@@ -30,8 +30,6 @@ public class Appointment {
     @JoinColumn(name = "doctorId")
     private Doctor doctor;
 	
-
-	
 	public int getAppointmentId() {
 		return appointmentId;
 	}
