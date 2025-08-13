@@ -12,16 +12,18 @@
         .row { display:flex; justify-content:space-between; align-items:center; margin-top:16px; }
         .btn { background:#0d6efd; color:#fff; border:0; padding:10px 16px; border-radius:6px; cursor:pointer; }
         .btn:hover { background:#0b5ed7; }
-        .link { font-size:14px; color:#0d6efd; text-decoration:none; }
-        .link:hover { text-decoration:underline; }
-        .alert { background:#ffe5e5; color:#b00020; padding:10px 12px; border-radius:6px; margin-bottom:12px; border:1px solid #ffcaca; }
+        .dropdown { position: relative; }
+        .dropdown-btn { background:none; border:none; color:#0d6efd; cursor:pointer; font-size:14px; }
+        .dropdown-content { display:none; position:absolute; right:0; background:#fff; border:1px solid #ddd; border-radius:6px; min-width:140px; box-shadow:0 8px 16px rgba(0,0,0,.1); }
+        .dropdown-content a { display:block; padding:8px 12px; font-size:14px; color:#333; text-decoration:none; }
+        .dropdown-content a:hover { background:#f0f0f0; }
+        .dropdown.show .dropdown-content { display:block; }
     </style>
 </head>
 <body>
 <div class="wrap">
     <h2>Login</h2>
 
-   	
     <form action="${pageContext.request.contextPath}/login" method="post" autocomplete="off">
         <label>Email</label>
         <input type="email" name="email" required />
@@ -37,8 +39,31 @@
         <div class="row">
             <button class="btn" type="submit">Login</button>
 
+            <div class="dropdown" id="signupDropdown">
+                <button type="button" class="dropdown-btn">Sign Up ▾</button>
+                <div class="dropdown-content">
+                    <a href="${pageContext.request.contextPath}/patientSignup">Patient</a>
+                    <a href="${pageContext.request.contextPath}/doctorSignup">Doctor</a>
+                </div>
+            </div>
         </div>
     </form>
 </div>
+
+<script>
+    // Toggle dropdown on click
+    const dropdown = document.getElementById('signupDropdown');
+    const btn = dropdown.querySelector('.dropdown-btn');
+
+    btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('show');
+    });
+
+    // Close dropdown if clicking outside
+    document.addEventListener('click', function () {
+        dropdown.classList.remove('show');
+    });
+</script>
 </body>
 </html>

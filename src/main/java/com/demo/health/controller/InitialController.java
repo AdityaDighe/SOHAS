@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class InitialController {
 	@RequestMapping("/")
 	public String start() {
-		return "signup";
+		return "login";
 	}
 
 	@RequestMapping("/doctorSignup")
@@ -15,8 +15,8 @@ public class InitialController {
 		return "doctor-signup";
 	}
 
-	@RequestMapping("/login")
+	@RequestMapping("/patientSignup")
 	public String login() {
-		return "login";
+		return "signup";
 	}
 }
