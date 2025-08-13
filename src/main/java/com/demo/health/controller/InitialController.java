@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class InitialController {
 	@RequestMapping("/")
 	public String start() {
-		return "employees";
+		return "signup";
 	}
 }

@@ -5,11 +5,13 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.demo.health.dao.DoctorDAO;
 import com.demo.health.entity.Doctor;
 import com.demo.health.service.DoctorService;
 
+@Service
 public class DoctorServiceImpl implements DoctorService{
 	@Autowired
 	private DoctorDAO doctorDAO;

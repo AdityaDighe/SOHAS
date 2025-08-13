@@ -3,12 +3,14 @@ package com.demo.health.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.health.dao.PatientDAO;
 import com.demo.health.entity.Patient;
 import com.demo.health.service.PatientService;
 
+@Service
 public class PatientServiceImpl implements PatientService {
 
 	@Autowired
