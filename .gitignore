@@ -45,4 +45,9 @@ Thumbs.db
 *~
  
 # Environment config files
+<<<<<<< HEAD
 .env
+=======
+.env
+ 
+>>>>>>> 2655d3031b5992ef1e4128dc1525f7fcc13199cb

@@ -1,10 +1,23 @@
 package com.demo.health.entity;
 
+import java.sql.Time;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="doctors")
 public class Doctor {
-	private int id;
-	private String name;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int doctorId;
+	private String doctorName;
 	private String speciality;
-	private int availableHours;
+	private Time startTime;
+	private Time endTime;
 	private String phoneNumber;
 	private String city;
 	private String email;
@@ -12,17 +25,18 @@ public class Doctor {
 	private String hospitalName;
 	
 	
-	public int getId() {
-		return id;
+	
+	public int getDoctorId() {
+		return doctorId;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setDoctorId(int doctorId) {
+		this.doctorId = doctorId;
 	}
-	public String getName() {
-		return name;
+	public String getDoctorName() {
+		return doctorName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
 	}
 	public String getSpeciality() {
 		return speciality;
@@ -30,11 +44,18 @@ public class Doctor {
 	public void setSpeciality(String speciality) {
 		this.speciality = speciality;
 	}
-	public int getAvailableHours() {
-		return availableHours;
+	
+	public Time getStartTime() {
+		return startTime;
 	}
-	public void setAvailableHours(int availableHours) {
-		this.availableHours = availableHours;
+	public void setStartTime(Time startTime) {
+		this.startTime = startTime;
+	}
+	public Time getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(Time endTime) {
+		this.endTime = endTime;
 	}
 	public String getPhoneNumber() {
 		return phoneNumber;
@@ -66,9 +87,6 @@ public class Doctor {
 	public void setHospitalName(String hospitalName) {
 		this.hospitalName = hospitalName;
 	}
-	
-	
-	
-	
 }
-
+ 
+ 
