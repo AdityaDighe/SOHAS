@@ -20,26 +20,51 @@
 </head>
 <body>
 <div class="wrap">
-    <h2>Doctor Login</h2>
+    <h2>Doctor signup</h2>
 
 
 
-    <form action="${pageContext.request.contextPath}/doctor/login" method="post" autocomplete="off">
+  <form action="${pageContext.request.contextPath}/doctorSignup" method="post" autocomplete="off">
+
+        <label>Doctor ID</label>
+        <input type="number" name="doctorId" required />
+
+        <label>Full Name</label>
+        <input type="text" name="doctorName" required />
+
+        <label>Speciality</label>
+        <input type="text" name="speciality" required />
+
+       
+
+        <label>Phone Number</label>
+        <input type="text" name="phoneNumber" required />
+
+        <label>City</label>
+        <input type="text" name="city" required />
+
+        <label>Hospital Name</label>
+        <input type="text" name="hospitalName" required />
+
         <label>Email</label>
         <input type="email" name="email" required />
 
         <label>Password</label>
         <input type="password" name="password" required />
 
-        <!-- If you enable Spring Security CSRF, keep this block -->
+        <!-- If you enable Spring Security CSRF -->
         <c:if test="${not empty _csrf}">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </c:if>
 
         <div class="row">
-            <button class="btn" type="submit">Login</button>
+            <button class="btn" type="submit">Sign Up</button>
             <a class="link" href="${pageContext.request.contextPath}/">Patient Sign Up</a>
         </div>
+    </form>
+       
+
+  
     </form>
 
     <p class="muted">Are you a patient? Use the signup link. Doctors should log in here.</p>

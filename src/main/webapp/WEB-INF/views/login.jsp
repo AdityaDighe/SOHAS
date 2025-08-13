@@ -2,7 +2,7 @@
 
 <html>
 <head>
-    <title>SOHAS • Doctor Login</title>
+    <title>SOHAS • Login</title>
     <style>
         body { font-family: Arial, sans-serif; background:#f5f7fb; margin:0; }
         .wrap { max-width:420px; margin:60px auto; background:#fff; padding:28px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,.08); }
@@ -15,42 +15,30 @@
         .link { font-size:14px; color:#0d6efd; text-decoration:none; }
         .link:hover { text-decoration:underline; }
         .alert { background:#ffe5e5; color:#b00020; padding:10px 12px; border-radius:6px; margin-bottom:12px; border:1px solid #ffcaca; }
-        .muted { color:#666; font-size:13px; text-align:center; margin-top:12px; }
     </style>
 </head>
 <body>
 <div class="wrap">
-    <h2>Patient Signup</h2>
+    <h2>Login</h2>
 
-
-
-  <form action="${pageContext.request.contextPath}/patient/signup" method="post" autocomplete="off">
-
-        <label>Patient ID</label>
-        <input type="number" name="patientId" required />
-
-        <label>Full Name</label>
-        <input type="text" name="patientName" required />
-
-        <label>Age</label>
-        <input type="number" name="age" required min="1" />
-
-        <label>City</label>
-        <input type="text" name="city" required />
-
+   	
+    <form action="${pageContext.request.contextPath}/login" method="post" autocomplete="off">
         <label>Email</label>
         <input type="email" name="email" required />
 
         <label>Password</label>
         <input type="password" name="password" required />
 
+        <!-- CSRF token if Spring Security is enabled -->
+        <c:if test="${not empty _csrf}">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </c:if>
+
         <div class="row">
-            <button class="btn" type="submit">Sign Up</button>
-            <a class="link" href="${pageContext.request.contextPath}/doctorSignup">Login for Doctor</a>
+            <button class="btn" type="submit">Login</button>
+
         </div>
     </form>
-
-    <p class="muted">Are you a patient? Use the signup link. Doctors should log in here.</p>
 </div>
 </body>
 </html>

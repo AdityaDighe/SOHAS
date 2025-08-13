@@ -10,8 +10,13 @@ public class InitialController {
 		return "signup";
 	}
 
-	@RequestMapping("/doctorlogin")
+	@RequestMapping("/doctorSignup")
 	public String dstart() {
-		return "doctor-login";
+		return "doctor-signup";
+	}
+
+	@RequestMapping("/login")
+	public String login() {
+		return "login";
 	}
 }
