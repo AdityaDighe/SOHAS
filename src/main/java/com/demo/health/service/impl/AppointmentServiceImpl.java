@@ -54,6 +54,7 @@ public class AppointmentServiceImpl implements AppointmentService{
 	}
 
 	@Override
+	@Transactional
 	public void updateStatus(Appointment apt) {
 		// TODO Auto-generated method stub
 		appointmentdao.updateStatus(apt);

@@ -10,4 +10,5 @@ public interface PatientService {
 	List<Patient> list();
 	void update(Patient patient);
 	void delete(int patientId);
+	Patient loginPatient(String email, String password);
 }

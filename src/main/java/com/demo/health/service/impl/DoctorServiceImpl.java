@@ -45,6 +45,12 @@ public class DoctorServiceImpl implements DoctorService{
 	public void delete(int doctorId) {
 		doctorDAO.delete(doctorId);
 	}
+
+	@Override
+	public Doctor loginDoctor(String email, String password) {
+		// TODO Auto-generated method stub
+		return doctorDAO.loginDoctor(email, password);
+	}
 }
 
 

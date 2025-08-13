@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.demo.health.dao.DoctorDAO;
 import com.demo.health.entity.Doctor;
+import com.demo.health.entity.Patient;
 
 @Repository
 @Transactional
@@ -41,5 +42,13 @@ public class DoctorDAOImpl implements DoctorDAO{
 	public void delete(int doctorId) {
 		Doctor doctor = sessionFactory.getCurrentSession().get(Doctor.class, doctorId);
 		if (doctor != null) sessionFactory.getCurrentSession().delete(doctor);	
+	}
+
+	public Doctor loginDoctor(String email, String password) {
+		String hql = "SELECT d FROM Doctor d WHERE d.email = :email AND d.password = :password";
+		return sessionFactory.getCurrentSession().createQuery(hql, Doctor.class)
+												  .setParameter("email", email)
+												  .setParameter("password", password)
+												  .uniqueResult();
 	}
 }

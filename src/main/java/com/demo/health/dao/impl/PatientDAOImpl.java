@@ -37,4 +37,13 @@ public class PatientDAOImpl implements PatientDAO{
 		if (p != null)
 			sessionFactory.getCurrentSession().delete(p);
 	}
+	
+	public Patient loginPatient(String email, String password) {
+		String hql = "SELECT p FROM Patient p WHERE p.email = :email AND p.password = :password";
+		return sessionFactory.getCurrentSession().createQuery(hql, Patient.class)
+												  .setParameter("email", email)
+												  .setParameter("password", password)
+												  .uniqueResult();
+	}
 }
+

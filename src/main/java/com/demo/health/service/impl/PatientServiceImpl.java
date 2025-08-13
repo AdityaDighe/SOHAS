@@ -53,4 +53,10 @@ public class PatientServiceImpl implements PatientService {
 		
 	}
 
+	@Override
+	public Patient loginPatient(String email, String password) {
+		// TODO Auto-generated method stub
+		return patientdao.loginPatient(email, password);
+	}
+
 }

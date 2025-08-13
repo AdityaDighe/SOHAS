@@ -10,4 +10,5 @@ public interface DoctorService {
 	List<Doctor> list();
 	void update(Doctor doctor);
 	void delete(int doctorId);
+	Doctor loginDoctor(String email, String password);
 }
