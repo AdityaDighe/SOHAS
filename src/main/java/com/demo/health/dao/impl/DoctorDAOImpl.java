@@ -40,9 +40,6 @@ public class DoctorDAOImpl implements DoctorDAO{
 	@Override
 	public void delete(int doctorId) {
 		Doctor doctor = sessionFactory.getCurrentSession().get(Doctor.class, doctorId);
-		if (doctor != null) sessionFactory.getCurrentSession().delete(doctor);
-		
+		if (doctor != null) sessionFactory.getCurrentSession().delete(doctor);	
 	}
-	
-	
 }
