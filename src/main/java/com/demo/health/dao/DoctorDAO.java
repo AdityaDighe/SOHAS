@@ -11,5 +11,3 @@ public interface DoctorDAO {
     void update(Doctor doctor);
     void delete(int doctorId);
 }
- 
- 
