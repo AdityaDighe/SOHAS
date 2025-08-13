@@ -22,7 +22,9 @@
 </head>
 <body>
 <div class="wrap">
-    <h2>Login</h2>
+    <h2>
+Login Page
+    </h2>
 
     <form action="${pageContext.request.contextPath}/login" method="post" autocomplete="off">
         <label>Email</label>
@@ -37,7 +39,11 @@
         </c:if>
 
         <div class="row">
-            <button class="btn" type="submit">Login</button>
+        
+        <a href="${pageContext.request.contextPath}/patientSignup">
+        <button class="btn" type="submit">Login</button>
+        </a>
+            
 
             <div class="dropdown" id="signupDropdown">
                 <button type="button" class="dropdown-btn">Sign Up ▾</button>
@@ -65,5 +71,9 @@
         dropdown.classList.remove('show');
     });
 </script>
+
+ 
+
+
 </body>
 </html>

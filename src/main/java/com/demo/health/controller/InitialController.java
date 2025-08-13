@@ -19,4 +19,14 @@ public class InitialController {
 	public String login() {
 		return "signup";
 	}
+
+	@RequestMapping("/patientDashboard")
+	public String patientDashboard() {
+		return "patient";
+	}
+
+	@RequestMapping("/patientDashboard/appointment")
+	public String appointment() {
+		return "appointments";
+	}
 }
