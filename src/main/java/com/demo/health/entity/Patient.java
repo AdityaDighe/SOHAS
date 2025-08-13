@@ -1,13 +1,10 @@
 package com.demo.health.entity;
 
-import com.demo.health.entity.Doctor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,15 +13,10 @@ public class Patient {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int patientId;
-	
 	private String patientName;
-	
 	private int age;
-	
 	private String city;
-	
 	private String email;
-	
 	private String password;
 	
 	public int getPatientId() {

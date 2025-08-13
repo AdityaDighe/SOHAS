@@ -3,16 +3,21 @@ package com.demo.health.entity;
 import java.sql.Date;
 import java.sql.Time;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import com.demo.health.entity.Doctor;
-import com.demo.health.entity.Patient;
-
+@Entity
+@Table(name="appointments")
 public class Appointment {
-	int doctorId;
-	int patientId;
-	int appointmentId;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int appointmentId;
+	
 	String status;
 	Date date;
 	Time time;
@@ -25,30 +30,22 @@ public class Appointment {
     @JoinColumn(name = "doctorId")
     private Doctor doctor;
 	
-	public int getDoctorId() {
-		return doctorId;
-	}
-	public void setDoctorId(int doctorId) {
-		this.doctorId = doctorId;
-	}
-	public int getPatientId() {
-		return patientId;
-	}
-	public void setPatientId(int patientId) {
-		this.patientId = patientId;
-	}
+
+	
 	public int getAppointmentId() {
 		return appointmentId;
 	}
 	public void setAppointmentId(int appointmentId) {
 		this.appointmentId = appointmentId;
 	}
+	
 	public String getStatus() {
 		return status;
 	}
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
 	public Date getDate() {
 		return date;
 	}
