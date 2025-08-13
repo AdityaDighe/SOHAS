@@ -1,0 +1,54 @@
+package com.demo.health.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.demo.health.dao.PatientDAO;
+import com.demo.health.entity.Patient;
+import com.demo.health.service.PatientService;
+
+public class PatientServiceImpl implements PatientService {
+
+	@Autowired
+	private PatientDAO patientdao;
+	
+	@Override
+	@Transactional
+	public void save(Patient patient) {
+		// TODO Auto-generated method stub
+		patientdao.save(patient);;
+		
+	}
+
+	@Override
+	@Transactional
+	public Patient get(int patientId) {
+		// TODO Auto-generated method stub
+		return patientdao.get(patientId);
+	}
+
+	@Override
+	@Transactional
+	public List<Patient> list() {
+		// TODO Auto-generated method stub
+		return patientdao.list();
+	}
+
+	@Override
+	@Transactional
+	public void update(Patient patient) {
+		// TODO Auto-generated method stub
+		patientdao.update(patient);
+	}
+
+	@Override
+	@Transactional
+	public void delete(int patientId) {
+		// TODO Auto-generated method stub
+		patientdao.delete(patientId);
+		
+	}
+
+}
