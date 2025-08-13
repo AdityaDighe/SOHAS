@@ -1,19 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>SOHAS - Sign up</title>
+    <title>SOHAS - Signup</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f5f5f5; }
         .container { width: 400px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; }
-        input, select { width: 100%; padding: 10px; margin: 5px 0; }
-        button { background: #28a745; color: #fff; border: none; padding: 10px; cursor: pointer; }
+        input { width: 100%; padding: 10px; margin: 5px 0; }
+        .btn-container { display: flex; justify-content: space-between; align-items: center; }
+        button { background: #28a745; color: #fff; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; }
         button:hover { background: #218838; }
+        a { text-decoration: none; color: #007bff; font-size: 14px; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h2>Create an Account</h2>
+    <h2>Create a Patient Account</h2>
     <form action="signup" method="post">
         <label>Full Name</label>
         <input type="text" name="name" required>
@@ -24,14 +27,12 @@
         <label>Password</label>
         <input type="password" name="password" required>
 
-        <label>Role</label>
-        <select name="role" required>
-            <option value="PATIENT">Patient</option>
-            <option value="DOCTOR">Doctor</option>
-        </select>
-
-        <button type="submit">Sign Up</button>
+        <div class="btn-container">
+            <button type="submit">Sign Up</button>
+            <a href="doctor-login.jsp">Login for Doctor</a>
+        </div>
     </form>
 </div>
 </body>
+
 </html>
