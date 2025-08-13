@@ -37,4 +37,11 @@ public class AppointmentDAOImpl implements AppointmentDAO{
 		if (a != null)
 			sessionFactory.getCurrentSession().delete(a);
 	}
+
+	@Override
+	public void updateStatus(Appointment apt) {
+		// TODO Auto-generated method stub
+		sessionFactory.getCurrentSession().update(apt);
+		
+	}
 }

@@ -38,7 +38,7 @@ public class AppointmentController {
 	}
 	
 	@PutMapping("/{id}")
-	public void updateEmployee(@PathVariable int id, @RequestBody Appointment appointment) {
+	public void updateAppointment(@PathVariable int id, @RequestBody Appointment appointment) {
 		appointment.setAppointmentId(id);
 		appointService.update(appointment);
 	}
@@ -47,5 +47,12 @@ public class AppointmentController {
 	public void deleteEmployee(@PathVariable int id) {
 		appointService.delete(id);
 	} 
+	
+	@PutMapping
+	public void updateStatus(@PathVariable int id, @RequestBody String status) {
+		Appointment apt = appointService.get(id);
+		apt.setStatus(status);
+		appointService.updateStatus(apt);
+	}
 	
 }
