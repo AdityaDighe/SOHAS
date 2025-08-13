@@ -29,7 +29,7 @@
 
         <div class="btn-container">
             <button type="submit">Sign Up</button>
-            <a href="doctor-login.jsp">Login for Doctor</a>
+            <a href="doctorlogin">Login for Doctor</a>
         </div>
     </form>
 </div>
