@@ -41,6 +41,12 @@
 
         <label>Hospital Name</label>
         <input type="text" name="hospitalName" id="hospital" required />
+        
+        <label>Start Time</label>
+		<input type="time" name="startTime" id="startTime" required />
+
+		<label>End Time</label>
+		<input type="time" name="endTime" id="endTime" required />
 
         <label>Email</label>
         <input type="email" name="email" id="email" required />
@@ -78,7 +84,9 @@ $("#doctorSignUp").click(function(event) {
             city: $("#city").val(),
             hospitalName: $("#hospital").val(),
             email: $("#email").val(),
-            password: $("#password").val()
+            password: $("#password").val(),
+            startTime: $("#startTime").val()+":00",
+            endTime: $("#endTime").val()+":00"
         }),
         success: function() {
             alert("Doctor added!");
