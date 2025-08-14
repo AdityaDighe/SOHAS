@@ -35,6 +35,7 @@
                 <th>Date</th>
                 <th>Time Slot</th>
                 <th>Status</th>
+                <th></th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -45,7 +46,7 @@
 <script>
 $(document).ready(function(){
     $.ajax({
-        url: "/SOHAS/doctorDashboard", // Fetch appointments
+        url: "/SOHAS/appointment", // Fetch appointments
         method: "GET",
         success: function(appointments){
             let tbody = $("#appointmentTable tbody");
@@ -53,15 +54,14 @@ $(document).ready(function(){
             appointments.forEach(function(app){
                 tbody.append(
                     "<tr>" +
-                        "<td>"+app.patientName+"</td>" +
+                        "<td>"+app.patient.patientName+"</td>" +
                         "<td>"+app.date+"</td>" +
-                        "<td>"+app.timeSlot+"</td>" +
+                        "<td>"+app.time+"</td>" +
+                        "<td>"+app.status+"</td>" +
                         "<td>" +
-                            "<select class='status-dropdown' data-id='"+app.id+"'>" +
-                                "<option value='BOOKED' "+(app.status==='BOOKED'?'selected':'')+">Booked</option>" +
-                                "<option value='COMPLETED' "+(app.status==='COMPLETED'?'selected':'')+">Completed</option>" +
-                                "<option value='CANCELLED' "+(app.status==='CANCELLED'?'selected':'')+">Cancelled</option>" +
-                            "</select>" +
+                        "<button class='status-finish btn-status' data-id='" + app.id + "'>Complete</button>" +
+                        " "+
+                        "<button class='status-cancel btn-status cancel' data-id='" + app.id + "'>Cancel</button>" +
                         "</td>" +
                     "</tr>"
                 );

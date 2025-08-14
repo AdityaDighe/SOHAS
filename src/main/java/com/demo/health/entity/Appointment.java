@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name="appointments")
 public class Appointment {
@@ -18,9 +20,13 @@ public class Appointment {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int appointmentId;
 	
-	String status;
-	Date date;
-	Time time;
+	private String status;
+	
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date date;
+ 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    private Time time;
 	
 	@ManyToOne
     @JoinColumn(name = "patientId")
