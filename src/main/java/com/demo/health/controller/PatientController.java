@@ -1,6 +1,9 @@
 package com.demo.health.controller;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
 import com.demo.health.service.PatientService;
 
@@ -46,5 +50,16 @@ public class PatientController {
     @DeleteMapping("/{id}")
     public void deletePatient(@PathVariable int id) {
     	patientService.delete(id);
+    }
+    
+    @GetMapping("/doctors")
+    public List<Doctor> getDoctors(@RequestBody Map<String, String> requirement){
+    	String location = requirement.get("location");
+    	String stime = requirement.get("time");
+    	String sdate = requirement.get("date");
+    	Time time = Time.valueOf(stime);
+    	Date date = Date.valueOf(sdate);
+    	
+    	return patientService.getDoctors(location, time, date);
     }
 }

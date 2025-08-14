@@ -1,5 +1,7 @@
 package com.demo.health.service.impl;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.health.dao.PatientDAO;
+import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
 import com.demo.health.service.PatientService;
 
@@ -54,9 +57,17 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	@Transactional
 	public Patient loginPatient(String email, String password) {
 		// TODO Auto-generated method stub
 		return patientdao.loginPatient(email, password);
+	}
+
+	@Override
+	@Transactional
+	public List<Doctor> getDoctors(String location, Time time, Date date) {
+		// TODO Auto-generated method stub
+		return patientdao.getDoctors(location, time, date);
 	}
 
 }
