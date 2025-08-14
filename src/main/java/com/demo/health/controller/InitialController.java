@@ -29,4 +29,8 @@ public class InitialController {
 	public String appointment() {
 		return "appointments";
 	}
+	@RequestMapping("/doctorDashboard")
+	public String doctor() {
+		return "doctor-dashboard";
+	}
 }

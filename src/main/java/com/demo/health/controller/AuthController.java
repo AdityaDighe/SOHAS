@@ -27,12 +27,14 @@ public class AuthController {
 		
 		Patient p = patientService.loginPatient(email, pass);
 		if(p != null) {
-			
+			System.out.println("Authorized Patient");
+			return;
 		}
 		
 		Doctor d = doctorService.loginDoctor(email, pass);
 		if(d != null) {
-			
+			System.out.println("Authorized Doctor");
+			return;
 		}
 		
 		System.out.println("Unauthorized");

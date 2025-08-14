@@ -72,8 +72,5 @@ Login Page
     });
 </script>
 
- 
-
-
 </body>
 </html>
