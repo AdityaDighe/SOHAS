@@ -14,30 +14,36 @@ import com.demo.health.service.PatientService;
 
 @Controller
 public class AuthController {
+
+   
 	
 	@Autowired
 	private PatientService patientService;
 	
 	@Autowired
 	private DoctorService doctorService;
+
+    
 	@PostMapping("/login")
-	public void dologin(@RequestBody Map<String, String> credentials) {
+	public String dologin(@RequestBody Map<String, String> credentials) {
 		String email = credentials.get("email");
 		String pass = credentials.get("password");
 		
-		Patient p = patientService.loginPatient(email, pass);
-		if(p != null) {
-			System.out.println("Authorized Patient");
-			return;
-		}
 		
-		Doctor d = doctorService.loginDoctor(email, pass);
-		if(d != null) {
-			System.out.println("Authorized Doctor");
-			return;
-		}
-		
-		System.out.println("Unauthorized");
+
+        Patient p = patientService.loginPatient(email, pass);
+        if (p != null) {
+            return "redirect:/patientDashboard";
+        }
+
+        Doctor d = doctorService.loginDoctor(email, pass);
+        if (d != null) {
+            return "redirect:/doctorDashboard";
+        }
+        
+        return "redirect:/?error=true";
+
+        
 	}
 	
 }

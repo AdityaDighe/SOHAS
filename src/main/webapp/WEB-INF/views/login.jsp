@@ -1,7 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+ 
+ 
 <html>
 <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>SOHAS • Login</title>
     <style>
         body { font-family: Arial, sans-serif; background:#f5f7fb; margin:0; }
@@ -22,29 +24,24 @@
 </head>
 <body>
 <div class="wrap">
-    <h2>
-Login Page
-    </h2>
-
-    <form action="${pageContext.request.contextPath}/login" method="post" autocomplete="off">
+    <h2>Login Page</h2>
+ 
+    <!-- Removed action/method to prevent normal submit -->
+    <form id="loginForm" autocomplete="off">
         <label>Email</label>
-        <input type="email" name="email" required />
-
+        <input type="email" name="email" id="email" required />
+ 
         <label>Password</label>
-        <input type="password" name="password" required />
-
-        <!-- CSRF token if Spring Security is enabled -->
+        <input type="password" name="password" id="password" required />
+ 
         <c:if test="${not empty _csrf}">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </c:if>
-
+ 
         <div class="row">
-        
-        <a href="${pageContext.request.contextPath}/patientSignup">
-        <button class="btn" type="submit">Login</button>
-        </a>
-            
-
+            <!-- Make button type="button" so no default form submission -->
+            <button class="btn" type="button" id="login">Login</button>
+ 
             <div class="dropdown" id="signupDropdown">
                 <button type="button" class="dropdown-btn">Sign Up ▾</button>
                 <div class="dropdown-content">
@@ -55,22 +52,55 @@ Login Page
         </div>
     </form>
 </div>
-
+ 
 <script>
-    // Toggle dropdown on click
+    // Dropdown toggle
     const dropdown = document.getElementById('signupDropdown');
     const btn = dropdown.querySelector('.dropdown-btn');
-
+ 
     btn.addEventListener('click', function (e) {
         e.stopPropagation();
         dropdown.classList.toggle('show');
     });
-
-    // Close dropdown if clicking outside
+ 
     document.addEventListener('click', function () {
         dropdown.classList.remove('show');
     });
+ 
+    // AJAX login
+    $("#login").click(function(event) {
+        event.preventDefault(); // prevent any accidental form submit
+ 
+        $.ajax({
+            url: "${pageContext.request.contextPath}/login",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                email: $("#email").val(),
+                password: $("#password").val()
+            }),
+            success: function(data) {
+                console.log("Response:", data);
+ 
+                if (typeof data === "string") {
+                    if (data.includes("patientDashboard")) {
+                        window.location.href = "${pageContext.request.contextPath}/patientDashboard";
+                    }
+                    else if (data.includes("doctorDashboard")) {
+                        window.location.href = "${pageContext.request.contextPath}/doctorDashboard";
+                    }
+                    else {
+                        alert("Invalid credentials. Try again.");
+                    }
+                } else {
+                    alert("Unexpected server response");
+                }
+            },
+            error: function(xhr) {
+                alert("Login failed: " + xhr.status);
+            }
+        });
+    });
 </script>
-
 </body>
 </html>
