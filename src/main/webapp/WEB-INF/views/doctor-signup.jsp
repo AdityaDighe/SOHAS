@@ -73,10 +73,7 @@
             <button class="btn" type="submit" id="doctorSignUp">Sign Up</button>
         </div>
     </form>
-       
-
-  
-    </form>
+      
 </div>
 
 <script>
