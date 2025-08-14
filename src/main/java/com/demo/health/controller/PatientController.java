@@ -4,8 +4,14 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +33,19 @@ public class PatientController {
     private PatientService patientService;
 
     @PostMapping
-    public void addPatient(@RequestBody Patient patient) {
-    	patientService.save(patient);
+    public ResponseEntity<?> addPatient(@RequestBody @Valid Patient patient, BindingResult result) {
+        if (result.hasErrors()) {
+            Map<String, List<String>> errors = result.getFieldErrors().stream()
+                .collect(Collectors.groupingBy(
+                    FieldError::getField,
+                    Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList())
+                ));
+
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        patientService.save(patient);
+        return ResponseEntity.ok("Patient added successfully");
     }
 
     @GetMapping("/{id}")

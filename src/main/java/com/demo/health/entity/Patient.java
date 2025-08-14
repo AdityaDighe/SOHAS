@@ -6,6 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "patients")
@@ -13,10 +18,26 @@ public class Patient {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int patientId;
+	
+	@NotBlank (message = "Name is required")
+	@Size (min = 3, max = 100, message = "Name must be between 3 and 100 characters")
 	private String patientName;
+	
+	@PositiveOrZero(message = "Age must be zero or a positive number")
 	private int age;
+	
+	@NotBlank(message = "City is required")
+	@Size(max = 50, message = "City cannot exceed 50 characters")
 	private String city;
+	
+	@Email(message = "Invalid email format")
+    @NotBlank
 	private String email;
+	
+	@Pattern(
+			regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+	        message = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
+	)
 	private String password;
 	
 	public int getPatientId() {

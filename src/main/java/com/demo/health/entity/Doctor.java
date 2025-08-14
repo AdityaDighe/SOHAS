@@ -7,6 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="doctors")
@@ -14,14 +18,41 @@ public class Doctor {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int doctorId;
+	
+	@NotBlank (message = "Name is required")
+	@Size (min = 3, max = 100, message = "Name must be between 3 and 100 characters")
 	private String doctorName;
+	
+	@NotBlank(message = "Specialty is required")
+    @Size(max = 100, message = "Specialty cannot exceed 100 characters")
 	private String speciality;
+	
 	private Time startTime;
+
 	private Time endTime;
+	
+	@NotBlank(message = "Phone number is required")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")
 	private String phoneNumber;
+	
+	@NotBlank(message = "City is required")
+	@Size(max = 50, message = "City cannot exceed 50 characters")
 	private String city;
+	 
+	@NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
 	private String email;
+	
+	@NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Pattern(
+       regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$",
+       message = "Password must contain upper, lower, number and special character"
+    )
 	private String password;
+	
+	@NotBlank(message = "Hospital name is required")
+    @Size(max = 100, message = "Hospital name cannot exceed 100 characters")
 	private String hospitalName;
 	
 	

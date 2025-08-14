@@ -17,11 +17,12 @@
         .link:hover { text-decoration:underline; }
         .alert { background:#ffe5e5; color:#b00020; padding:10px 12px; border-radius:6px; margin-bottom:12px; border:1px solid #ffcaca; }
         .muted { color:#666; font-size:13px; text-align:center; margin-top:12px; }
+        .error {color: #b00020; font-size: 13px; margin-top: 4px;}
     </style>
 </head>
 <body>
 <div class="wrap">
-    <h2>Doctor signup</h2>
+    <h2>Doctor Signup</h2>
 
 
 
@@ -29,31 +30,40 @@
 
         <label>Full Name</label>
         <input type="text" name="doctorName" id="name" required />
-
+		<div class="error" id="error-doctorName"></div>
+		
         <label>Speciality</label>
         <input type="text" name="speciality" id="speciality" required />
-
+		<div class="error" id="error-speciality"></div>
+		
         <label>Phone Number</label>
         <input type="text" name="phoneNumber" id="number" required />
-
+		<div class="error" id="error-phoneNumber"></div>
+		
         <label>City</label>
         <input type="text" name="city" id="city" required />
-
+		<div class="error" id="error-city"></div>
+		
         <label>Hospital Name</label>
         <input type="text" name="hospitalName" id="hospital" required />
+        <div class="error" id="error-hospitalName"></div>
         
         <label>Start Time</label>
 		<input type="time" name="startTime" id="startTime" required />
-
+		<div class="error" id="error-startTime"></div>
+		
 		<label>End Time</label>
 		<input type="time" name="endTime" id="endTime" required />
-
+		<div class="error" id="error-endTime"></div>
+		
         <label>Email</label>
         <input type="email" name="email" id="email" required />
-
+		<div class="error" id="error-email"></div>
+		
         <label>Password</label>
         <input type="password" name="password" id="password" required />
-
+		<div class="error" id="error-password"></div>
+		
         <!-- If you enable Spring Security CSRF -->
         <c:if test="${not empty _csrf}">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -90,7 +100,21 @@ $("#doctorSignUp").click(function(event) {
         }),
         success: function() {
             alert("Doctor added!");
+        },
+        error: function(xhr) {
+            if (xhr.status === 400) {
+                const errors = xhr.responseJSON;
+
+                $(".error").text(""); // Clear previous errors
+                $("input").css("border-color", ""); // Reset borders
+
+                for (const field in errors) {
+                    $("#error-" + field).text(errors[field]);
+                    $("#" + field).css("border-color", "#b00020"); // Highlight field
+                }
+            }
         }
+
     });
 });
 </script>

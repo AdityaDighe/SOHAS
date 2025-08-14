@@ -17,6 +17,7 @@
         .link:hover { text-decoration:underline; }
         .alert { background:#ffe5e5; color:#b00020; padding:10px 12px; border-radius:6px; margin-bottom:12px; border:1px solid #ffcaca; }
         .muted { color:#666; font-size:13px; text-align:center; margin-top:12px; }
+        .error {color: #b00020; font-size: 13px; margin-top: 4px;}
     </style>
 </head>
 <body>
@@ -29,19 +30,24 @@
 
         <label>Full Name</label>
         <input type="text" name="patientName" id="name" required />
-
+		<div class="error" id="error-patientName"></div>
+		
         <label>Age</label>
         <input type="number" name="age" id="age" required min=0 />
-
+		<div class="error" id="error-age"></div>
+		
         <label>City</label>
         <input type="text" name="city" id="city" required />
-
+		<div class="error" id="error-city"></div>
+		
         <label>Email</label>
         <input type="email" name="email" id="email" required />
-
+		<div class="error" id="error-email"></div>
+		
         <label>Password</label>
         <input type="password" name="password" id="password" required />
-
+		<div class="error" id="error-password"></div>
+		
         <div class="row">
             <button class="btn" type="submit" id="patientSignUp">Sign Up</button>
         </div>
@@ -65,6 +71,19 @@ $("#patientSignUp").click(function(event) {
         }),
         success: function() {
             alert("Patient added!");
+        },
+        error: function(xhr) {
+            if (xhr.status === 400) {
+                const errors = xhr.responseJSON;
+
+                $(".error").text(""); // Clear previous errors
+                $("input").css("border-color", ""); // Reset borders
+
+                for (const field in errors) {
+                    $("#error-" + field).text(errors[field]);
+                    $("#" + field).css("border-color", "#b00020"); // Highlight field
+                }
+            }
         }
     });
 });
