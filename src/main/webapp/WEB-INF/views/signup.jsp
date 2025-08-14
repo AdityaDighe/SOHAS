@@ -3,7 +3,7 @@
 <html>
 <head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>SOHAS • Doctor Login</title>
+    <title>SOHAS • Patient </title>
     <style>
         body { font-family: Arial, sans-serif; background:#f5f7fb; margin:0; }
         .wrap { max-width:420px; margin:60px auto; background:#fff; padding:28px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,.08); }

@@ -16,25 +16,21 @@
         table { width:100%; border-collapse: collapse; margin-top:20px; }
         th, td { padding:10px; border:1px solid #ddd; text-align:center; }
         th { background:#f8f9fa; }
+        .book-section { margin:20px 0; text-align:center; }
+        .book-section p { font-size:16px; margin-bottom:10px; }
+        .book-btn { background:#007bff; color:#fff; border:none; padding:10px 16px; border-radius:6px; cursor:pointer; text-decoration:none; }
+        .book-btn:hover { background:#0069d9; }
     </style>
 </head>
 <body>
 <div class="wrap">
     <h2>Welcome, ${patient.patientName}!</h2>
 
-    <!-- Book Appointment Section -->
-    <form action="${pageContext.request.contextPath}/appointments/book" method="get">
-        <label for="doctor">Select Doctor:</label>
-        <select name="doctorId" id="doctor" required>
-            <option value="">-- Select Doctor --</option>
-            <c:forEach var="doctor" items="${doctors}">
-                <option value="${doctor.doctorId}">
-                    Dr. ${doctor.doctorName} - ${doctor.speciality} (${doctor.hospitalName})
-                </option>
-            </c:forEach>
-        </select>
-        <button type="submit" class="btn">Book Now</button>
-    </form>
+    <!-- Book Doctor Section -->
+    <div class="book-section">
+        <p>Looking for a doctor? Book here now</p>
+        <a href="http://localhost:8080/SOHAS/patientDashboard/appointment" class="book-btn">Book</a>
+    </div>
 
     <!-- Booked Appointments Section -->
     <h3>Your Appointments</h3>
