@@ -81,19 +81,15 @@
             }),
             success: function(data) {
                 console.log("Response:", data);
- 
-                if (typeof data === "string") {
-                    if (data.includes("patientDashboard")) {
-                        window.location.href = "${pageContext.request.contextPath}/patientDashboard";
-                    }
-                    else if (data.includes("doctorDashboard")) {
-                        window.location.href = "${pageContext.request.contextPath}/doctorDashboard";
-                    }
-                    else {
-                        alert("Invalid credentials. Try again.");
-                    }
-                } else {
-                    alert("Unexpected server response");
+
+                if (data === "patientDashboard") {
+                    window.location.href = "${pageContext.request.contextPath}/patientDashboard";
+                }
+                else if (data === "doctorDashboard") {
+                    window.location.href = "${pageContext.request.contextPath}/doctorDashboard";
+                }
+                else {
+                    alert("Invalid credentials. Try again.");
                 }
             },
             error: function(xhr) {
