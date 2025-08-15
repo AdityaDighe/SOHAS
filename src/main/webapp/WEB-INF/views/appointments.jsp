@@ -1,6 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-
 <html>
 <head>
 <title>SOHAS • Book Appointment</title>
@@ -45,7 +43,7 @@ input, select {
 <div class="wrap">
     <h2>Book Appointment</h2>
 
-    <!-- Step 1: Select Date, Time, and City -->
+    <!-- Form Section -->
     <div class="form-section">
         <form id="searchForm">
             <label>Select Date:</label>
@@ -80,7 +78,7 @@ input, select {
         </form>
     </div>
 
-    <!-- Step 2: Doctors List -->
+    <!-- Doctors Table -->
     <div id="doctorsSection" style="display:none;">
         <h3>Available Doctors</h3>
         <table id="doctorsTable">
@@ -100,20 +98,13 @@ input, select {
 </div>
 
 <script>
-// Strict date format validation for YYYY-MM-DD
+// Validate date format
 document.getElementById("appointmentDate").addEventListener("input", function () {
-    let val = this.value;
     let regex = /^\d{4}-\d{2}-\d{2}$/;
-    if (!regex.test(val)) {
-        this.setCustomValidity("Please enter the date in YYYY-MM-DD format");
-    } else {
-        this.setCustomValidity("");
-    }
+    this.setCustomValidity(regex.test(this.value) ? "" : "Please enter the date in YYYY-MM-DD format");
 });
 
 $(document).ready(function () {
-
-    // Search for doctors
     $("#searchForm").on("submit", function (event) {
         event.preventDefault();
 
@@ -123,43 +114,42 @@ $(document).ready(function () {
 
         $.ajax({
             url: "/SOHAS/patients/doctors",
-            method: "GET",
+            type: "GET",
+            dataType: "json",
             data: { date: date, time: time, location: city },
             success: function (doctors) {
-            	console.log(doctors);
-                if (doctors.length > 0) {
-                    let tableRows = "";
-                    doctors.forEach(doc => {
-                        tableRows += `
-                            <tr>
-                                <td>Dr. ${doc.doctorName}</td>
-                                <td>${doc.hospitalName}</td>
-                                <td>${doc.speciality}</td>
-                                <td>${doc.city}</td>
-                                <td>
-                                    <form action="/SOHAS/appointment" method="post">
-                                    <!--need to add patientId after JWT-->
-                                        <input type="hidden" name="doctorId" value="${doc.doctorId}" />
-                                        <input type="hidden" name="appointmentDate" value="${date}" />
-                                        <input type="hidden" name="appointmentTime" value="${time}" />
-                                        <button type="submit" class="btn">Book</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                    $("#doctorsTable tbody").html(tableRows);
-                } else {
-                    $("#doctorsTable tbody").html(`<tr><td colspan="5">No doctors available for the selected time.</td></tr>`);
-                }
+
+                let tbody = $("#doctorsTable tbody")
+                tbody.empty();
+
+                doctors.forEach(doc => {
+                    console.log("Loop doc:", doc.doctorName); // check value here
+                    tbody.append(
+                        "<tr>"+
+                            "<td>Dr."+doc.doctorName + "</td>"+
+                            "<td>"+doc.hospitalName+"</td>"+
+                            "<td>"+doc.speciality+"</td>"+
+                            "<td>"+doc.city+"</td>"+
+                            "<td>"+
+	                            "<form action='/SOHAS/appointment' method='post'>"+
+	                                "<input type='hidden' name='doctorId' value="+doc.doctorId+"/>"+
+	                                "<input type='hidden' name='appointmentDate' value="+date+" />"+
+	                                "<input type='hidden' name='appointmentTime' value="+time+" />"+
+	                                "<button type='submit' class='btn'>Book</button>"+
+	                            "</form>"+
+	                        "</td>"+
+                        "</tr>"
+                        )
+                });
                 $("#doctorsSection").show();
             },
-            error: function () {
+
+            error: function (xhr) {
+                console.error(xhr);
                 alert("Error fetching doctors. Please try again.");
             }
         });
     });
-
 });
 </script>
 </body>
