@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.demo.health.dao.DoctorDAO;
+import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.service.DoctorService;
 
@@ -55,6 +56,12 @@ public class DoctorServiceImpl implements DoctorService{
 	@Override
 	public Doctor findByEmail(String email) {
 		return doctorDAO.findByEmail(email);
+	}
+
+	@Override
+	public List<Appointment> myAppointments(int id) {
+		// TODO Auto-generated method stub
+		return doctorDAO.myAppointments(id);
 	}
 }
 

@@ -100,6 +100,17 @@ public class PatientDAOImpl implements PatientDAO{
 	            .setParameter("email", email)
 	            .uniqueResult();
 	}
+
+	@Override
+	public List<Appointment> getAppointment(int id) {
+		// TODO Auto-generated method stub
+		String hql = "FROM Appointment a WHERE a.patient.patientId = :patientId";
+	    return sessionFactory.getCurrentSession()
+	            .createQuery(hql, Appointment.class)
+	            .setParameter("patientId", id)
+	            .list();
+	}
+	
 	
 	
 }

@@ -38,8 +38,9 @@
         loadAppointments();
 
         function loadAppointments() {
-            $.ajax({
-                url: baseUrl + "/appointment",
+            let id = "${id}"
+        	$.ajax({
+                url: baseUrl + "/doctors/appointment/"+id,
                 method: "GET",
                 success: function(appointments) {
                     let tbody = $("#appointmentTable tbody");

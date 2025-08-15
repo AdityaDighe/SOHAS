@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.service.DoctorService;
 
@@ -81,5 +82,10 @@ public class DoctorController {
     @DeleteMapping("/{id}")
     public void deleteDoctor(@PathVariable int id) {
         doctorService.delete(id);
+    }
+    
+    @GetMapping("/appointment/{id}")
+    public List<Appointment> myAppointments(@PathVariable int id){
+    	return doctorService.myAppointments(id);
     }
 }

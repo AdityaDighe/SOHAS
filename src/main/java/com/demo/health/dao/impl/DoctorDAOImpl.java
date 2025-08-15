@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.demo.health.dao.DoctorDAO;
+import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 
 @Repository
@@ -58,5 +59,15 @@ public class DoctorDAOImpl implements DoctorDAO{
 	            .createQuery(hql, Doctor.class)
 	            .setParameter("email", email)
 	            .uniqueResult();
+	}
+
+	@Override
+	public List<Appointment> myAppointments(int id) {
+		// TODO Auto-generated method stub
+		String hql = "FROM Appointment a WHERE a.doctor.doctorId = :id";
+		 return sessionFactory.getCurrentSession()
+		            .createQuery(hql, Appointment.class)
+		            .setParameter("id", id)
+		            .list();
 	}
 }

@@ -70,9 +70,21 @@
     // AJAX login
     $("#login").click(function(event) {
         event.preventDefault(); // prevent any accidental form submit
- 
+ 		
+        
+        function setCookie(name, value, hours) {
+	        let expires = "";
+	        if (hours) {
+	            let date = new Date();
+	            date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
+	            expires = "; expires=" + date.toUTCString();
+	        }
+	        // Add Secure; SameSite=Strict for better security if using HTTPS
+	        document.cookie = name + "=" + value + expires + "; path=/; Secure; SameSite=Strict";
+	    }
+	 
         $.ajax({
-            url: "${pageContext.request.contextPath}/login",
+            url: "${pageContext.request.contextPath}/api/login",
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -80,12 +92,15 @@
                 password: $("#password").val()
             }),
             success: function(data) {
-                console.log("Response:", data);
-
-                if (data === "patientDashboard") {
-                    window.location.href = "${pageContext.request.contextPath}/patientDashboard";
+            	alert("Hitted succesfully");
+                console.log(data);
+				
+                if (data.role === "patientDashboard") {
+                	setCookie("jwtToken", data.token, 2)
+                    window.location.href = "${pageContext.request.contextPath}/patientDashboard"; 
                 }
-                else if (data === "doctorDashboard") {
+                else if (data.role === "doctorDashboard") {
+                	setCookie("jwtToken", data.token, 2)
                     window.location.href = "${pageContext.request.contextPath}/doctorDashboard";
                 }
                 else {

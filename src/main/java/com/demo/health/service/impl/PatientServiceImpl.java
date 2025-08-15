@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.health.dao.PatientDAO;
+import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
 import com.demo.health.service.PatientService;
@@ -71,8 +72,16 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	@Transactional
 	public Patient findByEmail(String email) {
 		return patientdao.findByEmail(email);
+	}
+
+	@Override
+	@Transactional
+	public List<Appointment> getAppointment(int id) {
+		// TODO Auto-generated method stub
+		return patientdao.getAppointment(id);
 	}
 
 }

@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
+import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
 
@@ -16,4 +17,5 @@ public interface PatientDAO {
     Patient loginPatient(String email, String password);
 	List<Doctor> getDoctors(String location, Time time, Date date);
 	Patient findByEmail(String email);
+	List<Appointment> getAppointment(int id);
 }

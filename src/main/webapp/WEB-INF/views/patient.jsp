@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>SOHAS • Patient Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; background:#f5f7fb; margin:0; }
         .wrap { max-width:800px; margin:40px auto; background:#fff; padding:28px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,.08); }
@@ -24,8 +25,9 @@
 </head>
 <body>
 <div class="wrap">
-    <h2>Welcome, ${patient.patientName}!</h2>
-
+    <h2>Welcome, ${username}!</h2>
+	
+	
     <!-- Book Doctor Section -->
     <div class="book-section">
         <p>Looking for a doctor? Book here now</p>
@@ -34,34 +36,91 @@
 
     <!-- Booked Appointments Section -->
     <h3>Your Appointments</h3>
-    <c:if test="${empty appointments}">
-        <p>No appointments booked yet.</p>
-    </c:if>
-    <c:if test="${not empty appointments}">
-        <table>
+    
+        <table id="myAppointments">
+        	<thead>
             <tr>
                 <th>Doctor</th>
                 <th>Speciality</th>
                 <th>Date</th>
                 <th>Time</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
-            <c:forEach var="appt" items="${appointments}">
-                <tr>
-                    <td>Dr. ${appt.doctorName}</td>
-                    <td>${appt.speciality}</td>
-                    <td>${appt.date}</td>
-                    <td>${appt.time}</td>
-                    <td>
-                        <form action="${pageContext.request.contextPath}/appointments/cancel" method="post" style="margin:0;">
-                            <input type="hidden" name="appointmentId" value="${appt.appointmentId}" />
-                            <button type="submit" class="cancel">Cancel</button>
-                        </form>
-                    </td>
-                </tr>
-            </c:forEach>
+            </thead>
+            <tbody>
+            </tbody>
         </table>
-    </c:if>
+  
 </div>
+
+<script>
+$(document).ready(function() {
+    // Get patientId from hidden input
+    var patientId = "${id}";
+    
+	loadAppointments();
+    
+   	 function loadAppointments() {
+   		 $.ajax({
+   	        url: "/SOHAS/patients/appointment/" + patientId,
+   	        method: "GET",
+   	        contentType: "application/json",
+   	        success: function(appointments) {
+   	            console.log(appointments)
+   	        	var tbody = $("#myAppointments tbody");
+   	            tbody.empty(); // clear table before filling
+
+   	            if (appointments.length === 0) {
+   	                tbody.append("<tr><td colspan='5'>No appointments booked yet.</td></tr>");
+   	                return;
+   	            }
+
+   	            appointments.forEach(function(app) {
+   	                
+   	                    
+   	                tbody.append(
+   	                		"<tr>" +
+   	                	    "<td>Dr. " + app.doctor.doctorName + "</td>" +
+   	                	    "<td>" + app.doctor.speciality + "</td>" +
+   	                	    "<td>" + app.date + "</td>" +
+   	                	    "<td>" + app.time + "</td>" +
+   	                	    "<td>" + app.status + "</td>" +
+   	                	    "<td>" +
+   	                	            "<button class='cancel' data-id='"+app.appointmentId+"'>Cancel</button>" +
+   	                	    "</td>" +
+   	                	"</tr>"	
+   	               	
+   	                )
+   	                
+   	            });
+   	        },
+   	        error: function(xhr) {
+   	            console.error("Error fetching appointments:", xhr.responseText);
+   	            $("table tbody").append("<tr><td colspan='5'>Error loading appointments</td></tr>");
+   	        }
+   	    });
+   	 }
+    
+    $(document).on("click", ".cancel", function() {
+        let id = $(this).data("id");
+        $.ajax({
+            url: "/SOHAS/appointment/"+id,
+            method: "PUT",
+            contentType : "application/json",
+            data : JSON.stringify({status : "CANCELLED"}),
+            success: function() {
+                alert("Appointment cancelled successfully");
+                loadAppointments();// reload updated list
+            },
+            error: function(xhr) {
+                alert("Error: " + xhr.responseText);
+                console.log(xhr);
+            }
+        });
+    });
+
+});
+</script>
 </body>
 </html>

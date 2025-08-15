@@ -2,6 +2,7 @@ package com.demo.health.service;
 
 import java.util.List;
 
+import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 
 public interface DoctorService {
@@ -12,4 +13,5 @@ public interface DoctorService {
 	void delete(int doctorId);
 	Doctor loginDoctor(String email, String password);
 	Doctor findByEmail(String email);
+	List<Appointment> myAppointments(int id);
 }

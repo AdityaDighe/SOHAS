@@ -42,7 +42,7 @@ input, select {
 
 <div class="wrap">
     <h2>Book Appointment</h2>
-
+	<input type="hidden" id="patientId" name="patientId" value="${id}">
     <!-- Form Section -->
     <div class="form-section">
         <form id="searchForm">
@@ -107,7 +107,7 @@ document.getElementById("appointmentDate").addEventListener("input", function ()
 $(document).ready(function () {
     $("#searchForm").on("submit", function (event) {
         event.preventDefault();
-
+        
         let date = $("#appointmentDate").val();
         let time = $("#appointmentTime").val();
         let city = $("#city").val();
@@ -126,17 +126,12 @@ $(document).ready(function () {
                     console.log("Loop doc:", doc.doctorName); // check value here
                     tbody.append(
                         "<tr>"+
-                            "<td>Dr."+doc.doctorName + "</td>"+
+                            "<td>Dr. "+doc.doctorName + "</td>"+
                             "<td>"+doc.hospitalName+"</td>"+
                             "<td>"+doc.speciality+"</td>"+
                             "<td>"+doc.city+"</td>"+
                             "<td>"+
-	                            "<form action='/SOHAS/appointment' method='post'>"+
-	                                "<input type='hidden' name='doctorId' value="+doc.doctorId+"/>"+
-	                                "<input type='hidden' name='appointmentDate' value="+date+" />"+
-	                                "<input type='hidden' name='appointmentTime' value="+time+" />"+
-	                                "<button type='submit' class='btn'>Book</button>"+
-	                            "</form>"+
+	                                "<button class='book' data-id='"+doc.doctorId+"'>Book</button>"+
 	                        "</td>"+
                         "</tr>"
                         )
@@ -147,6 +142,32 @@ $(document).ready(function () {
             error: function (xhr) {
                 console.error(xhr);
                 alert("Error fetching doctors. Please try again.");
+            }
+        });
+    });
+    
+    $(document).on("click", ".book", function() {
+        let id = $(this).data("id");
+        let patientId = "${id}";
+        let date = $("#appointmentDate").val();
+        let time = $("#appointmentTime").val();
+        $.ajax({
+            url: "/SOHAS/appointment",
+            method: "POST",
+            contentType : "application/json",
+            data : JSON.stringify({
+            	date : date,
+            	time : time,
+            	patient : {patientId : patientId},
+            	doctor : {doctorId  : id}
+            }),
+            success: function() {
+                alert("Appointment booked successfully");
+                // reload updated list
+            },
+            error: function(xhr) {
+                alert("Error: " + xhr.responseText);
+                console.log(xhr);
             }
         });
     });

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
 import com.demo.health.service.PatientService;
@@ -85,4 +86,10 @@ public class PatientController {
     	Date d = Date.valueOf(date);
     	return patientService.getDoctors(location, t, d);
     }
+    
+    @GetMapping("/appointment/{id}")
+    public List<Appointment> getAppointment(@PathVariable int id){
+    	return patientService.getAppointment(id);
+    }
+    
 }

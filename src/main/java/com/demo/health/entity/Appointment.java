@@ -20,7 +20,7 @@ public class Appointment {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int appointmentId;
 	
-	private String status;
+	private String status = "BOOKED";
 	
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
