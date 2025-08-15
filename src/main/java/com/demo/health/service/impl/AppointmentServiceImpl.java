@@ -55,10 +55,14 @@ public class AppointmentServiceImpl implements AppointmentService{
 
 	@Override
 	@Transactional
-	public void updateStatus(Appointment apt) {
+	public void updateCompleteStatus(Appointment apt) {
 		// TODO Auto-generated method stub
-		appointmentdao.updateStatus(apt);
-		
+		appointmentdao.updateCompleteStatus(apt);	
+	}
+	
+	public void updateCancelStatus(Appointment apt) {
+		// TODO Auto-generated method stub
+		appointmentdao.updateCancelStatus(apt);	
 	}
 
 }

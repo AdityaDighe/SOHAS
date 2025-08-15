@@ -39,9 +39,14 @@ public class AppointmentDAOImpl implements AppointmentDAO{
 	}
 
 	@Override
-	public void updateStatus(Appointment apt) {
+	public void updateCompleteStatus(Appointment apt) {
 		// TODO Auto-generated method stub
 		sessionFactory.getCurrentSession().update(apt);
-		
+	}
+	
+	@Override
+	public void updateCancelStatus(Appointment apt) {
+		// TODO Auto-generated method stub
+		sessionFactory.getCurrentSession().update(apt);
 	}
 }

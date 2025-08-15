@@ -10,5 +10,6 @@ public interface AppointmentDAO {
     List<Appointment> list();
     void update(Appointment appoint);
     void delete(int appointmentId);
-	void updateStatus(Appointment apt);
+	void updateCompleteStatus(Appointment apt);
+	void updateCancelStatus(Appointment apt);
 }

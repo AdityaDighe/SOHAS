@@ -8,21 +8,9 @@
         table { width:100%; border-collapse:collapse; margin-top:20px; }
         th, td { border:1px solid #ddd; padding:10px; text-align:left; }
         th { background:#f0f0f0; }
-
-        /* Dropdown Styling */
-        select.status-dropdown {
-            padding:6px 10px;
-            border-radius:6px;
-            border:1px solid #ccc;
-            background:#fff;
-            font-size:14px;
-            cursor:pointer;
-            transition:all 0.2s ease;
-        }
-        select.status-dropdown:hover {
-            border-color:#0d6efd;
-            box-shadow:0 0 5px rgba(13,110,253,0.3);
-        }
+        button.btn-status { padding:5px 10px; border:none; border-radius:5px; cursor:pointer; }
+        button.cancel { background:#f44336; color:white; }
+        button.complete { background:#4CAF50; color:white; }
     </style>
 </head>
 <body>
@@ -30,13 +18,13 @@
     <h2>My Appointments</h2>
     <table id="appointmentTable">
         <thead>
-            <tr>
-                <th>Patient Name</th>
-                <th>Date</th>
-                <th>Time Slot</th>
-                <th>Status</th>
-                <th></th>
-            </tr>
+        <tr>
+            <th>Patient Name</th>
+            <th>Date</th>
+            <th>Time Slot</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -44,38 +32,67 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function(){
-    $.ajax({
-        url: "/SOHAS/appointment", // Fetch appointments
-        method: "GET",
-        success: function(appointments){
-            let tbody = $("#appointmentTable tbody");
-            tbody.empty();
-            appointments.forEach(function(app){
-                tbody.append(
-                    "<tr>" +
-                        "<td>"+app.patient.patientName+"</td>" +
-                        "<td>"+app.date+"</td>" +
-                        "<td>"+app.time+"</td>" +
-                        "<td>"+app.status+"</td>" +
-                        "<td>" +
-                        "<button class='status-finish btn-status' data-id='" + app.id + "'>Complete</button>" +
-                        " "+
-                        "<button class='status-cancel btn-status cancel' data-id='" + app.id + "'>Cancel</button>" +
-                        "</td>" +
-                    "</tr>"
-                );
+    const baseUrl = "${pageContext.request.contextPath}";
+
+    $(document).ready(function(){
+        loadAppointments();
+
+        function loadAppointments() {
+            $.ajax({
+                url: baseUrl + "/appointment",
+                method: "GET",
+                success: function(appointments) {
+                    let tbody = $("#appointmentTable tbody");
+                    tbody.empty();
+                    appointments.forEach(function(app) {
+                    	tbody.append(
+                                "<tr>" +
+                                    "<td>"+app.patient.patientName+"</td>" +
+                                    "<td>"+app.date+"</td>" +
+                                    "<td>"+app.time+"</td>" +
+                                    "<td>"+app.status+"</td>" +
+                                    "<td>" +
+                                    "<button class='status-finish btn-status' data-id='" + app.appointmentId + "'>Complete</button>" +
+                                    " " +
+                                    "<button class='status-cancel btn-status cancel' data-id='" + app.appointmentId + "'>Cancel</button>" +
+                                    "</td>" +
+                                "</tr>"
+                         );
+                    });
+                },
+                error: function() {
+                    alert("Failed to load appointments.");
+                }
+            });
+        }
+
+        // Event delegation
+        $(document).on("click", ".complete", function() {
+            let id = $(this).data("id");
+            updateStatus(id, "complete");
+        });
+
+        $(document).on("click", ".cancel", function() {
+            let id = $(this).data("id");
+            updateStatus(id, "cancel");
+        });
+
+        function updateStatus(id, action) {
+            $.ajax({
+                url: baseUrl + `/appointment/${action}/${id}`,
+                method: "POST",
+                success: function() {
+                    alert(`Appointment ${action}d successfully`);
+                    loadAppointments(); // reload updated list
+                },
+                error: function(xhr) {
+                    alert("Error: " + xhr.responseText);
+                    console.log(xhr);
+                }
             });
         }
     });
-
-    // For now: alert when status changes (backend hookup later)
-    $(document).on("change", ".status-dropdown", function(){
-        let appointmentId = $(this).data("id");
-        let newStatus = $(this).val();
-        alert("Appointment ID: " + appointmentId + " → New Status: " + newStatus);
-    });
-});
 </script>
 </body>
 </html>
+
