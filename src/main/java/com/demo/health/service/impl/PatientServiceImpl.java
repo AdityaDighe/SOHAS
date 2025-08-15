@@ -70,4 +70,9 @@ public class PatientServiceImpl implements PatientService {
 		return patientdao.getDoctors(location, time, date);
 	}
 
+	@Override
+	public Patient findByEmail(String email) {
+		return patientdao.findByEmail(email);
+	}
+
 }

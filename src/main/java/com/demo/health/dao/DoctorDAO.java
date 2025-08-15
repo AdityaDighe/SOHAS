@@ -11,4 +11,5 @@ public interface DoctorDAO {
     void update(Doctor doctor);
     void delete(int doctorId);
     Doctor loginDoctor(String email, String password);
+    Doctor findByEmail(String email);
 }

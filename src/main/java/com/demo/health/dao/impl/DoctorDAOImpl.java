@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import com.demo.health.dao.DoctorDAO;
 import com.demo.health.entity.Doctor;
-import com.demo.health.entity.Patient;
 
 @Repository
 @Transactional
@@ -50,5 +49,14 @@ public class DoctorDAOImpl implements DoctorDAO{
 												  .setParameter("email", email)
 												  .setParameter("password", password)
 												  .uniqueResult();
+	}
+	
+	@Override
+	public Doctor findByEmail(String email) {
+		String hql = "FROM Doctor d WHERE d.email = :email";
+	    return sessionFactory.getCurrentSession()
+	            .createQuery(hql, Doctor.class)
+	            .setParameter("email", email)
+	            .uniqueResult();
 	}
 }

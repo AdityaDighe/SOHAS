@@ -91,5 +91,16 @@ public class PatientDAOImpl implements PatientDAO{
 		
 		return doctors;
 	}
+
+	@Override
+	public Patient findByEmail(String email) {
+		String hql = "FROM Patient p WHERE p.email = :email";
+	    return sessionFactory.getCurrentSession()
+	            .createQuery(hql, Patient.class)
+	            .setParameter("email", email)
+	            .uniqueResult();
+	}
+	
+	
 }
 

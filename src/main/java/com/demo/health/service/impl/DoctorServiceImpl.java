@@ -51,6 +51,11 @@ public class DoctorServiceImpl implements DoctorService{
 		// TODO Auto-generated method stub
 		return doctorDAO.loginDoctor(email, password);
 	}
+
+	@Override
+	public Doctor findByEmail(String email) {
+		return doctorDAO.findByEmail(email);
+	}
 }
 
 

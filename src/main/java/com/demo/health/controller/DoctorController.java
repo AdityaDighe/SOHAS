@@ -37,18 +37,35 @@ public class DoctorController {
 	@PostMapping
 	public ResponseEntity<?> addDoctor(@RequestBody @Valid Doctor doctor, BindingResult result) {
 	    if (result.hasErrors()) {
-	    	Map<String, List<String>> errors = result.getFieldErrors().stream()
-	    		    .collect(Collectors.groupingBy(
-	    		        FieldError::getField,
-	    		        Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList())
-	    		    ));
+	        // Only one message per field (the first one)
+	        Map<String, String> errors = result.getFieldErrors().stream()
+	            .collect(Collectors.toMap(
+	                FieldError::getField,
+	                FieldError::getDefaultMessage,
+	                (existing, replacement) -> existing // keep first message
+	            ));
 
 	        return ResponseEntity.badRequest().body(errors);
+	    }
+
+	    // Custom validation: End time after start time
+	    if (doctor.getEndTime() != null && doctor.getStartTime() != null &&
+	            !doctor.getEndTime().after(doctor.getStartTime())) {
+
+	        return ResponseEntity.badRequest()
+	                .body(Map.of("endTime", "End time must be after start time"));
+	    }
+
+	    // Custom validation: Email already exists
+	    if (doctorService.findByEmail(doctor.getEmail()) != null) {
+	        return ResponseEntity.badRequest()
+	                .body(Map.of("email", "Email already registered"));
 	    }
 
 	    doctorService.save(doctor);
 	    return ResponseEntity.ok("Doctor added successfully");
 	}
+
 	
 	@GetMapping
     public List<Doctor> listDoctors() {

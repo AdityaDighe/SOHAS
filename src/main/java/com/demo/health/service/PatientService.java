@@ -15,4 +15,5 @@ public interface PatientService {
 	void delete(int patientId);
 	Patient loginPatient(String email, String password);
 	List<Doctor> getDoctors(String location, Time time, Date date);
+	Patient findByEmail(String email);
 }
