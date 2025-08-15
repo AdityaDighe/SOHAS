@@ -28,24 +28,10 @@ public class AppointmentDAOImpl implements AppointmentDAO{
 		return sessionFactory.getCurrentSession().createQuery("from Appointment", Appointment.class).list();
 	}
 
-	public void update(Appointment appointment) {
-		sessionFactory.getCurrentSession().update(appointment);
-	}
-
-	public void delete(int appointmentId) {
-		Appointment a = get(appointmentId);
-		if (a != null)
-			sessionFactory.getCurrentSession().delete(a);
-	}
-
-	@Override
-	public void updateCompleteStatus(Appointment apt) {
-		// TODO Auto-generated method stub
-		sessionFactory.getCurrentSession().update(apt);
-	}
+	
 	
 	@Override
-	public void updateCancelStatus(Appointment apt) {
+	public void updateStatus(Appointment apt) {
 		// TODO Auto-generated method stub
 		sessionFactory.getCurrentSession().update(apt);
 	}

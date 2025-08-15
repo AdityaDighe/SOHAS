@@ -37,32 +37,12 @@ public class AppointmentServiceImpl implements AppointmentService{
 		return appointmentdao.list();
 	}
 
-	@Override
-	@Transactional
-	public void update(Appointment appoint) {
-		// TODO Auto-generated method stub
-		appointmentdao.update(appoint);
-		
-	}
-
-	@Override
-	@Transactional
-	public void delete(int appointmentId) {
-		// TODO Auto-generated method stub
-		appointmentdao.delete(appointmentId);
-		
-	}
-
-	@Override
-	@Transactional
-	public void updateCompleteStatus(Appointment apt) {
-		// TODO Auto-generated method stub
-		appointmentdao.updateCompleteStatus(apt);	
-	}
 	
-	public void updateCancelStatus(Appointment apt) {
+	@Override
+	@Transactional
+	public void updateStatus(Appointment apt) {
 		// TODO Auto-generated method stub
-		appointmentdao.updateCancelStatus(apt);	
+		appointmentdao.updateStatus(apt);	
 	}
 
 }

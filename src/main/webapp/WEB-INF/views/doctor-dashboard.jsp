@@ -52,7 +52,7 @@
                                     "<td>"+app.time+"</td>" +
                                     "<td>"+app.status+"</td>" +
                                     "<td>" +
-                                    "<button class='status-finish btn-status' data-id='" + app.appointmentId + "'>Complete</button>" +
+                                    "<button class='status-finish btn-status complete' data-id='" + app.appointmentId + "'>Complete</button>" +
                                     " " +
                                     "<button class='status-cancel btn-status cancel' data-id='" + app.appointmentId + "'>Cancel</button>" +
                                     "</td>" +
@@ -66,23 +66,17 @@
             });
         }
 
-        // Event delegation
+        
         $(document).on("click", ".complete", function() {
             let id = $(this).data("id");
-            updateStatus(id, "complete");
-        });
-
-        $(document).on("click", ".cancel", function() {
-            let id = $(this).data("id");
-            updateStatus(id, "cancel");
-        });
-
-        function updateStatus(id, action) {
+            console.log(id);
             $.ajax({
-                url: baseUrl + `/appointment/${action}/${id}`,
-                method: "POST",
+                url: baseUrl + "/appointment/"+id,
+                method: "PUT",
+                contentType : "application/json",
+                data : JSON.stringify({status : "COMPLETED"}),
                 success: function() {
-                    alert(`Appointment ${action}d successfully`);
+                    alert("Appointment completed successfully");
                     loadAppointments(); // reload updated list
                 },
                 error: function(xhr) {
@@ -90,7 +84,27 @@
                     console.log(xhr);
                 }
             });
-        }
+        });
+
+        $(document).on("click", ".cancel", function() {
+            let id = $(this).data("id");
+            $.ajax({
+                url: baseUrl + "/appointment/"+id,
+                method: "PUT",
+                contentType : "application/json",
+                data : JSON.stringify({status : "CANCELLED"}),
+                success: function() {
+                    alert("Appointment cancelled successfully");
+                    loadAppointments(); // reload updated list
+                },
+                error: function(xhr) {
+                    alert("Error: " + xhr.responseText);
+                    console.log(xhr);
+                }
+            });
+        });
+
+        
     });
 </script>
 </body>

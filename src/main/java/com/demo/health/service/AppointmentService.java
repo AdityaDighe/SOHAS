@@ -8,8 +8,6 @@ public interface AppointmentService {
     void save(Appointment appoint);
     Appointment get(int  appointmentId);
     List<Appointment> list();
-    void update(Appointment appoint);
-    void delete(int appointmentId);
-	void updateCompleteStatus(Appointment apt);
-	void updateCancelStatus(Appointment apt);
+	void updateStatus(Appointment apt);
+	
 }

@@ -5,9 +5,9 @@ import java.sql.Time;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
- 
+
 import javax.validation.Valid;
- 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -19,8 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
- 
+
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
 import com.demo.health.service.PatientService;
@@ -79,13 +80,9 @@ public class PatientController {
     }
     
     @GetMapping("/doctors")
-    public List<Doctor> getDoctors(@RequestBody Map<String, String> requirement){
-    	String location = requirement.get("location");
-    	String stime = requirement.get("time");
-    	String sdate = requirement.get("date");
-    	Time time = Time.valueOf(stime);
-    	Date date = Date.valueOf(sdate);
-    	
-    	return patientService.getDoctors(location, time, date);
+    public List<Doctor> getDoctors(@RequestParam String location, @RequestParam String time, @RequestParam String date){
+    	Time t = Time.valueOf(time);
+    	Date d = Date.valueOf(date);
+    	return patientService.getDoctors(location, t, d);
     }
 }
