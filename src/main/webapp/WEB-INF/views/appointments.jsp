@@ -163,6 +163,7 @@ $(document).ready(function () {
             }),
             success: function() {
                 alert("Appointment booked successfully");
+                window.location.href = "${pageContext.request.contextPath}/patientDashboard";
                 // reload updated list
             },
             error: function(xhr) {

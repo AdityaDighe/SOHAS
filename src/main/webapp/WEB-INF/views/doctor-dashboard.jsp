@@ -29,14 +29,14 @@
         <tbody></tbody>
     </table>
 </div>
-
+ 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     const baseUrl = "${pageContext.request.contextPath}";
-
+ 
     $(document).ready(function(){
         loadAppointments();
-
+ 
         function loadAppointments() {
             let id = "${id}"
         	$.ajax({
@@ -46,6 +46,8 @@
                     let tbody = $("#appointmentTable tbody");
                     tbody.empty();
                     appointments.forEach(function(app) {
+                    	let disabled = app.status === "CANCELLED" ? "disabled" : "";
+       	                let btnText = app.status === "CANCELLED" ? "Cancelled" : "Cancel";
                     	tbody.append(
                                 "<tr>" +
                                     "<td>"+app.patient.patientName+"</td>" +
@@ -53,9 +55,9 @@
                                     "<td>"+app.time+"</td>" +
                                     "<td>"+app.status+"</td>" +
                                     "<td>" +
-                                    "<button class='status-finish btn-status complete' data-id='" + app.appointmentId + "'>Complete</button>" +
+                                    "<button class='status-finish btn-status complete' data-id='" + app.appointmentId + "' "+disabled+">Complete</button>" +
                                     " " +
-                                    "<button class='status-cancel btn-status cancel' data-id='" + app.appointmentId + "'>Cancel</button>" +
+                                    "<button class='status-cancel btn-status cancel' data-id='" + app.appointmentId + "' "+disabled+">"+btnText+"</button>" +
                                     "</td>" +
                                 "</tr>"
                          );
@@ -66,7 +68,7 @@
                 }
             });
         }
-
+ 
         
         $(document).on("click", ".complete", function() {
             let id = $(this).data("id");
@@ -86,7 +88,7 @@
                 }
             });
         });
-
+ 
         $(document).on("click", ".cancel", function() {
             let id = $(this).data("id");
             $.ajax({
@@ -104,10 +106,9 @@
                 }
             });
         });
-
+ 
         
     });
 </script>
 </body>
 </html>
-
