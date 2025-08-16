@@ -43,4 +43,37 @@ public class AuthController {
  
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"error\":\"Invalid credentials\"}");
     }
+    
+    
+    
+    @PostMapping("/api/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        String newPassword = payload.get("newPassword");
+
+        boolean updated = false;
+
+        // Try updating patient password
+        Patient patient = patientService.findByEmail(email);
+        if (patient != null) {
+            patient.setPassword(newPassword);
+            patientService.update(patient);
+            updated = true;
+        }
+
+        // Try updating doctor password
+        Doctor doctor = doctorService.findByEmail(email);
+        if (doctor != null) {
+            doctor.setPassword(newPassword);
+            doctorService.update(doctor);
+            updated = true;
+        }
+
+        if (updated) {
+            return ResponseEntity.ok(Map.of("message", "Password updated successfully"));
+        } else {
+            return ResponseEntity.status(404).body(Map.of("message", "Email not found"));
+        }
+    }
+
 }

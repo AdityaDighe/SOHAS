@@ -61,4 +61,10 @@ public class InitialController {
 
 		return "doctor-dashboard";
 	}
+	
+	@RequestMapping("/forgot-password")
+	public String forgotPasswordPage() {
+	    return "forgot-password";
+	}
+
 }

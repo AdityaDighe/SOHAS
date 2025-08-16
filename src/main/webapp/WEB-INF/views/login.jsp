@@ -20,6 +20,9 @@
         .dropdown-content a { display:block; padding:8px 12px; font-size:14px; color:#333; text-decoration:none; }
         .dropdown-content a:hover { background:#f0f0f0; }
         .dropdown.show .dropdown-content { display:block; }
+        .anchor-forgot { text-align: center; margin-top: 16px; }
+		.anchor-forgot a { color: #0d6efd; text-decoration: none; font-size: 14px; }
+		.anchor-forgot a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -50,6 +53,10 @@
                 </div>
             </div>
         </div>
+        
+        <div class="anchor-forgot">
+   			<a href="${pageContext.request.contextPath}/forgot-password" id="anchor-forgot">Forgot Password?</a>
+		</div>
     </form>
 </div>
  
