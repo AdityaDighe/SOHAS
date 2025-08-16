@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.service.DoctorService;
+import com.demo.health.service.PatientService;
 
 @RestController
 @RequestMapping ("/doctors")
@@ -29,6 +30,9 @@ public class DoctorController {
 	
 	@Autowired
 	private DoctorService doctorService;
+	
+	@Autowired
+	private PatientService patientService;
 	
 	@GetMapping("/{id}")
     public Doctor getDoctor(@PathVariable int id) {
@@ -58,6 +62,11 @@ public class DoctorController {
 	    }
 
 	    // Custom validation: Email already exists
+	    if (patientService.findByEmail(doctor.getEmail()) != null) {
+	        return ResponseEntity.badRequest()
+	                .body(Map.of("email", "Email already registered"));
+	    }
+	    
 	    if (doctorService.findByEmail(doctor.getEmail()) != null) {
 	        return ResponseEntity.badRequest()
 	                .body(Map.of("email", "Email already registered"));
@@ -68,10 +77,10 @@ public class DoctorController {
 	}
 
 	
-	@GetMapping
-    public List<Doctor> listDoctors() {
-        return doctorService.list();
-    }
+//	@GetMapping
+//    public List<Doctor> listDoctors() {
+//        return doctorService.list();
+//    }
 
     @PutMapping("/{id}")
     public void updateDoctor(@PathVariable int id, @RequestBody Doctor doctor) {

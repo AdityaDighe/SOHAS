@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
+import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
  
 @RestController
@@ -33,6 +34,9 @@ public class PatientController {
  
     @Autowired
     private PatientService patientService;
+    
+    @Autowired
+    private DoctorService doctorService;
  
     @PostMapping
     public ResponseEntity<?> addPatient(@RequestBody @Valid Patient patient, BindingResult result) {
@@ -53,6 +57,11 @@ public class PatientController {
 	        return ResponseEntity.badRequest()
 	                .body(Map.of("email", "Email already registered"));
 	    }
+	    
+	    if(doctorService.findByEmail(patient.getEmail()) != null) {
+	    	 return ResponseEntity.badRequest()
+		                .body(Map.of("email", "Email already registered"));
+	    }
  
         patientService.save(patient);
         return ResponseEntity.ok("Patient added successfully");
@@ -64,10 +73,10 @@ public class PatientController {
         return patientService.get(id);
     }
  
-    @GetMapping
-    public List<Patient> listPatient() {
-        return patientService.list();
-    }
+//    @GetMapping
+//    public List<Patient> listPatient() {
+//        return patientService.list();
+//    }
  
     @PutMapping("/{id}")
     public void updatePatient(@PathVariable int id, @RequestBody Patient patient) {

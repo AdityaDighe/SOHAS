@@ -71,7 +71,8 @@ public class PatientDAOImpl implements PatientDAO{
 		 subquery.select(appointmentRoot.get("doctor").get("doctorId"))
 		         .where(
 		                 cb.equal(appointmentRoot.get("date"), date),
-		                 cb.equal(appointmentRoot.get("time"), time)
+		                 cb.equal(appointmentRoot.get("time"), time),
+		                 cb.equal(appointmentRoot.get("status"), "BOOKED")
 		         );
 		 
 //		 Main Query : 

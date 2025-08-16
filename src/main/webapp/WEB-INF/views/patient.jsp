@@ -77,7 +77,8 @@ $(document).ready(function() {
    	            }
 
    	            appointments.forEach(function(app) {
-   	                
+   	            	let disabled = app.status === "CANCELLED" ? "disabled" : "";
+   	                let btnText = app.status === "CANCELLED" ? "Cancelled" : "Cancel";
    	                    
    	                tbody.append(
    	                		"<tr>" +
@@ -87,7 +88,7 @@ $(document).ready(function() {
    	                	    "<td>" + app.time + "</td>" +
    	                	    "<td>" + app.status + "</td>" +
    	                	    "<td>" +
-   	                	            "<button class='cancel' data-id='"+app.appointmentId+"'>Cancel</button>" +
+   	                	            "<button class='cancel' data-id='"+app.appointmentId+"' "+disabled+">"+btnText+"</button>" +
    	                	    "</td>" +
    	                	"</tr>"	
    	               	
@@ -104,6 +105,7 @@ $(document).ready(function() {
     
     $(document).on("click", ".cancel", function() {
         let id = $(this).data("id");
+        let btn = $(this)
         $.ajax({
             url: "/SOHAS/appointment/"+id,
             method: "PUT",
