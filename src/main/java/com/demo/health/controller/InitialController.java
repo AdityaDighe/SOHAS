@@ -1,5 +1,7 @@
 package com.demo.health.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -28,63 +30,34 @@ public class InitialController {
 	}
 
 	@RequestMapping("/patientDashboard")
-	public String patientDashboard(@CookieValue(value = "jwtToken", required = false) String jwtToken, Model model) {
-		if (jwtToken == null) {
-            return "login";
-        }
-		
-		
-        try {
-            Jws<Claims> claims = JwtUtil.validateToken(jwtToken);
-            String username = claims.getBody().getSubject();
-            Integer id = claims.getBody().get("id", Integer.class);
-            model.addAttribute("username", username);
-            model.addAttribute("id", id);
-            System.out.println("USername : "+ username);
-            System.out.println("ID : " + id);
-            return "patient";
-        } catch (Exception e) {
-            return "{\"error\":\"Invalid or expired token\"}";
-        }
+	public String patientDashboard(HttpServletRequest request, Model model) {
+		String username = (String) request.getAttribute("username");
+	    Integer id = (Integer) request.getAttribute("id");
+	    
+	    model.addAttribute("username", username);
+	    model.addAttribute("id", id);
+	    
+	    return "patient";
 	}
 
 	@RequestMapping("/patientDashboard/appointment")
-	public String appointment(@CookieValue(value = "jwtToken", required = false) String jwtToken, Model model) {
-		if (jwtToken == null) {
-            return "login";
-        }
-		
-		
-        try {
-            Jws<Claims> claims = JwtUtil.validateToken(jwtToken);
-            String username = claims.getBody().getSubject();
-            Integer id = claims.getBody().get("id", Integer.class);
-            model.addAttribute("username", username);
-            model.addAttribute("id", id);
-           
-            return "appointments";
-        } catch (Exception e) {
-            return "{\"error\":\"Invalid or expired token\"}";
-        }
+	public String appointment(HttpServletRequest request, Model model) {
+		String username = (String) request.getAttribute("username");
+	    Integer id = (Integer) request.getAttribute("id");
+	    
+	    model.addAttribute("username", username);
+	    model.addAttribute("id", id);
+	    
+	    return "appointments";
 	}
 	@RequestMapping("/doctorDashboard")
-	public String doctor(@CookieValue(value = "jwtToken", required = false) String jwtToken, Model model) {
-		
-		if (jwtToken == null) {
-            return "login";
-        }
-		
-		
-        try {
-            Jws<Claims> claims = JwtUtil.validateToken(jwtToken);
-            String username = claims.getBody().getSubject();
-            Integer id = claims.getBody().get("id", Integer.class);
-            model.addAttribute("username", username);
-            model.addAttribute("id", id);
-           
-            return "doctor-dashboard";
-        } catch (Exception e) {
-            return "{\"error\":\"Invalid or expired token\"}";
-        }
+	public String doctor(HttpServletRequest request, Model model) {
+		String username = (String) request.getAttribute("username");
+	    Integer id = (Integer) request.getAttribute("id");
+	    
+	    model.addAttribute("username", username);
+	    model.addAttribute("id", id);
+	    
+	    return "doctor-dashboard";
 	}
 }
