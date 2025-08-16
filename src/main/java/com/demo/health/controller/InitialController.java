@@ -55,7 +55,7 @@ public class InitialController {
 	public String doctor(HttpServletRequest request, Model model) {
 		String username = (String) request.getAttribute("username");
 		Integer id = (Integer) request.getAttribute("id");
-
+		
 		model.addAttribute("username", username);
 		model.addAttribute("id", id);
 

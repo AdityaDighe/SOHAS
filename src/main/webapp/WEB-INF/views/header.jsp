@@ -1,20 +1,8 @@
-
 <%
-    String user = (String) session.getAttribute("username"); 
-    boolean loggedIn = false;
-
-    // Check if jwtToken cookie exists
-    javax.servlet.http.Cookie[] cookies = request.getCookies();
-    if (cookies != null) {
-        for (javax.servlet.http.Cookie c : cookies) {
-            if ("jwtToken".equals(c.getName()) && c.getValue() != null && !c.getValue().isEmpty()) {
-                loggedIn = true;
-                break;
-            }
-        }
-    }
+	String user = (String) request.getAttribute("username");
+	String role = (String) request.getAttribute("role");
+	boolean loggedIn = (user != null);
 %>
-
 
 <!DOCTYPE html>
 <html>
@@ -127,7 +115,7 @@
 <body>
 
 <header class="navbar">
-    <a href="${pageContext.request.contextPath}/index.jsp" class="logo">SOHAS</a>
+    <a href="${pageContext.request.contextPath}/" class="logo">SOHAS</a>
     <div class="profile">
         <% if (!loggedIn) { %>
             <a href="${pageContext.request.contextPath}/login">
@@ -136,8 +124,14 @@
         <% } else { %>
             <button class="profile-btn"><%= (user != null) ? user : "User" %></button>
             <div class="dropdown">
-                <a href="#">Profile</a>
-                <a href="#">Settings</a>
+                <a href="${pageContext.request.contextPath}/profile">Profile</a>
+                
+                <% if ("doctor".equalsIgnoreCase(role)) { %>
+                    <a href="${pageContext.request.contextPath}/doctorDashboard">My Appointments</a>
+                <% } else if ("patient".equalsIgnoreCase(role)) { %>
+                    <a href="${pageContext.request.contextPath}/patientDashboard">My Appointments</a>
+                <% } %>
+
                 <a href="${pageContext.request.contextPath}/logout">Logout</a>
             </div>
         <% } %>

@@ -54,7 +54,26 @@ public class JwtAuthenticationFilter extends HttpFilter implements Filter {
 		// Skip JWT check for login endpoint
 		if (path.equals(req.getContextPath() + "/") || path.contains("/login") || path.contains("/doctorSignup")
 				|| path.contains("/patientSignup") || path.endsWith("index.jsp")) {
-			chain.doFilter(request, response);
+			
+			try {
+				Claims claims = JwtUtil.validateToken(jwtToken).getBody();
+
+				// Extract username + id
+				String username = claims.getSubject();
+				Integer id = claims.get("id", Integer.class);
+				String role = claims.get("role", String.class);
+
+				// Attach to request attributes so controllers can use them
+				req.setAttribute("username", username);
+				req.setAttribute("id", id);
+				req.setAttribute("role", role);
+				
+				chain.doFilter(req, res); // proceed only if valid
+			} catch (Exception e) {
+				chain.doFilter(req,res);
+				
+			}
+			
 			return;
 		}
 
@@ -69,11 +88,13 @@ public class JwtAuthenticationFilter extends HttpFilter implements Filter {
 			// Extract username + id
 			String username = claims.getSubject();
 			Integer id = claims.get("id", Integer.class);
+			String role = claims.get("role", String.class);
 
 			// Attach to request attributes so controllers can use them
 			req.setAttribute("username", username);
 			req.setAttribute("id", id);
-
+			req.setAttribute("role", role);
+			
 			chain.doFilter(req, res); // proceed only if valid
 		} catch (Exception e) {
 			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");

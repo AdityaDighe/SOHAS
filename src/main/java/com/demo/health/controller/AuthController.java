@@ -31,14 +31,14 @@ public class AuthController {
  
         Patient p = patientService.loginPatient(email, pass);
         if (p != null) {
-        	String token = JwtUtil.generateToken(p.getPatientId(), p.getPatientName());
-            return ResponseEntity.ok("{\"token\":\"" + token + "\", \"role\":\"patientDashboard\"}"); // send only keyword
+        	String token = JwtUtil.generateToken(p.getPatientId(), p.getPatientName(), "PATIENT");
+        	return ResponseEntity.ok("{\"token\":\"" + token + "\"}");// send only keyword
         }
  
         Doctor d = doctorService.loginDoctor(email, pass);
         if (d != null) {
-        	String token = JwtUtil.generateToken(d.getDoctorId(), d.getDoctorName());
-        	return ResponseEntity.ok("{\"token\":\"" + token + "\", \"role\":\"doctorDashboard\"}"); // send only keyword
+        	String token = JwtUtil.generateToken(d.getDoctorId(), d.getDoctorName(), "DOCTOR");
+        	return ResponseEntity.ok("{\"token\":\"" + token + "\"}"); // send only keyword
         }
  
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"error\":\"Invalid credentials\"}");

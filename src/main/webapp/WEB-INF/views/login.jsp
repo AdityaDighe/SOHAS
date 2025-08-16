@@ -95,17 +95,8 @@
             	alert("Hitted succesfully");
                 console.log(data);
 				
-                if (data.role === "patientDashboard") {
-                	setCookie("jwtToken", data.token, 2)
-                    window.location.href = "${pageContext.request.contextPath}/patientDashboard"; 
-                }
-                else if (data.role === "doctorDashboard") {
-                	setCookie("jwtToken", data.token, 2)
-                    window.location.href = "${pageContext.request.contextPath}/doctorDashboard";
-                }
-                else {
-                    alert("Invalid credentials. Try again.");
-                }
+                setCookie("jwtToken", data.token, 2);
+                window.location.href = "${pageContext.request.contextPath}/";
             },
             error: function(xhr) {
                 alert("Login failed: " + xhr.status);
