@@ -11,6 +11,7 @@
         input { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:6px; font-size:14px;  }
         .btn { background:#007bff; color:#fff; border:none; cursor:pointer; }
         .btn:hover { background:#0056b3; }
+        .error {color: #b00020; font-size: 13px; margin-top: 4px;}
     </style>
 </head>
 <body>
@@ -18,15 +19,66 @@
     <h2>Forgot Password</h2>
     <form id="forgotForm">
         <label>Email</label>
-        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+        <input type="email" id="email" name="email" required />
+        <div class="error" id="error-email"></div>
+        
         <label>New Password</label>
-        <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password" required />
+        <input type="password" id="newPassword" name="newPassword" required />
+        <div class="error" id="error-newPassword"></div>
+        
         <button type="submit" class="btn">Reset Password</button>
     </form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+function showError(id, message) {
+    $("#error-" + id).text(message);
+    $("#" + id).css("border-color", "#b00020");
+}
+
+function clearError(id) {
+    $("#error-" + id).text("");
+    $("#" + id).css("border-color", "");
+}
+
+function validateEmail() {
+    const val = $("#email").val().trim();
+    if (!val) {
+        showError("email", "Email is required");
+        return false;
+    } else if (!/^\S+@\S+\.\S+$/.test(val)) {
+        showError("email", "Invalid Email format");
+        return false;
+    }
+    return true;
+}
+
+function validatePassword() {
+    const val = $("#newPassword").val();
+    const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!val) {
+        showError("newPassword", "Password is required");
+        return false;
+    } else if (!pattern.test(val)) {
+        showError("newPassword", "Password must include uppercase, lowercase, number, and special character");
+        return false;
+    }
+    return true;
+}
+
+$("#email").on("blur", validateEmail);
+$("#newPassword").on("blur", validatePassword);
+
+$("input").on("focus input change", function () {
+    const id = $(this).attr("id");
+    clearError(id);
+});
+
+
+
+
     $("#forgotForm").on("submit", function(e) {
         e.preventDefault();
         $.ajax({
