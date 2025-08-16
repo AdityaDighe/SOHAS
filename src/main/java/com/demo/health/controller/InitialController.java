@@ -31,35 +31,52 @@ public class InitialController {
 
 	@RequestMapping("/patientDashboard")
 	public String patientDashboard(HttpServletRequest request, Model model) {
-		String username = (String) request.getAttribute("username");
-		Integer id = (Integer) request.getAttribute("id");
+		String role = (String)request.getAttribute("role");
+		
+		if(role.equalsIgnoreCase("patient")) {
+			String username = (String) request.getAttribute("username");
+			Integer id = (Integer) request.getAttribute("id");
 
-		model.addAttribute("username", username);
-		model.addAttribute("id", id);
+			model.addAttribute("username", username);
+			model.addAttribute("id", id);
 
-		return "patient";
+			return "patient";
+		}
+		return "error";
+		
 	}
 
 	@RequestMapping("/patientDashboard/appointment")
 	public String appointment(HttpServletRequest request, Model model) {
-		String username = (String) request.getAttribute("username");
-		Integer id = (Integer) request.getAttribute("id");
+		String role = (String)request.getAttribute("role");
+		
+		if(role.equalsIgnoreCase("patient")) {
+			String username = (String) request.getAttribute("username");
+			Integer id = (Integer) request.getAttribute("id");
 
-		model.addAttribute("username", username);
-		model.addAttribute("id", id);
+			model.addAttribute("username", username);
+			model.addAttribute("id", id);
 
-		return "appointments";
+			return "appointments";
+		}
+		return "error";
 	}
 
 	@RequestMapping("/doctorDashboard")
 	public String doctor(HttpServletRequest request, Model model) {
-		String username = (String) request.getAttribute("username");
-		Integer id = (Integer) request.getAttribute("id");
+		String role = (String) request.getAttribute("role");
 		
-		model.addAttribute("username", username);
-		model.addAttribute("id", id);
+		if(role.equalsIgnoreCase("doctor")) {
+			String username = (String) request.getAttribute("username");
+			Integer id = (Integer) request.getAttribute("id");
+			
+			model.addAttribute("username", username);
+			model.addAttribute("id", id);
 
-		return "doctor-dashboard";
+			return "doctor-dashboard";
+		}
+		
+		return "error";
 	}
 	
 	@RequestMapping("/forgot-password")

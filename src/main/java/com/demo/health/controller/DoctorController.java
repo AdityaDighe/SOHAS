@@ -39,7 +39,7 @@ public class DoctorController {
         return doctorService.get(id);
     }
 	
-	@PostMapping
+	@PostMapping("/signup")
 	public ResponseEntity<?> addDoctor(@RequestBody @Valid Doctor doctor, BindingResult result) {
 	    if (result.hasErrors()) {
 	        // Only one message per field (the first one)

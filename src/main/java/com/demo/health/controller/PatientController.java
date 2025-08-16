@@ -38,7 +38,7 @@ public class PatientController {
     @Autowired
     private DoctorService doctorService;
  
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<?> addPatient(@RequestBody @Valid Patient patient, BindingResult result) {
         if (result.hasErrors()) {
             // Keep only the first validation message per field

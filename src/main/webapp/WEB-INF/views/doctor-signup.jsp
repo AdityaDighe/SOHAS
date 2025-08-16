@@ -351,7 +351,7 @@ $("#doctorSignUp").click(function(event) {
     endTime = endTime ? endTime : "17:00";
    
     $.ajax({
-        url: "/SOHAS/doctors",
+        url: "/SOHAS/doctors/signup",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({
@@ -373,7 +373,7 @@ $("#doctorSignUp").click(function(event) {
                 $("#successSticker").fadeOut(() => {
                     window.location.href = "${pageContext.request.contextPath}/login";
                 });
-            }, 2000); // 2 seconds
+            }, 1000); // 1 seconds
             //window.location.href = "${pageContext.request.contextPath}/";
         },
         error: function(xhr) {

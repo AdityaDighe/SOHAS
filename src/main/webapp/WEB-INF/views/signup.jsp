@@ -184,7 +184,7 @@ $("#patientSignUp").click(function(event) {
 
 	
     $.ajax({
-        url: "/SOHAS/patients",
+        url: "/SOHAS/patients/signup",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({
@@ -202,7 +202,7 @@ $("#patientSignUp").click(function(event) {
                 $("#successSticker").fadeOut(() => {
                     window.location.href = "${pageContext.request.contextPath}/login";
                 });
-            }, 2000); // 2 seconds
+            }, 1000); // 1 seconds
             //window.location.href = "${pageContext.request.contextPath}/";
         },
         error: function(xhr) {
