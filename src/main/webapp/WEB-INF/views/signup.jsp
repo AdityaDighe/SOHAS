@@ -200,7 +200,7 @@ $("#patientSignUp").click(function(event) {
 
             setTimeout(() => {
                 $("#successSticker").fadeOut(() => {
-                    window.location.href = "${pageContext.request.contextPath}/";
+                    window.location.href = "${pageContext.request.contextPath}/login";
                 });
             }, 2000); // 2 seconds
             //window.location.href = "${pageContext.request.contextPath}/";

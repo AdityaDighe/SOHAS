@@ -4,16 +4,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.demo.health.util.JwtUtil;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 
 @Controller
 public class InitialController {
+
+	@RequestMapping("/")
+	public String startPage() {
+		return "index";
+	}
+
 	@RequestMapping("/login")
 	public String start() {
 		return "login";
@@ -32,32 +32,33 @@ public class InitialController {
 	@RequestMapping("/patientDashboard")
 	public String patientDashboard(HttpServletRequest request, Model model) {
 		String username = (String) request.getAttribute("username");
-	    Integer id = (Integer) request.getAttribute("id");
-	    
-	    model.addAttribute("username", username);
-	    model.addAttribute("id", id);
-	    
-	    return "patient";
+		Integer id = (Integer) request.getAttribute("id");
+
+		model.addAttribute("username", username);
+		model.addAttribute("id", id);
+
+		return "patient";
 	}
 
 	@RequestMapping("/patientDashboard/appointment")
 	public String appointment(HttpServletRequest request, Model model) {
 		String username = (String) request.getAttribute("username");
-	    Integer id = (Integer) request.getAttribute("id");
-	    
-	    model.addAttribute("username", username);
-	    model.addAttribute("id", id);
-	    
-	    return "appointments";
+		Integer id = (Integer) request.getAttribute("id");
+
+		model.addAttribute("username", username);
+		model.addAttribute("id", id);
+
+		return "appointments";
 	}
+
 	@RequestMapping("/doctorDashboard")
 	public String doctor(HttpServletRequest request, Model model) {
 		String username = (String) request.getAttribute("username");
-	    Integer id = (Integer) request.getAttribute("id");
-	    
-	    model.addAttribute("username", username);
-	    model.addAttribute("id", id);
-	    
-	    return "doctor-dashboard";
+		Integer id = (Integer) request.getAttribute("id");
+
+		model.addAttribute("username", username);
+		model.addAttribute("id", id);
+
+		return "doctor-dashboard";
 	}
 }

@@ -20,20 +20,19 @@ import io.jsonwebtoken.Claims;
 
 @WebFilter("/*")
 public class JwtAuthenticationFilter extends HttpFilter implements Filter {
-       
-    /**
-     * @see HttpFilter#HttpFilter()
-     */
-    public JwtAuthenticationFilter() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    
+
+	/**
+	 * @see HttpFilter#HttpFilter()
+	 */
+	public JwtAuthenticationFilter() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see Filter#destroy()
 	 */
+	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
 	}
@@ -41,57 +40,61 @@ public class JwtAuthenticationFilter extends HttpFilter implements Filter {
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
-	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-		  HttpServletResponse res = (HttpServletResponse) response;
-	      HttpServletRequest req = (HttpServletRequest) request;
+	@Override
+	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+		HttpServletResponse res = response;
+		HttpServletRequest req = request;
 
-	        String jwtToken = getJwtFromCookies(req);;
+		String jwtToken = getJwtFromCookies(req);
+		;
 
-	        String path = request.getRequestURI();
+		String path = request.getRequestURI();
 
-	        // Skip JWT check for login endpoint
-	        if (path.equals("/") || path.contains("/login") || path.contains("/doctorSignup") || path.contains("/patientSignup")) {
-	            chain.doFilter(request, response);
-	            return;
-	        }
-	        
-	        if (jwtToken == null) {
-	            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing JWT cookie");
-	            return;
-	        }
-	        
-	        
-	        try {
-	        	Claims claims = JwtUtil.validateToken(jwtToken).getBody();
+		// Skip JWT check for login endpoint
+		if (path.equals("http://localhost:8080/SOHAS/") || path.contains("/login") || path.contains("/doctorSignup")
+				|| path.contains("/patientSignup")) {
+			chain.doFilter(request, response);
+			return;
+		}
 
-	            // Extract username + id
-	            String username = claims.getSubject();
-	            Integer id = claims.get("id", Integer.class);
+		if (jwtToken == null) {
+			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing JWT cookie");
+			return;
+		}
 
-	            // Attach to request attributes so controllers can use them
-	            req.setAttribute("username", username);
-	            req.setAttribute("id", id);
+		try {
+			Claims claims = JwtUtil.validateToken(jwtToken).getBody();
 
-	            chain.doFilter(req, res); // proceed only if valid
-	        } catch (Exception e) {
-	            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
-	        }
+			// Extract username + id
+			String username = claims.getSubject();
+			Integer id = claims.get("id", Integer.class);
+
+			// Attach to request attributes so controllers can use them
+			req.setAttribute("username", username);
+			req.setAttribute("id", id);
+
+			chain.doFilter(req, res); // proceed only if valid
+		} catch (Exception e) {
+			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+		}
 	}
-	
+
 	private String getJwtFromCookies(HttpServletRequest req) {
-        if (req.getCookies() != null) {
-            for (Cookie cookie : req.getCookies()) {
-                if ("jwtToken".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
+		if (req.getCookies() != null) {
+			for (Cookie cookie : req.getCookies()) {
+				if ("jwtToken".equals(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * @see Filter#init(FilterConfig)
 	 */
+	@Override
 	public void init(FilterConfig fConfig) throws ServletException {
 		// TODO Auto-generated method stub
 	}
