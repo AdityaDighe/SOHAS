@@ -52,8 +52,8 @@ public class JwtAuthenticationFilter extends HttpFilter implements Filter {
 		String path = request.getRequestURI();
 
 		// Skip JWT check for login endpoint
-		if (path.equals("http://localhost:8080/SOHAS/") || path.contains("/login") || path.contains("/doctorSignup")
-				|| path.contains("/patientSignup")) {
+		if (path.equals(req.getContextPath() + "/") || path.contains("/login") || path.contains("/doctorSignup")
+				|| path.contains("/patientSignup") || path.endsWith("index.jsp")) {
 			chain.doFilter(request, response);
 			return;
 		}

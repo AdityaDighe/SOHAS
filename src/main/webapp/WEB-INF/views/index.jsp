@@ -6,7 +6,7 @@
 
 <html lang="en">
 
-<%@ include file="header.jsp" %>
+
 
 <head>
 <meta charset="UTF-8">
