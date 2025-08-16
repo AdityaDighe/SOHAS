@@ -47,9 +47,12 @@ input, select {
     <div class="form-section">
         <form id="searchForm">
             <label>Select Date:</label>
+            <!--  
             <input type="text" id="appointmentDate" name="appointmentDate" placeholder="YYYY-MM-DD" required 
                    pattern="\d{4}-\d{2}-\d{2}" title="Enter date in format YYYY-MM-DD">
-
+            -->
+			<input type="date" id="appointmentDate" name="appointmentDate" required min="">
+			
             <label>Select Time:</label>
             <select id="appointmentTime" name="appointmentTime" required>
                 <option value="">-- Select Time --</option>
@@ -102,6 +105,11 @@ input, select {
 document.getElementById("appointmentDate").addEventListener("input", function () {
     let regex = /^\d{4}-\d{2}-\d{2}$/;
     this.setCustomValidity(regex.test(this.value) ? "" : "Please enter the date in YYYY-MM-DD format");
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById("appointmentDate").setAttribute("min", today);
 });
 
 $(document).ready(function () {

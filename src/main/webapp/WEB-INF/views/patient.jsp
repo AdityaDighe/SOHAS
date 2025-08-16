@@ -21,6 +21,48 @@
         .book-section p { font-size:16px; margin-bottom:10px; }
         .book-btn { background:#007bff; color:#fff; border:none; padding:10px 16px; border-radius:6px; cursor:pointer; text-decoration:none; }
         .book-btn:hover { background:#0069d9; }
+        
+button:disabled {
+  	display: none;
+}
+
+button.cancel {
+	border-radius: 20px;
+}
+td button {
+    display: block;
+    margin: 0 auto;
+}
+
+button:hover {
+    transform: scale(1.10);
+    transition: transform 0.2s ease;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: bold;
+    display: inline-block;
+    text-transform: uppercase;
+}
+
+.status-PENDING {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-BOOKED {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-CANCELLED {
+    background-color: #dc3545;
+    color: white;
+}
+
     </style>
 </head>
 <body>
@@ -86,7 +128,9 @@ $(document).ready(function() {
    	                	    "<td>" + app.doctor.speciality + "</td>" +
    	                	    "<td>" + app.date + "</td>" +
    	                	    "<td>" + app.time + "</td>" +
-   	                	    "<td>" + app.status + "</td>" +
+   	                	    //"<td>" + app.status + "</td>" +
+   	                	    "<td><span class='status-badge status-" + app.status + "'>" + app.status + "</span></td>" +
+
    	                	    "<td>" +
    	                	            "<button class='cancel' data-id='"+app.appointmentId+"' "+disabled+">"+btnText+"</button>" +
    	                	    "</td>" +

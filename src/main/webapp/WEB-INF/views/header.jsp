@@ -124,16 +124,16 @@
         <% } else { %>
             <button class="profile-btn"><%= (user != null) ? user : "User" %></button>
             <div class="dropdown">
-                <a href="${pageContext.request.contextPath}/profile">Profile</a>
-                
                 <% if ("doctor".equalsIgnoreCase(role)) { %>
+                	<a href="${pageContext.request.contextPath}/doctor/profile">Profile</a>
                     <a href="${pageContext.request.contextPath}/doctorDashboard">My Appointments</a>
                 <% } else if ("patient".equalsIgnoreCase(role)) { %>
+                	<a href="${pageContext.request.contextPath}/patient/profile">Profile</a>
                     <a href="${pageContext.request.contextPath}/patientDashboard">My Appointments</a>
                 <% } %>
-
                 <a href="${pageContext.request.contextPath}/logout">Logout</a>
             </div>
+            
         <% } %>
     </div>
 </header>

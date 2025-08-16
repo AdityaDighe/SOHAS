@@ -6,11 +6,58 @@
         body { font-family: Arial, sans-serif; background:#f5f7fb; margin:0; }
         .wrap { max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,.08); }
         table { width:100%; border-collapse:collapse; margin-top:20px; }
-        th, td { border:1px solid #ddd; padding:10px; text-align:left; }
+        th, td { border:1px solid #ddd; padding:10px; text-align:center; }
         th { background:#f0f0f0; }
         button.btn-status { padding:5px 10px; border:none; border-radius:5px; cursor:pointer; }
         button.cancel { background:#f44336; color:white; }
         button.complete { background:#4CAF50; color:white; }
+        
+     
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+
+button:hover {
+    transform: scale(1.10);
+    transition: transform 0.2s ease;
+}
+
+button:disabled {
+  	display: none;
+}
+
+button.cancel, button.complete {
+	border-radius: 20px;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: bold;
+    display: inline-block;
+    text-transform: uppercase;
+}
+
+.status-BOOKED {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-COMPLETED {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-CANCELLED {
+    background-color: #dc3545;
+    color: white;
+}
+
     </style>
 </head>
 <body>
@@ -46,18 +93,21 @@
                     let tbody = $("#appointmentTable tbody");
                     tbody.empty();
                     appointments.forEach(function(app) {
-                    	let disabled = app.status === "CANCELLED" ? "disabled" : "";
+                    	let disabled = ((app.status === "CANCELLED") || (app.status === "COMPLETED"))? "disabled" : "";
        	                let btnText = app.status === "CANCELLED" ? "Cancelled" : "Cancel";
                     	tbody.append(
                                 "<tr>" +
                                     "<td>"+app.patient.patientName+"</td>" +
                                     "<td>"+app.date+"</td>" +
                                     "<td>"+app.time+"</td>" +
-                                    "<td>"+app.status+"</td>" +
+                                    //"<td>"+app.status+"</td>" +
+                                    "<td><span class='status-badge status-" + app.status + "'>" + app.status + "</span></td>" +
                                     "<td>" +
+                                    "<div class='btn-group'>" +
                                     "<button class='status-finish btn-status complete' data-id='" + app.appointmentId + "' "+disabled+">Complete</button>" +
                                     " " +
                                     "<button class='status-cancel btn-status cancel' data-id='" + app.appointmentId + "' "+disabled+">"+btnText+"</button>" +
+                                    "</div>" +
                                     "</td>" +
                                 "</tr>"
                          );
