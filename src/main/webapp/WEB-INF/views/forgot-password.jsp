@@ -3,7 +3,7 @@
 <head>
     <title>Forgot Password</title>
     <style>
-        body { font-family: Arial; background:#f5f5f5; }
+        body { font-family: Arial; background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%); }
         h2 { text-align: center; }
         .wrap { max-width:400px; margin:60px auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,0.1); }
         button { width:100%; padding:10px; margin-top:10px; border-radius:6px; }

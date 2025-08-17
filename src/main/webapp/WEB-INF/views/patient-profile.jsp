@@ -8,13 +8,18 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f5f7fb;
+      background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%);
       margin: 0;
-      display: flex; 
+    }
+
+    .main-content {
+      display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      min-height: calc(100vh - 80px); /* adjust based on your header height */
+      padding-top: 10px;
     }
+
     .profile-wrapper {
       width: 100%;
       max-width: 400px;
@@ -22,22 +27,25 @@
       padding: 28px;
       border-radius: 10px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
-      position: relative;
     }
+
     h2 {
       text-align: center;
       margin-bottom: 24px;
     }
+
     .profile-field {
       margin-bottom: 16px;
       position: relative;
     }
+
     label {
       display: block;
       font-weight: 600;
       margin-bottom: 6px;
       color: #333;
     }
+
     input[type="text"], 
     input[type="number"], 
     select {
@@ -50,29 +58,31 @@
       box-sizing: border-box;
       transition: border-color 0.3s ease;
     }
+
     input[type="text"]:focus,
     input[type="number"]:focus,
     select:focus {
       border-color: #0d6efd;
       outline: none;
     }
-    .edit-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%; /* Change this */
-  transform: translateY(-50%); /* Add this */
-  font-size: 16px;
-  color: #0d6efd;
-  cursor: pointer;
-}
 
-select {
-  -webkit-appearance: none;  /* For Chrome, Safari, Opera */
-  -moz-appearance: none;     /* For Firefox */
-  appearance: none;          /* For modern browsers */
-  background-image: none;    /* Remove any default background images */
-  padding-right: 10px;       /* Adjust padding to avoid clipped text */
-}
+    .edit-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: #0d6efd;
+      cursor: pointer;
+    }
+
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: none;
+      padding-right: 10px;
+    }
 
     .error {
       color: #b00020;
@@ -80,10 +90,12 @@ select {
       margin-top: 4px;
       min-height: 1em;
     }
+
     .btn-row {
       text-align: center;
       margin-top: 24px;
     }
+
     .btn {
       background: #0d6efd;
       color: white;
@@ -95,20 +107,22 @@ select {
       margin-right: 10px;
       transition: background-color 0.3s ease;
     }
+
     .btn.cancel {
       background: #ccc;
       color: #000;
     }
+
     .btn:hover {
       background: #0b5ed7;
       transform: scale(1.10);
-      transition: transform 0.2s ease;
     }
+
     .btn.cancel:hover {
       background: #999;
       transform: scale(1.10);
-   	  transition: transform 0.2s ease;
     }
+
     .success-toast {
       position: fixed;
       bottom: 30px;
@@ -125,132 +139,129 @@ select {
     }
   </style>
 </head>
+
 <body>
+  <%@ include file="header.jsp" %>
 
-<div class="profile-wrapper">
-  <h2>Patient Profile</h2>
-  <form id="profileForm" autocomplete="off" novalidate>
-	<div class="profile-field">
-  		<label for="email">Email</label>
-  		<input type="text" id="email" name="email" disabled 
-         value="${patient.email != null ? patient.email : ''}" />
-	</div>
-		  
-    <div class="profile-field">
-      <label for="fullName">Full Name</label>
-      <input type="text" id="fullName" name="fullName" required
-             value="${patient.patientName != null ? patient.patientName : ''}" disabled />
-      <span class="edit-icon" data-target="fullName">&#9998;</span>
-      <div class="error" id="error-fullName"></div>
+  <div class="main-content">
+    <div class="profile-wrapper">
+      <h2>Patient Profile</h2>
+      <form id="profileForm" autocomplete="off" novalidate>
+        <div class="profile-field">
+          <label for="email">Email</label>
+          <input type="text" id="email" name="email" disabled 
+                 value="${patient.email != null ? patient.email : ''}" />
+        </div>
+        
+        <div class="profile-field">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullName" required
+                 value="${patient.patientName != null ? patient.patientName : ''}" disabled />
+          <span class="edit-icon" data-target="fullName">&#9998;</span>
+          <div class="error" id="error-fullName"></div>
+        </div>
+
+        <div class="profile-field">
+          <label for="age">Age</label>
+          <input type="text" id="age" name="age" required
+                 value="${patient.age != null ? patient.age : ''}" disabled />
+          <span class="edit-icon" data-target="age">&#9998;</span>
+          <div class="error" id="error-age"></div>
+        </div>
+
+        <div class="profile-field">
+          <label for="city">Select City</label>
+          <input type="text" id="city" name="city" required 
+                 value="${patient.city != null ? patient.city : ''}" disabled />
+          <span class="edit-icon" data-target="city">&#9998;</span>
+          <div class="error" id="error-city"></div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn cancel" id="cancelEdit">Cancel</button>
+          <button type="submit" class="btn">Save Changes</button>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <div class="profile-field">
-      <label for="age">Age</label>
-      <input type="text" id="age" name="age" required
-             value="${patient.age != null ? patient.age : ''}" disabled />
-      <span class="edit-icon" data-target="age">&#9998;</span>
-      <div class="error" id="error-age"></div>
-    </div>
+  <div class="success-toast" id="successToast">Updated successfully!</div>
 
-    <div class="profile-field">
-      <label for="city">Select City</label>
-      <input type="text" id="city" name="city" required disabled />
-      <span class="edit-icon" data-target="city">&#9998;</span>
-      <div class="error" id="error-city"></div>
-    </div>
-
-    <div class="btn-row">
-      <button type="button" class="btn cancel" id="cancelEdit">Cancel</button>
-      <button type="submit" class="btn">Save Changes</button>
-    </div>
-  </form>
-</div>
-
-<div class="success-toast" id="successToast">Updated successfully!</div>
-
-<script>
-  $(document).ready(function () {
-    // Initially inputs are disabled (set by JSP)
-
-    $('.edit-icon').click(function () {
-  const target = $(this).data('target');
-  const $field = $('#' + target);
-  $field.prop('disabled', false).focus();
-
-  // On blur, disable the field again
-  $field.one('blur', function () {
-    $(this).prop('disabled', true);
-  });
-});
-
-    // Cancel button resets form and disables inputs
-    $('#cancelEdit').click(function () {
-      // Reset inputs to original server-rendered values
-      $('#fullName').val("${patient.patientName != null ? patient.patientName : ''}");
-      $('#age').val("${patient.age != null ? patient.age : ''}");
-      $('#city').val("${patient.city != null ? patient.city : ''}");
-
-      $('.error').text('');
-      $('input, select').prop('disabled', true);
-    });
-
-    // Validate and submit form via AJAX
-    $('#profileForm').submit(function (e) {
-      e.preventDefault();
-      $('.error').text('');
-
-      const fullName = $('#fullName').val().trim();
-      const age = $('#age').val();
-      const city = $('#city').val();
-
-      let hasError = false;
-
-      if (!fullName) {
-        $('#error-fullName').text('Full Name is required.');
-        hasError = true;
-      }
-      if (!age || age < 0 || age > 120) {
-        $('#error-age').text('Age must be between 0 and 120.');
-        hasError = true;
-      }
-      if (!city) {
-        $('#error-city').text('Please select a city.');
-        hasError = true;
-      }
-      if (hasError) return;
-
-      $('input, select, button').prop('disabled', true);
-
-      $.ajax({
-        url: '${pageContext.request.contextPath}/patients/${patient.patientId}',
-        method: 'PUT',
-        contentType: 'application/json',
-        data: JSON.stringify({ 
-        		patientName: $("#fullName").val(),
-            	age: parseInt($("#age").val()),
-            	city: $("#city").val(),
-            	email: $("#email").val(),
-            	password: "${patient.password}"
-        	}),
-        success: function () {
-          showToast();
-          // Disable inputs again after save
-          $('input, select').prop('disabled', true);
-          $('button').prop('disabled', false);
-        },
-        error: function () {
-          alert('Update failed.');
-          $('input, select, button').prop('disabled', false);
-        }
+  <script>
+    $(document).ready(function () {
+      // Enable edit on click
+      $('.edit-icon').click(function () {
+        const target = $(this).data('target');
+        const $field = $('#' + target);
+        $field.prop('disabled', false).focus();
+        $field.one('blur', function () {
+          $(this).prop('disabled', true);
+        });
       });
+
+      // Cancel button resets to original values
+      $('#cancelEdit').click(function () {
+        $('#fullName').val("${patient.patientName != null ? patient.patientName : ''}");
+        $('#age').val("${patient.age != null ? patient.age : ''}");
+        $('#city').val("${patient.city != null ? patient.city : ''}");
+        $('.error').text('');
+        $('input, select').prop('disabled', true);
+      });
+
+      // AJAX form submit
+      $('#profileForm').submit(function (e) {
+        e.preventDefault();
+        $('.error').text('');
+
+        const fullName = $('#fullName').val().trim();
+        const age = $('#age').val();
+        const city = $('#city').val();
+
+        let hasError = false;
+
+        if (!fullName) {
+          $('#error-fullName').text('Full Name is required.');
+          hasError = true;
+        }
+        if (!age || age < 0 || age > 120) {
+          $('#error-age').text('Age must be between 0 and 120.');
+          hasError = true;
+        }
+        if (!city) {
+          $('#error-city').text('Please select a city.');
+          hasError = true;
+        }
+        if (hasError) return;
+
+        $('input, select, button').prop('disabled', true);
+
+        $.ajax({
+          url: '${pageContext.request.contextPath}/patients/${patient.patientId}',
+          method: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify({ 
+            patientName: fullName,
+            age: parseInt(age),
+            city: city,
+            email: $("#email").val(),
+            password: "${patient.password}"
+          }),
+          success: function () {
+            showToast();
+            $('input, select').prop('disabled', true);
+            $('button').prop('disabled', false);
+          },
+          error: function () {
+            alert('Update failed.');
+            $('input, select, button').prop('disabled', false);
+          }
+        });
+      });
+
+      function showToast() {
+        $('#successToast').fadeIn().delay(1500).fadeOut();
+      }
     });
-
-    function showToast() {
-      $('#successToast').fadeIn().delay(1500).fadeOut();
-    }
-  });
-</script>
-
-
+  </script>
 </body>
 </html>

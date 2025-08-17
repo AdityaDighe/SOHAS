@@ -1,12 +1,13 @@
 <%
-	String user = (String) request.getAttribute("username");
-	String role = (String) request.getAttribute("role");
-	boolean loggedIn = (user != null);
+    String user = (String) request.getAttribute("username");
+    String role = (String) request.getAttribute("role");
+    boolean loggedIn = (user != null);
 %>
 
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
             --brand: #0d6efd;
@@ -17,11 +18,10 @@
             --card-border: rgba(255, 255, 255, 0.3);
         }
 
-        /* Header Navbar */
         .navbar {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             padding: 14px 28px;
             background: var(--card-bg);
             backdrop-filter: blur(14px) saturate(160%);
@@ -40,74 +40,60 @@
             cursor: pointer;
         }
 
-        .profile {
-            position: relative;
+        .navbar-center {
+            flex: 1;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, #0d6efd, #5b9dff);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
         }
 
-        .profile-btn {
+        .navbar-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
             background: var(--brand);
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 8px 12px;
             border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            transition: background 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.3s ease, transform 0.15s ease;
         }
+        
+        .navbar a {
+    		text-decoration: none;
+    		color: inherit;
+		}
+        
 
-        .profile-btn:hover {
+        .nav-btn:hover {
             background: #0b5ed7;
+            transform: scale(1.07);
         }
 
-        /* Dropdown Menu */
-        .dropdown {
-            display: none;
-            position: absolute;
-            top: 110%;
-            right: 0;
-            background: white;
-            border-radius: 12px;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-            min-width: 170px;
-            overflow: hidden;
-        }
-
-        .dropdown a {
-            display: block;
-            padding: 12px 16px;
-            text-decoration: none;
-            color: var(--text-dark);
-            font-size: 0.95rem;
-            transition: background 0.2s;
-        }
-
-        .dropdown a:hover {
-            background: var(--bg);
-        }
-
-        .profile:hover .dropdown {
-            display: block;
-        }
-
-        /* Responsive */
         @media (max-width: 640px) {
             .navbar {
                 flex-direction: column;
-                align-items: flex-start;
-                padding: 12px 20px;
+                align-items: stretch;
+                gap: 10px;
             }
-            .profile {
-                margin-top: 8px;
-                width: 100%;
-            }
-            .profile-btn {
-                width: 100%;
+            .navbar-center {
                 text-align: center;
+                margin: 10px 0;
             }
-            .dropdown {
-                width: 100%;
+            .navbar-right {
+                justify-content: center;
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -115,27 +101,44 @@
 <body>
 
 <header class="navbar">
+    <!-- Left: Logo -->
     <a href="${pageContext.request.contextPath}/" class="logo">SOHAS</a>
-    <div class="profile">
+
+    <!-- Center: Welcome -->
+    <div class="navbar-center">
+        <% if (loggedIn) { %>
+            Welcome <%= user %> !
+        <% } %>
+    </div>
+
+    <!-- Right: Buttons -->
+    <div class="navbar-right">
         <% if (!loggedIn) { %>
             <a href="${pageContext.request.contextPath}/login">
-                <button class="profile-btn">Login</button>
+                <button class="nav-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
             </a>
         <% } else { %>
-            <button class="profile-btn"><%= (user != null) ? user : "User" %></button>
-            <div class="dropdown">
-                <% if ("doctor".equalsIgnoreCase(role)) { %>
-                	<a href="${pageContext.request.contextPath}/doctor/profile">Profile</a>
-                    <a href="${pageContext.request.contextPath}/doctorDashboard">My Appointments</a>
-                <% } else if ("patient".equalsIgnoreCase(role)) { %>
-                	<a href="${pageContext.request.contextPath}/patient/profile">Profile</a>
-                    <a href="${pageContext.request.contextPath}/patientDashboard">My Appointments</a>
-                <% } %>
-                <a href="${pageContext.request.contextPath}/logout">Logout</a>
-            </div>
-            
+            <% if ("doctor".equalsIgnoreCase(role)) { %>
+                <a href="${pageContext.request.contextPath}/doctorDashboard">
+                    <button class="nav-btn"><i class="fas fa-calendar-check"></i> Appointments</button>
+                </a>
+                <a href="${pageContext.request.contextPath}/doctor/profile">
+                    <button class="nav-btn"><i class="fas fa-user-md"></i> Profile</button>
+                </a>
+            <% } else if ("patient".equalsIgnoreCase(role)) { %>
+                <a href="${pageContext.request.contextPath}/patientDashboard">
+                    <button class="nav-btn"><i class="fas fa-calendar-check"></i> Appointments</button>
+                </a>
+                <a href="${pageContext.request.contextPath}/patient/profile">
+                    <button class="nav-btn"><i class="fas fa-user"></i> Profile</button>
+                </a>
+            <% } %>
+            <a href="${pageContext.request.contextPath}/logout">
+                <button class="nav-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </a>
         <% } %>
     </div>
 </header>
+
 </body>
 </html>

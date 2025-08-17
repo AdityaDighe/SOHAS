@@ -7,7 +7,7 @@
 <style>
 body {
 	font-family: Arial, sans-serif;
-	background: #f5f7fb;
+	background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%);
 	margin: 0;
 }
 
@@ -343,12 +343,12 @@ $("#doctorSignUp").click(function(event) {
         validateStartEndTime()
     ].every(Boolean);
 
-   // if (!isValid) return;
+   	if (!isValid) return;
     
     let startTime = $("#startTime").val();
     let endTime = $("#endTime").val();
-    startTime = startTime ? startTime : "09:00";
-    endTime = endTime ? endTime : "17:00";
+    startTime = startTime ? startTime : "09:00:00";
+    endTime = endTime ? endTime : "17:00:00";
    
     $.ajax({
         url: "/SOHAS/doctors/signup",

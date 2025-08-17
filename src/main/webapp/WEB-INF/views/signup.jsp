@@ -5,7 +5,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>SOHAS • Patient </title>
     <style>
-        body { font-family: Arial, sans-serif; background:#f5f7fb; margin:0; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%); margin:0; }
         .wrap { max-width:420px; margin:60px auto; background:#fff; padding:28px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,.08); }
         h2 { margin:0 0 18px; text-align:center; }
         label { display:block; margin:12px 0 6px; font-size:14px; color:#333; }
@@ -180,7 +180,7 @@ $("#patientSignUp").click(function(event) {
         validatePassword()
     ].every(Boolean);
 
-    //if (!isValid) return;
+    if (!isValid) return;
 
 	
     $.ajax({

@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
+<%--
+String user = (String) request.getAttribute("username");
+String role = (String) request.getAttribute("role");
+boolean loggedIn = (user != null);
+--%>
 
 <!DOCTYPE html>
 
@@ -147,8 +152,12 @@ footer {
 				and consult with ease. Secure, fast, and designed for the modern
 				world.</p>
 			<div class="hero-buttons">
-				<a href="${pageContext.request.contextPath}/login"
+				<a
+					href="<%=loggedIn
+		? (role != null && role.equalsIgnoreCase("patient") ? "/SOHAS/patientDashboard" : "/SOHAS/doctorDashboard")
+		: "/SOHAS/login"%>"
 					class="btn-primary">Get Started</a>
+
 
 			</div>
 		</div>
