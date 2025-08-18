@@ -133,12 +133,30 @@
                     <button class="nav-btn"><i class="fas fa-user"></i> Profile</button>
                 </a>
             <% } %>
-            <a href="${pageContext.request.contextPath}/logout">
-                <button class="nav-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </a>
+				<a href="javascript:void(0);" id="logoutBtn">
+				    <button class="nav-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+				</a>
         <% } %>
     </div>
 </header>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#logoutBtn").click(function () {
+            $.ajax({
+                url: "${pageContext.request.contextPath}/api/logout",
+                type: "POST",
+                success: function (response) {
+                    alert(response); // shows "Logged out successfully!"
+                    window.location.href = "${pageContext.request.contextPath}/"; 
+                },
+                error: function (xhr) {
+                    alert("Logout failed: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

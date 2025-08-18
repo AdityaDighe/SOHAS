@@ -2,6 +2,9 @@ package com.demo.health.controller;
  
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,6 +77,22 @@ public class AuthController {
         } else {
             return ResponseEntity.status(404).body(Map.of("message", "Email not found"));
         }
+    }
+    
+    
+    @PostMapping("/api/logout")
+    public String logout(HttpServletResponse response) {
+        // Create a cookie with the same name as your JWT cookie
+        Cookie cookie = new Cookie("jwtToken", null);
+        cookie.setHttpOnly(true);      // prevent access from JS
+        cookie.setSecure(false);       // set true if using HTTPS
+        cookie.setPath("/");           // must match the original cookie path
+        cookie.setMaxAge(0);           // expire immediately
+
+        // Add cookie to response to remove it from browser
+        response.addCookie(cookie);
+
+        return "Logged out successfully!";
     }
 
 }
