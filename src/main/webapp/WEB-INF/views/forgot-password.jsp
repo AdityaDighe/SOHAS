@@ -3,18 +3,23 @@
 <head>
     <title>Forgot Password</title>
     <style>
-        body { font-family: Arial; background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%); }
+        body { font-family: Arial; background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%); margin: 0; padding: 0; width: 100%; x`}
         h2 { text-align: center; }
         .wrap { max-width:400px; margin:60px auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,0.1); }
         button { width:100%; padding:10px; margin-top:10px; border-radius:6px; }
         label { display:block; margin:12px 0 6px; font-size:14px; color:#333; }
         input { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:6px; font-size:14px;  }
         .btn { background:#007bff; color:#fff; border:none; cursor:pointer; }
-        .btn:hover { background:#0056b3; }
+        .btn:hover { background:#0056b3; transform: scale(1.05);}
         .error {color: #b00020; font-size: 13px; margin-top: 4px;}
     </style>
 </head>
 <body>
+<header style="padding: 1rem 2rem; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); width: 100%; box-sizing: border-box;">
+	<a href="${pageContext.request.contextPath}/" style="text-decoration: none; font-weight: 600; font-size: 1.4rem; color: #0d6efd;">
+		SOHAS
+	</a>
+</header>
 <div class="wrap">
     <h2>Forgot Password</h2>
     <form id="forgotForm">

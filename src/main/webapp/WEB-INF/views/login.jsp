@@ -13,9 +13,10 @@
         input { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:6px; font-size:14px; }
         .row { display:flex; justify-content:space-between; align-items:center; margin-top:16px; }
         .btn { background:#0d6efd; color:#fff; border:0; padding:10px 16px; border-radius:6px; cursor:pointer; }
-        .btn:hover { background:#0b5ed7; }
+        .btn:hover { background:#0b5ed7; transform: scale(1.05);}
         .dropdown { position: relative; }
-        .dropdown-btn { background:none; border:none; color:#0d6efd; cursor:pointer; font-size:14px; }
+        .dropdown-btn { background:none; border:none; color:#0d6efd; cursor:pointer; font-size:14px; padding: 8px 14px; border-radius: 8px;}
+        .dropdown-btn:hover {background-color: #e0ecff; color: #084298; transform: scale(1.05);}
         .dropdown-content { display:none; position:absolute; right:0; background:#fff; border:1px solid #ddd; border-radius:6px; min-width:140px; box-shadow:0 8px 16px rgba(0,0,0,.1); }
         .dropdown-content a { display:block; padding:8px 12px; font-size:14px; color:#333; text-decoration:none; }
         .dropdown-content a:hover { background:#f0f0f0; }
@@ -26,6 +27,11 @@
     </style>
 </head>
 <body>
+<header style="padding: 1rem 2rem; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+	<a href="${pageContext.request.contextPath}/" style="text-decoration: none; font-weight: 600; font-size: 1.4rem; color: #0d6efd;">
+		SOHAS
+	</a>
+</header>
 <div class="wrap">
     <h2>Login Page</h2>
  

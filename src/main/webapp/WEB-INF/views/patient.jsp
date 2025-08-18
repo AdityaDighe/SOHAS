@@ -93,6 +93,7 @@
 
         .book-btn:hover {
             background: #0069d9;
+            transform: scale(1.08);
         }
 
         button:disabled {
@@ -136,6 +137,26 @@
             background-color: #dc3545;
             color: white;
         }
+        
+        /* New header flex container for welcome + book button */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 50px 40px 30px; 
+            flex-wrap: wrap;
+        }
+        .welcome-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        .welcome-subtext {
+            font-weight: normal;
+            font-size: 1rem;
+            color: #555;
+        }
     </style>
 </head>
 <body>
@@ -143,18 +164,25 @@
 <%@ include file="header.jsp" %>
 
 <div class="wrap">
-    <h2>Welcome, ${username}!</h2>
 
-    <!-- Book Doctor Section -->
-    <div class="book-section">
-        <p>Looking for a doctor? Book here now</p>
+    <!-- Header with welcome text left and book button right -->
+    <div class="header-row">
+        <div>
+            <div class="welcome-text">Looking for a doctor? Book an appointment now</div>
+        </div>
         <a href="http://localhost:8080/SOHAS/patientDashboard/appointment" class="book-btn">Book</a>
     </div>
 
     <!-- Booked Appointments Section -->
     <h3>Your Appointments</h3>
 
-    <table id="myAppointments">
+	<!-- No appointments message -->
+	<div id="noAppointmentsMessage" style="display:none; text-align:center; margin-top: 30px; font-size: 18px; color: #555;">
+	    No appointments booked yet.
+	</div>
+	
+	
+    <table id="myAppointments" style="display:none;">
         <thead>
         <tr>
             <th>Doctor</th>
@@ -186,10 +214,11 @@ $(document).ready(function() {
                 tbody.empty();
 
                 if (appointments.length === 0) {
-                    tbody.append("<tr><td colspan='6'>No appointments booked yet.</td></tr>");
+                	$("#myAppointments").hide();
+                    $("#noAppointmentsMessage").show();
                     return;
                 }
-
+				
                 appointments.forEach(function(app) {
                     let disabled = app.status === "CANCELLED" ? "disabled" : "";
                     let btnText = app.status === "CANCELLED" ? "Cancelled" : "Cancel";
@@ -204,7 +233,10 @@ $(document).ready(function() {
                             "<td><button class='cancel' data-id='" + app.appointmentId + "' " + disabled + ">" + btnText + "</button></td>" +
                         "</tr>"
                     );
+                    
                 });
+                $("#noAppointmentsMessage").hide();
+                $("#myAppointments").show();
             },
             error: function(xhr) {
                 console.error("Error fetching appointments:", xhr.responseText);

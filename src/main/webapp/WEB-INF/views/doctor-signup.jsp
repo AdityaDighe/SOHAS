@@ -13,7 +13,7 @@ body {
 
 .wrap {
 	max-width: 420px;
-	margin: 60px auto;
+	margin: 40px auto;
 	background: #fff;
 	padding: 28px;
 	border-radius: 10px;
@@ -58,6 +58,7 @@ input {
 
 .btn:hover {
 	background: #0b5ed7;
+	transform: scale(1.05);
 }
 
 .link {
@@ -133,6 +134,11 @@ select:focus {
 </style>
 </head>
 <body>
+<header style="padding: 1rem 2rem; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+	<a href="${pageContext.request.contextPath}/" style="text-decoration: none; font-weight: 600; font-size: 1.4rem; color: #0d6efd;">
+		SOHAS
+	</a>
+</header>
 	<div class="wrap">
 		<h2>Doctor Signup</h2>
 

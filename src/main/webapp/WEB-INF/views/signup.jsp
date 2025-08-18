@@ -6,13 +6,13 @@
     <title>SOHAS • Patient </title>
     <style>
         body { font-family: Arial, sans-serif; background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%); margin:0; }
-        .wrap { max-width:420px; margin:60px auto; background:#fff; padding:28px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,.08); }
+        .wrap { max-width:420px; margin:40px auto; background:#fff; padding:28px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,.08); }
         h2 { margin:0 0 18px; text-align:center; }
         label { display:block; margin:12px 0 6px; font-size:14px; color:#333; }
         input { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:6px; font-size:14px; }
         .row { display:flex; justify-content:center; align-items:center; margin-top:16px; }
         .btn { background:#0d6efd; color:#fff; border:0; padding:10px 16px; border-radius:6px; cursor:pointer; }
-        .btn:hover { background:#0b5ed7; }
+        .btn:hover { background:#0b5ed7; transform: scale(1.05);}
         .link { font-size:14px; color:#0d6efd; text-decoration:none; }
         .link:hover { text-decoration:underline; }
         .alert { background:#ffe5e5; color:#b00020; padding:10px 12px; border-radius:6px; margin-bottom:12px; border:1px solid #ffcaca; }
@@ -44,6 +44,11 @@
     </style>
 </head>
 <body>
+<header style="padding: 1rem 2rem; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+	<a href="${pageContext.request.contextPath}/" style="text-decoration: none; font-weight: 600; font-size: 1.4rem; color: #0d6efd;">
+		SOHAS
+	</a>
+</header>
 <div class="wrap">
     <h2>Patient Signup</h2>
 

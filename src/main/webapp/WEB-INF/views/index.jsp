@@ -84,6 +84,7 @@ body {
 
 .btn-primary:hover {
 	background: #0b5ed7;
+	transform: scale(1.02);
 }
 
 .btn-outline {
@@ -99,12 +100,14 @@ body {
 /* ===== Bento Grid ===== */
 .bento-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
 	gap: 1.5rem;
 	padding: 4rem 2rem;
 	max-width: 1200px;
 	margin: auto;
 }
+
+
 
 .bento-item {
 	background: var(--card-bg);

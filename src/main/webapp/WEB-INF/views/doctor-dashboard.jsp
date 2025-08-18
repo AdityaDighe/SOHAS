@@ -8,6 +8,11 @@
             background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%);
             margin: 0;
         }
+        
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
         .main-content {
             max-width: 800px;
@@ -102,7 +107,11 @@
 
 <div class="main-content">
     <h2>My Appointments</h2>
-    <table id="appointmentTable">
+    
+    <div id="noAppointmentsMessage" style="display:none; text-align:center; margin-top: 30px; font-size: 18px; color: #555;">
+    	You have no appointments yet.
+	</div>
+    <table id="appointmentTable" style="display:none;">
         <thead>
         <tr>
             <th>Patient Name</th>
@@ -131,6 +140,13 @@
                 success: function (appointments) {
                     let tbody = $("#appointmentTable tbody");
                     tbody.empty();
+                    
+                    if (appointments.length === 0) {
+                        $("#appointmentTable").hide();
+                        $("#noAppointmentsMessage").show();
+                        return;
+                    }
+                    
                     appointments.forEach(function (app) {
                         let disabled = ((app.status === "CANCELLED") || (app.status === "COMPLETED")) ? "disabled" : "";
                         let btnText = app.status === "CANCELLED" ? "Cancelled" : "Cancel";
@@ -150,6 +166,8 @@
                             "</tr>"
                         );
                     });
+                    $("#noAppointmentsMessage").hide();
+                    $("#appointmentTable").show();
                 },
                 error: function () {
                     alert("Failed to load appointments.");
