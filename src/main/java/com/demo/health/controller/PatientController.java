@@ -40,35 +40,6 @@ public class PatientController {
     
     @Autowired
     private DoctorService doctorService;
- 
-//    @PostMapping("/signup")
-//    public ResponseEntity<?> addPatient(@RequestBody @Valid Patient patient, BindingResult result) {
-//        if (result.hasErrors()) {
-//            // Keep only the first validation message per field
-//            Map<String, String> errors = result.getFieldErrors().stream()
-//                .collect(Collectors.toMap(
-//                    FieldError::getField,
-//                    FieldError::getDefaultMessage,
-//                    (existing, replacement) -> existing // keep the first message only
-//                ));
-// 
-//            return ResponseEntity.badRequest().body(errors);
-//        }
-//        
-//     // Custom validation: Email already exists
-//	    if (patientService.findByEmail(patient.getEmail()) != null) {
-//	        return ResponseEntity.badRequest()
-//	                .body(Map.of("email", "Email already registered"));
-//	    }
-//	    
-//	    if(doctorService.findByEmail(patient.getEmail()) != null) {
-//	    	 return ResponseEntity.badRequest()
-//		                .body(Map.of("email", "Email already registered"));
-//	    }
-// 
-//        patientService.save(patient);
-//        return ResponseEntity.ok("Patient added successfully");
-//    }
     
     @PostMapping("/signup")
     public ResponseEntity<?> addPatient(@RequestBody @Valid Patient patient, BindingResult result) {
