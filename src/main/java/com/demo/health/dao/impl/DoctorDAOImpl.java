@@ -44,13 +44,13 @@ public class DoctorDAOImpl implements DoctorDAO{
 		if (doctor != null) sessionFactory.getCurrentSession().delete(doctor);	
 	}
 
-	public Doctor loginDoctor(String email, String password) {
-		String hql = "SELECT d FROM Doctor d WHERE d.email = :email AND d.password = :password";
-		return sessionFactory.getCurrentSession().createQuery(hql, Doctor.class)
-												  .setParameter("email", email)
-												  .setParameter("password", password)
-												  .uniqueResult();
-	}
+//	public Doctor loginDoctor(String email, String password) {
+//		String hql = "SELECT d FROM Doctor d WHERE d.email = :email AND d.password = :password";
+//		return sessionFactory.getCurrentSession().createQuery(hql, Doctor.class)
+//												  .setParameter("email", email)
+//												  .setParameter("password", password)
+//												  .uniqueResult();
+//	}
 	
 	@Override
 	public Doctor findByEmail(String email) {

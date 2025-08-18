@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
@@ -38,34 +41,62 @@ public class PatientController {
     @Autowired
     private DoctorService doctorService;
  
+//    @PostMapping("/signup")
+//    public ResponseEntity<?> addPatient(@RequestBody @Valid Patient patient, BindingResult result) {
+//        if (result.hasErrors()) {
+//            // Keep only the first validation message per field
+//            Map<String, String> errors = result.getFieldErrors().stream()
+//                .collect(Collectors.toMap(
+//                    FieldError::getField,
+//                    FieldError::getDefaultMessage,
+//                    (existing, replacement) -> existing // keep the first message only
+//                ));
+// 
+//            return ResponseEntity.badRequest().body(errors);
+//        }
+//        
+//     // Custom validation: Email already exists
+//	    if (patientService.findByEmail(patient.getEmail()) != null) {
+//	        return ResponseEntity.badRequest()
+//	                .body(Map.of("email", "Email already registered"));
+//	    }
+//	    
+//	    if(doctorService.findByEmail(patient.getEmail()) != null) {
+//	    	 return ResponseEntity.badRequest()
+//		                .body(Map.of("email", "Email already registered"));
+//	    }
+// 
+//        patientService.save(patient);
+//        return ResponseEntity.ok("Patient added successfully");
+//    }
+    
     @PostMapping("/signup")
     public ResponseEntity<?> addPatient(@RequestBody @Valid Patient patient, BindingResult result) {
         if (result.hasErrors()) {
-            // Keep only the first validation message per field
             Map<String, String> errors = result.getFieldErrors().stream()
                 .collect(Collectors.toMap(
                     FieldError::getField,
                     FieldError::getDefaultMessage,
-                    (existing, replacement) -> existing // keep the first message only
+                    (existing, replacement) -> existing
                 ));
- 
             return ResponseEntity.badRequest().body(errors);
         }
-        
-     // Custom validation: Email already exists
-	    if (patientService.findByEmail(patient.getEmail()) != null) {
-	        return ResponseEntity.badRequest()
-	                .body(Map.of("email", "Email already registered"));
-	    }
-	    
-	    if(doctorService.findByEmail(patient.getEmail()) != null) {
-	    	 return ResponseEntity.badRequest()
-		                .body(Map.of("email", "Email already registered"));
-	    }
- 
+
+        if (patientService.findByEmail(patient.getEmail()) != null || 
+            doctorService.findByEmail(patient.getEmail()) != null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("email", "Email already registered"));
+        }
+
+        // 🔑 Encrypt password before saving
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        patient.setPassword(encoder.encode(patient.getPassword()));
+
         patientService.save(patient);
         return ResponseEntity.ok("Patient added successfully");
     }
+
+
  
  
     @GetMapping("/{id}")

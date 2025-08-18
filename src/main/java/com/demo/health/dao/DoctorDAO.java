@@ -11,7 +11,7 @@ public interface DoctorDAO {
     List<Doctor> list();
     void update(Doctor doctor);
     void delete(int doctorId);
-    Doctor loginDoctor(String email, String password);
+//    Doctor loginDoctor(String email, String password);
     Doctor findByEmail(String email);
 	List<Appointment> myAppointments(int id);
 }

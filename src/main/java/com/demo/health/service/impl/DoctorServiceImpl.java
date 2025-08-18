@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.demo.health.dao.DoctorDAO;
@@ -49,9 +50,16 @@ public class DoctorServiceImpl implements DoctorService{
 
 	@Override
 	public Doctor loginDoctor(String email, String password) {
-		// TODO Auto-generated method stub
-		return doctorDAO.loginDoctor(email, password);
+	    Doctor doctor = doctorDAO.findByEmail(email);
+	    if (doctor != null) {
+	        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	        if (encoder.matches(password, doctor.getPassword())) {
+	            return doctor; // ✅ login success
+	        }
+	    }
+	    return null; // ❌ login failed
 	}
+
 
 	@Override
 	public Doctor findByEmail(String email) {

@@ -18,107 +18,88 @@ import com.demo.health.util.JwtUtil;
 
 import io.jsonwebtoken.Claims;
 
+/**
+ * JWT Authentication Filter for protecting secured endpoints.
+ */
 @WebFilter("/*")
 public class JwtAuthenticationFilter extends HttpFilter implements Filter {
 
-	/**
-	 * @see HttpFilter#HttpFilter()
-	 */
-	public JwtAuthenticationFilter() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public JwtAuthenticationFilter() {
+        super();
+    }
 
-	/**
-	 * @see Filter#destroy()
-	 */
-	@Override
-	public void destroy() {
-		// TODO Auto-generated method stub
-	}
+    @Override
+    public void destroy() {
+        // nothing special to destroy
+    }
 
-	/**
-	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
-	 */
-	@Override
-	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		HttpServletResponse res = response;
-		HttpServletRequest req = request;
+    @Override
+    public void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
 
-		String jwtToken = getJwtFromCookies(req);
-		;
+        String jwtToken = getJwtFromCookies(req);
+        String path = req.getRequestURI();
 
-		String path = request.getRequestURI();
+        // ✅ Public endpoints (no JWT required)
+        if (path.equals(req.getContextPath() + "/")
+                || path.contains("/login")
+                || path.contains("/doctorSignup")
+                || path.contains("/patientSignup")
+                || path.endsWith("index.jsp")
+                || path.contains("/forgot-password")
+                || path.contains("/signup")) {
+            
+//            chain.doFilter(req, res); // let it pass without JWT
+//            
+            try {
+                Claims claims = JwtUtil.validateToken(jwtToken).getBody();
 
-		// Skip JWT check for login endpoint
-		if (path.equals(req.getContextPath() + "/") || path.contains("/login") || path.contains("/doctorSignup")
-				|| path.contains("/patientSignup") || path.endsWith("index.jsp") || path.contains("/forgot-password")
-				|| path.contains("/signup")) {
-			
-			try {
-				Claims claims = JwtUtil.validateToken(jwtToken).getBody();
+                // Attach claims to request for controllers
+                req.setAttribute("username", claims.getSubject());
+                req.setAttribute("id", claims.get("id", Integer.class));
+                req.setAttribute("role", claims.get("role", String.class));
 
-				// Extract username + id
-				String username = claims.getSubject();
-				Integer id = claims.get("id", Integer.class);
-				String role = claims.get("role", String.class);
+                chain.doFilter(req, res); // proceed only if valid
+            } catch (Exception e) {
+            	chain.doFilter(req, res);
+//                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+            }
+            return;
+        }
 
-				// Attach to request attributes so controllers can use them
-				req.setAttribute("username", username);
-				req.setAttribute("id", id);
-				req.setAttribute("role", role);
-				
-				chain.doFilter(req, res); // proceed only if valid
-			} catch (Exception e) {
-				chain.doFilter(req,res);
-				
-			}
-			
-			return;
-		}
+        // Protected endpoints → JWT required
+        if (jwtToken == null) {
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing JWT cookie");
+            return;
+        }
 
-		if (jwtToken == null) {
-			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing JWT cookie");
-			return;
-		}
+        try {
+            Claims claims = JwtUtil.validateToken(jwtToken).getBody();
 
-		try {
-			Claims claims = JwtUtil.validateToken(jwtToken).getBody();
+            // Attach claims to request for controllers
+            req.setAttribute("username", claims.getSubject());
+            req.setAttribute("id", claims.get("id", Integer.class));
+            req.setAttribute("role", claims.get("role", String.class));
 
-			// Extract username + id
-			String username = claims.getSubject();
-			Integer id = claims.get("id", Integer.class);
-			String role = claims.get("role", String.class);
+            chain.doFilter(req, res); // proceed only if valid
+        } catch (Exception e) {
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+        }
+    }
 
-			// Attach to request attributes so controllers can use them
-			req.setAttribute("username", username);
-			req.setAttribute("id", id);
-			req.setAttribute("role", role);
-			
-			chain.doFilter(req, res); // proceed only if valid
-		} catch (Exception e) {
-			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
-		}
-	}
+    private String getJwtFromCookies(HttpServletRequest req) {
+        if (req.getCookies() != null) {
+            for (Cookie cookie : req.getCookies()) {
+                if ("jwtToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
 
-	private String getJwtFromCookies(HttpServletRequest req) {
-		if (req.getCookies() != null) {
-			for (Cookie cookie : req.getCookies()) {
-				if ("jwtToken".equals(cookie.getName())) {
-					return cookie.getValue();
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @see Filter#init(FilterConfig)
-	 */
-	@Override
-	public void init(FilterConfig fConfig) throws ServletException {
-		// TODO Auto-generated method stub
-	}
-
+    @Override
+    public void init(FilterConfig fConfig) throws ServletException {
+        // nothing special to init
+    }
 }

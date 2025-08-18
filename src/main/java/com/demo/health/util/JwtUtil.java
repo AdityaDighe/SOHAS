@@ -7,12 +7,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+//import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 public class JwtUtil {
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private static final long EXPIRATION_MS = 3600000; // 1 hour
+//    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+	private static final String SECRET = "my-very-strong-secret-key-for-jwt-signing-which-should-be-long";
+	private static final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
+
+	private static final long EXPIRATION_MS = 3600000; // 1 hour
 
     public static String generateToken(int id, String username, String role) {
         return Jwts.builder()

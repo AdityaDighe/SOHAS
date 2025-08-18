@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.service.DoctorService;
@@ -39,43 +41,74 @@ public class DoctorController {
         return doctorService.get(id);
     }
 	
+//	@PostMapping("/signup")
+//	public ResponseEntity<?> addDoctor(@RequestBody @Valid Doctor doctor, BindingResult result) {
+//	    if (result.hasErrors()) {
+//	        // Only one message per field (the first one)
+//	        Map<String, String> errors = result.getFieldErrors().stream()
+//	            .collect(Collectors.toMap(
+//	                FieldError::getField,
+//	                FieldError::getDefaultMessage,
+//	                (existing, replacement) -> existing // keep first message
+//	            ));
+//
+//	        return ResponseEntity.badRequest().body(errors);
+//	    }
+//
+//	    // Custom validation: End time after start time
+//	    if (doctor.getEndTime() != null && doctor.getStartTime() != null &&
+//	            !doctor.getEndTime().after(doctor.getStartTime())) {
+//
+//	        return ResponseEntity.badRequest()
+//	                .body(Map.of("endTime", "End time must be after start time"));
+//	    }
+//
+//	    // Custom validation: Email already exists
+//	    if (patientService.findByEmail(doctor.getEmail()) != null) {
+//	        return ResponseEntity.badRequest()
+//	                .body(Map.of("email", "Email already registered"));
+//	    }
+//	    
+//	    if (doctorService.findByEmail(doctor.getEmail()) != null) {
+//	        return ResponseEntity.badRequest()
+//	                .body(Map.of("email", "Email already registered"));
+//	    }
+//
+//	    doctorService.save(doctor);
+//	    return ResponseEntity.ok("Doctor added successfully");
+//	}
+
 	@PostMapping("/signup")
 	public ResponseEntity<?> addDoctor(@RequestBody @Valid Doctor doctor, BindingResult result) {
 	    if (result.hasErrors()) {
-	        // Only one message per field (the first one)
 	        Map<String, String> errors = result.getFieldErrors().stream()
 	            .collect(Collectors.toMap(
 	                FieldError::getField,
 	                FieldError::getDefaultMessage,
-	                (existing, replacement) -> existing // keep first message
+	                (existing, replacement) -> existing
 	            ));
-
 	        return ResponseEntity.badRequest().body(errors);
 	    }
 
-	    // Custom validation: End time after start time
 	    if (doctor.getEndTime() != null && doctor.getStartTime() != null &&
 	            !doctor.getEndTime().after(doctor.getStartTime())) {
-
 	        return ResponseEntity.badRequest()
 	                .body(Map.of("endTime", "End time must be after start time"));
 	    }
 
-	    // Custom validation: Email already exists
-	    if (patientService.findByEmail(doctor.getEmail()) != null) {
+	    if (patientService.findByEmail(doctor.getEmail()) != null || 
+	        doctorService.findByEmail(doctor.getEmail()) != null) {
 	        return ResponseEntity.badRequest()
 	                .body(Map.of("email", "Email already registered"));
 	    }
-	    
-	    if (doctorService.findByEmail(doctor.getEmail()) != null) {
-	        return ResponseEntity.badRequest()
-	                .body(Map.of("email", "Email already registered"));
-	    }
+
+	    // 🔑 Encrypt password before saving
+	    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	    doctor.setPassword(encoder.encode(doctor.getPassword()));
 
 	    doctorService.save(doctor);
 	    return ResponseEntity.ok("Doctor added successfully");
 	}
-
 	
 //	@GetMapping
 //    public List<Doctor> listDoctors() {

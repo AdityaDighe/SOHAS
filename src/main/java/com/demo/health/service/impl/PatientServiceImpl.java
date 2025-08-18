@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,11 +59,18 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	@Transactional
 	public Patient loginPatient(String email, String password) {
-		// TODO Auto-generated method stub
-		return patientdao.loginPatient(email, password);
+	    Patient patient = patientdao.findByEmail(email);
+	    if (patient != null) {
+	        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	        if (encoder.matches(password, patient.getPassword())) {
+	            return patient; // ✅ login success
+	        }
+	    }
+	    return null; // ❌ login failed
 	}
+
+
 
 	@Override
 	@Transactional
