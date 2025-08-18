@@ -222,7 +222,7 @@
       $('#hospitalName').val("${doctor.hospitalName}");
       $('#startTime').val("${doctor.startTime}");
       $('#endTime').val("${doctor.endTime}");
-      $('input, select').prop('disabled', true);
+      $('input, select');
       $('.error').text('');
     });
 
