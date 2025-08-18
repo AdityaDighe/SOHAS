@@ -205,7 +205,7 @@
         $('#age').val("${patient.age != null ? patient.age : ''}");
         $('#city').val("${patient.city != null ? patient.city : ''}");
         $('.error').text('');
-        $('input, select').prop('disabled', true);
+        $('input, select');
       });
 
       // AJAX form submit
