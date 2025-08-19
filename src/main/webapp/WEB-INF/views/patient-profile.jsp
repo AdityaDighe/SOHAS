@@ -190,13 +190,7 @@
 
         <div class="profile-field">
           <label for="city">City</label>
-          <select id="city" name="city">
-            <option value="">-- Select City --</option>
-            <option value="Mumbai" ${patient.city == 'Mumbai' ? 'selected' : ''}>Mumbai</option>
-            <option value="Chennai" ${patient.city == 'Chennai' ? 'selected' : ''}>Chennai</option>
-            <option value="Pune" ${patient.city == 'Pune' ? 'selected' : ''}>Pune</option>
-            <option value="Bhopal" ${patient.city == 'Bhopal' ? 'selected' : ''}>Bhopal</option>
-          </select>
+          <input type="text" id="city" name="city" value="${patient.city}">
           <div class="error" id="error-city"></div>
         </div>
       </div>
