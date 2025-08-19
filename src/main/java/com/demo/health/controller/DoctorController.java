@@ -26,6 +26,10 @@ import com.demo.health.entity.Doctor;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
 
+/*
+ REST controller for handling doctor-related operations such as registration,
+ profile management, and viewing appointments.
+ */
 @RestController
 @RequestMapping ("/doctors")
 public class DoctorController {
@@ -40,9 +44,14 @@ public class DoctorController {
     public Doctor getDoctor(@PathVariable int id) {
         return doctorService.get(id);
     }
-
+	
+	/*
+     Registers a new doctor.
+    */
 	@PostMapping("/signup")
 	public ResponseEntity<?> addDoctor(@RequestBody @Valid Doctor doctor, BindingResult result) {
+		
+		//Check for validation errors and return  
 	    if (result.hasErrors()) {
 	        Map<String, String> errors = result.getFieldErrors().stream()
 	            .collect(Collectors.toMap(
@@ -52,31 +61,28 @@ public class DoctorController {
 	            ));
 	        return ResponseEntity.badRequest().body(errors);
 	    }
-
+	    
+	    // Check if start and end time are provided & end time comes after start time
 	    if (doctor.getEndTime() != null && doctor.getStartTime() != null &&
 	            !doctor.getEndTime().after(doctor.getStartTime())) {
 	        return ResponseEntity.badRequest()
 	                .body(Map.of("endTime", "End time must be after start time"));
 	    }
-
+	    
+	    // Check if the email is unique or not across Doctor & Patient Tables
 	    if (patientService.findByEmail(doctor.getEmail()) != null || 
 	        doctorService.findByEmail(doctor.getEmail()) != null) {
 	        return ResponseEntity.badRequest()
 	                .body(Map.of("email", "Email already registered"));
 	    }
 
-	    // 🔑 Encrypt password before saving
+	    // Encrypt password before saving
 	    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 	    doctor.setPassword(encoder.encode(doctor.getPassword()));
 
 	    doctorService.save(doctor);
 	    return ResponseEntity.ok("Doctor added successfully");
 	}
-	
-//	@GetMapping
-//    public List<Doctor> listDoctors() {
-//        return doctorService.list();
-//    }
 
     @PutMapping("/{id}")
     public void updateDoctor(@PathVariable int id, @RequestBody Doctor doctor) {

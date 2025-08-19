@@ -1,6 +1,5 @@
 package com.demo.health.controller;
 
-// add import
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -38,32 +37,33 @@ public class AuthController {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    // ✅ LOGIN with BCrypt
+    //Login with BCrypt, single API for both Patient and Doctor entities
     @PostMapping(value = "/api/login", produces = "application/json")
     public ResponseEntity<?> doLogin(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
         String rawPassword = credentials.get("password");
 
-        // Check patient
+        // Check patient and check if password encoded matches, return token
         Patient p = patientService.findByEmail(email);
         if (p != null && passwordEncoder.matches(rawPassword, p.getPassword())) {
             String token = JwtUtil.generateToken(p.getPatientId(), p.getPatientName(), "PATIENT");
             return ResponseEntity.ok(Map.of("token", token));
         }
 
-        // Check doctor
+        // Check doctor and check if password encoded matches, return token
         Doctor d = doctorService.findByEmail(email);
         if (d != null && passwordEncoder.matches(rawPassword, d.getPassword())) {
             String token = JwtUtil.generateToken(d.getDoctorId(), d.getDoctorName(), "DOCTOR");
             return ResponseEntity.ok(Map.of("token", token));
         }
-
+        
+        //Unauthorized access (wrong password or email)
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", "Invalid credentials"));
     }
 
 
-    // ✅ LOGOUT remains the same
+    //Logout, entering null cookie and removing jwtToken
     @PostMapping("/api/logout")
     public String logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("jwtToken", null);
@@ -78,7 +78,7 @@ public class AuthController {
     }
     
 
-  // ✅ inject EmailService
+  //inject EmailService
 
     @PostMapping("/api/request-otp")
     public ResponseEntity<?> requestOtp(@RequestBody Map<String, String> payload) {
@@ -114,7 +114,7 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "OTP sent successfully"));
     }
 
-
+    //Forget password with BCrypt, single API for both doctor and patient
     @PostMapping("/api/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> payload) {
         String email = payload.get("email");
@@ -126,7 +126,7 @@ public class AuthController {
         try {
             Patient patient = patientService.findByEmail(email);
             Doctor doctor = doctorService.findByEmail(email);
-
+            //Try updating patient password
             if (patient != null) {
                 System.out.println("DEBUG => Patient OTP: " + patient.getOtp() + ", Expiry: " + patient.getOtpExpiry());
             }
@@ -159,7 +159,8 @@ public class AuthController {
                 doctorService.update(doctor);
                 updated = true;
             }
-
+            
+            //Return if successful or not
             if (updated) {
                 return ResponseEntity.ok(Map.of("message", "Password updated successfully"));
             } else {

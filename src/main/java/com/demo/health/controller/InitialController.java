@@ -12,6 +12,11 @@ import com.demo.health.entity.Patient;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
 
+/*
+ View Rendering for different tasks or roles
+ HTTPServletRequest is being for sending the details from FrontEnd to BackEnd
+ Model is used for sending details from BackEnd to FrontEnd
+ */
 @Controller
 public class InitialController {
 	
@@ -40,11 +45,14 @@ public class InitialController {
 	public String login() {
 		return "signup";
 	}
-
+	
+	//Patient side rendering to display the appointments
 	@RequestMapping("/patientDashboard")
 	public String patientDashboard(HttpServletRequest request, Model model) {
+		//Getting role attribute from the cookie JWT
 		String role = (String)request.getAttribute("role");
 		
+		//Ensuring only patients has access and rendering patient.jsp (Already booked appointments of user)
 		if(role.equalsIgnoreCase("patient")) {
 			String username = (String) request.getAttribute("username");
 			Integer id = (Integer) request.getAttribute("id");
@@ -57,11 +65,13 @@ public class InitialController {
 		return "error";
 		
 	}
-
+	
+	//Patient side rendering to book appointments
 	@RequestMapping("/patientDashboard/appointment")
 	public String appointment(HttpServletRequest request, Model model) {
 		String role = (String)request.getAttribute("role");
 		
+		//Ensuring only patients has access and rendering appointments.jsp (Available doctors to user)
 		if(role.equalsIgnoreCase("patient")) {
 			String username = (String) request.getAttribute("username");
 			Integer id = (Integer) request.getAttribute("id");
@@ -73,11 +83,13 @@ public class InitialController {
 		}
 		return "error";
 	}
-
+	
+	//Doctor side rendering to display the appointments
 	@RequestMapping("/doctorDashboard")
 	public String doctor(HttpServletRequest request, Model model) {
 		String role = (String) request.getAttribute("role");
 		
+		//Ensuring only doctors has access and rendering doctor-dashboard.jsp (All the bookings of doctor)
 		if(role.equalsIgnoreCase("doctor")) {
 			String username = (String) request.getAttribute("username");
 			Integer id = (Integer) request.getAttribute("id");
@@ -96,9 +108,12 @@ public class InitialController {
 	    return "forgot-password";
 	}
 	
+	//Rendering patients profile page containing all the details
 	@RequestMapping("/patient/profile")
 	public String showPatientProfile(Model model, HttpServletRequest request) {
     	String role = (String) request.getAttribute("role");
+    	
+    	//Ensuring only patients has access and rendering patient-profile.jsp (Changing any user details)
     	if (role.equalsIgnoreCase("patient")) {
     		int id = (Integer) request.getAttribute("id"); // get logged-in username
             Patient patient = patientService.get(id); // fetch patient data
@@ -108,12 +123,15 @@ public class InitialController {
     	return "error";
     }
 	
+	//Rendering Doctors profile page containing all the details
 	@RequestMapping("/doctor/profile")
 	public String showDoctorProfile(Model model, HttpServletRequest request) {
 		String role = (String) request.getAttribute("role");
+		
+		//Ensuring only doctor has access and rendering doctor-profile.jsp (Changing any user details)
     	if (role.equalsIgnoreCase("doctor")) {
-    		int id = (Integer) request.getAttribute("id"); // get logged-in username
-    		Doctor doctor = doctorService.get(id); // fetch patient data
+    		int id = (Integer) request.getAttribute("id"); 
+    		Doctor doctor = doctorService.get(id); 
     		model.addAttribute("doctor", doctor);
     		return "doctor-profile";
     	}

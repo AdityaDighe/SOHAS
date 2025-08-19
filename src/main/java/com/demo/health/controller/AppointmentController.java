@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demo.health.entity.Appointment;
 import com.demo.health.service.AppointmentService;
 
+/*
+ REST controller for managing appointment-related operations.
+ Provides endpoints to create, list, and update appointment statuses.
+ */
 @RestController
 @RequestMapping("/appointment")
 public class AppointmentController {

@@ -32,7 +32,12 @@ import com.demo.health.entity.Patient;
 import com.demo.health.exception.DoctorNotFoundException;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
- 
+
+
+/*
+REST controller for handling patient-related operations such as registration,
+profile management, and viewing appointments.
+*/
 @RestController
 @RequestMapping("/patients")
 public class PatientController {
@@ -43,8 +48,13 @@ public class PatientController {
     @Autowired
     private DoctorService doctorService;
     
+    /*
+     Registers a new patient 
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> addPatient(@RequestBody @Valid Patient patient, BindingResult result) {
+    	
+    	//Check for validation errors and return
         if (result.hasErrors()) {
             Map<String, String> errors = result.getFieldErrors().stream()
                 .collect(Collectors.toMap(
@@ -55,13 +65,14 @@ public class PatientController {
             return ResponseEntity.badRequest().body(errors);
         }
 
+        // Check if the email is unique or not across Doctor & Patient Tables
         if (patientService.findByEmail(patient.getEmail()) != null || 
             doctorService.findByEmail(patient.getEmail()) != null) {
             return ResponseEntity.badRequest()
                     .body(Map.of("email", "Email already registered"));
         }
 
-        // 🔑 Encrypt password before saving
+        //Encrypt password before saving
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         patient.setPassword(encoder.encode(patient.getPassword()));
 
@@ -77,11 +88,6 @@ public class PatientController {
         return patientService.get(id);
     }
  
-//    @GetMapping
-//    public List<Patient> listPatient() {
-//        return patientService.list();
-//    }
- 
     @PutMapping("/{id}")
     public void updatePatient(@PathVariable int id, @RequestBody Patient patient) {
     	patient.setPatientId(id);
@@ -93,20 +99,15 @@ public class PatientController {
     	patientService.delete(id);
     }
     
-//    @GetMapping("/doctors")
-//    public List<Doctor> getDoctors(@RequestParam String location, @RequestParam String time, @RequestParam String date){
-//    	Time t = Time.valueOf(time);
-//    	Date d = Date.valueOf(date);
-//    	return patientService.getDoctors(location, t, d);
-//    }
-    
+    //getting all the doctors list based on parameters
     @GetMapping("/doctors")
     public ResponseEntity<?> getDoctors(@RequestParam String location, @RequestParam String time, @RequestParam String date) {
         Time t = Time.valueOf(time);
         Date d = Date.valueOf(date);
  
         List<Doctor> doctors = patientService.getDoctors(location, t, d);
- 
+        
+        //Handling DoctorsNotFoundException and sending custom message
         if (doctors.isEmpty()) {
             throw new DoctorNotFoundException("No doctors available for the selected city and time.");
         }
