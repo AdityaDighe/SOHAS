@@ -2,6 +2,7 @@ package com.demo.health.dao;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.demo.health.entity.Appointment;
@@ -18,4 +19,9 @@ public interface PatientDAO {
 	List<Doctor> getDoctors(String location, Time time, Date date);
 	Patient findByEmail(String email);
 	List<Appointment> getAppointment(int id);
+	
+	void updateOtp(String email, String otp, LocalDateTime expiry);
+	Patient findByEmailAndOtp(String email, String otp);
+	void updatePassword(String email, String newPassword);
 }
+

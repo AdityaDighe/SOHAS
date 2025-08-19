@@ -47,7 +47,9 @@ public class JwtAuthenticationFilter extends HttpFilter implements Filter {
                 || path.contains("/patientSignup")
                 || path.endsWith("index.jsp")
                 || path.contains("/forgot-password")
-                || path.contains("/signup")) {
+                || path.contains("/signup")
+                || path.contains("/api/reset-password")
+                || path.contains("/api/request-otp")) {
             
 //            chain.doFilter(req, res); // let it pass without JWT
 //            

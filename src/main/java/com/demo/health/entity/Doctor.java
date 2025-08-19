@@ -11,6 +11,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="doctors")
@@ -45,17 +46,35 @@ public class Doctor {
 	
 	@NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
-    @Pattern(
-       regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$",
-       message = "Password must contain upper, lower, number and special character"
-    )
+//    @Pattern(
+//       regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$",
+//       message = "Password must contain upper, lower, number and special character"
+//    )
 	private String password;
 	
 	@NotBlank(message = "Hospital name is required")
     @Size(max = 100, message = "Hospital name cannot exceed 100 characters")
 	private String hospitalName;
 	
-	
+
+
+	private String otp;
+	private LocalDateTime otpExpiry;
+
+	public String getOtp() {
+	    return otp;
+	}
+	public void setOtp(String otp) {
+	    this.otp = otp;
+	}
+
+	public LocalDateTime getOtpExpiry() {
+	    return otpExpiry;
+	}
+	public void setOtpExpiry(LocalDateTime otpExpiry) {
+	    this.otpExpiry = otpExpiry;
+	}
+
 	
 	public int getDoctorId() {
 		return doctorId;

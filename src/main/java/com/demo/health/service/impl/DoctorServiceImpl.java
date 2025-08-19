@@ -1,6 +1,8 @@
 package com.demo.health.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 import javax.transaction.Transactional;
 
@@ -72,6 +74,40 @@ public class DoctorServiceImpl implements DoctorService{
 	public List<Appointment> myAppointments(int id) {
 		// TODO Auto-generated method stub
 		return doctorDAO.myAppointments(id);
+	}
+	
+	@Autowired
+	private BCryptPasswordEncoder encoder; // reuse for password encoding
+ 
+	@Override
+	@Transactional
+	public void sendOtp(String email) {
+	    Doctor doctor = doctorDAO.findByEmail(email);
+	    if (doctor != null) {
+	        String otp = String.format("%06d", new Random().nextInt(999999));
+	        LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
+ 
+	        doctorDAO.updateOtp(email, otp, expiry);
+ 
+	        // TODO: call EmailService to send OTP to doctor.getEmail()
+	    }
+	}
+ 
+	@Override
+	@Transactional
+	public boolean verifyOtp(String email, String otp) {
+	    Doctor doctor = doctorDAO.findByEmailAndOtp(email, otp);
+	    if (doctor != null && doctor.getOtpExpiry().isAfter(LocalDateTime.now())) {
+	        return true;
+	    }
+	    return false;
+	}
+ 
+	@Override
+	@Transactional
+	public void resetPassword(String email, String newPassword) {
+	    String hashed = encoder.encode(newPassword);
+	    doctorDAO.updatePassword(email, hashed);
 	}
 }
 

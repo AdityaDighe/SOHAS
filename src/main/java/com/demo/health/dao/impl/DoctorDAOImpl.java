@@ -1,5 +1,6 @@
 package com.demo.health.dao.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -44,13 +45,6 @@ public class DoctorDAOImpl implements DoctorDAO{
 		if (doctor != null) sessionFactory.getCurrentSession().delete(doctor);	
 	}
 
-//	public Doctor loginDoctor(String email, String password) {
-//		String hql = "SELECT d FROM Doctor d WHERE d.email = :email AND d.password = :password";
-//		return sessionFactory.getCurrentSession().createQuery(hql, Doctor.class)
-//												  .setParameter("email", email)
-//												  .setParameter("password", password)
-//												  .uniqueResult();
-//	}
 	
 	@Override
 	public Doctor findByEmail(String email) {
@@ -70,4 +64,36 @@ public class DoctorDAOImpl implements DoctorDAO{
 		            .setParameter("id", id)
 		            .list();
 	}
+	
+	@Override
+	public void updateOtp(String email, String otp, LocalDateTime expiry) {
+	    Doctor doctor = findByEmail(email);
+	    if (doctor != null) {
+	        doctor.setOtp(otp);
+	        doctor.setOtpExpiry(expiry);
+	        sessionFactory.getCurrentSession().update(doctor);
+	    }
+	}
+
+	@Override
+	public Doctor findByEmailAndOtp(String email, String otp) {
+	    String hql = "FROM Doctor d WHERE d.email = :email AND d.otp = :otp";
+	    return sessionFactory.getCurrentSession()
+	            .createQuery(hql, Doctor.class)
+	            .setParameter("email", email)
+	            .setParameter("otp", otp)
+	            .uniqueResult();
+	}
+
+	@Override
+	public void updatePassword(String email, String newPassword) {
+	    Doctor doctor = findByEmail(email);
+	    if (doctor != null) {
+	        doctor.setPassword(newPassword);
+	        doctor.setOtp(null); // clear OTP after use
+	        doctor.setOtpExpiry(null);
+	        sessionFactory.getCurrentSession().update(doctor);
+	    }
+	}
+
 }

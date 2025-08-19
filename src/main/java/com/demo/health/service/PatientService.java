@@ -18,4 +18,8 @@ public interface PatientService {
 	List<Doctor> getDoctors(String location, Time time, Date date);
 	Patient findByEmail(String email);
 	List<Appointment> getAppointment(int id);
+	
+	void sendOtp(String email);
+	boolean verifyOtp(String email, String otp);
+	void resetPassword(String email, String newPassword);
 }

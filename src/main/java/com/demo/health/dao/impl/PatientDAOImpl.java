@@ -2,6 +2,7 @@ package com.demo.health.dao.impl;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -48,13 +49,6 @@ public class PatientDAOImpl implements PatientDAO{
 			sessionFactory.getCurrentSession().delete(p);
 	}
 	
-//	public Patient loginPatient(String email, String password) {
-//		String hql = "SELECT p FROM Patient p WHERE p.email = :email AND p.password = :password";
-//		return sessionFactory.getCurrentSession().createQuery(hql, Patient.class)
-//												  .setParameter("email", email)
-//												  .setParameter("password", password)
-//												  .uniqueResult();
-//	}
 
 	@Override
 	public List<Doctor> getDoctors(String location, Time time, Date date) {
@@ -111,6 +105,38 @@ public class PatientDAOImpl implements PatientDAO{
 	            .setParameter("patientId", id)
 	            .list();
 	}
+	
+	@Override
+	public void updateOtp(String email, String otp, LocalDateTime expiry) {
+	    Patient patient = findByEmail(email);
+	    if (patient != null) {
+	        patient.setOtp(otp);
+	        patient.setOtpExpiry(expiry);
+	        sessionFactory.getCurrentSession().update(patient);
+	    }
+	}
+
+	@Override
+	public Patient findByEmailAndOtp(String email, String otp) {
+	    String hql = "FROM Patient p WHERE p.email = :email AND p.otp = :otp";
+	    return sessionFactory.getCurrentSession()
+	            .createQuery(hql, Patient.class)
+	            .setParameter("email", email)
+	            .setParameter("otp", otp)
+	            .uniqueResult();
+	}
+
+	@Override
+	public void updatePassword(String email, String newPassword) {
+	    Patient patient = findByEmail(email);
+	    if (patient != null) {
+	        patient.setPassword(newPassword);
+	        patient.setOtp(null); // clear OTP after use
+	        patient.setOtpExpiry(null);
+	        sessionFactory.getCurrentSession().update(patient);
+	    }
+	}
+
 	
 	
 	

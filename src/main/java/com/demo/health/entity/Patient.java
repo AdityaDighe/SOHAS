@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "patients")
@@ -34,12 +35,32 @@ public class Patient {
     @NotBlank
 	private String email;
 	
-	@Pattern(
-			regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-	        message = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
-	)
+//	@Pattern(
+//			regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+//	        message = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
+//	)
 	private String password;
 	
+	
+
+
+	private String otp;
+	private LocalDateTime otpExpiry;
+
+	public String getOtp() {
+	    return otp;
+	}
+	public void setOtp(String otp) {
+	    this.otp = otp;
+	}
+
+	public LocalDateTime getOtpExpiry() {
+	    return otpExpiry;
+	}
+	public void setOtpExpiry(LocalDateTime otpExpiry) {
+	    this.otpExpiry = otpExpiry;
+	}
+
 	public int getPatientId() {
 		return patientId;
 	}

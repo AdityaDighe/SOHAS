@@ -15,4 +15,8 @@ public interface DoctorService {
 	Doctor loginDoctor(String email, String password);
 	Doctor findByEmail(String email);
 	List<Appointment> myAppointments(int id);
+	
+	void sendOtp(String email);
+	boolean verifyOtp(String email, String otp);
+	void resetPassword(String email, String newPassword);
 }

@@ -2,7 +2,9 @@ package com.demo.health.service.impl;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -90,6 +92,40 @@ public class PatientServiceImpl implements PatientService {
 	public List<Appointment> getAppointment(int id) {
 		// TODO Auto-generated method stub
 		return patientdao.getAppointment(id);
+	}
+
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+
+	@Override
+	@Transactional
+	public void sendOtp(String email) {
+	    Patient patient = patientdao.findByEmail(email);
+	    if (patient != null) {
+	        String otp = String.format("%06d", new Random().nextInt(999999));
+	        LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
+
+	        patientdao.updateOtp(email, otp, expiry);
+
+	        // TODO: call EmailService to send OTP to patient.getEmail()
+	    }
+	}
+
+	@Override
+	@Transactional
+	public boolean verifyOtp(String email, String otp) {
+	    Patient patient = patientdao.findByEmailAndOtp(email, otp);
+	    if (patient != null && patient.getOtpExpiry().isAfter(LocalDateTime.now())) {
+	        return true;
+	    }
+	    return false;
+	}
+
+	@Override
+	@Transactional
+	public void resetPassword(String email, String newPassword) {
+	    String hashed = encoder.encode(newPassword);
+	    patientdao.updatePassword(email, hashed);
 	}
 
 }
