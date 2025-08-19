@@ -59,21 +59,21 @@ public class PatientServiceImpl implements PatientService {
 		patientdao.delete(patientId);
 		
 	}
-
+	
+	//Logging the patient and matching the hashcode with encoded password
 	@Override
 	public Patient loginPatient(String email, String password) {
 	    Patient patient = patientdao.findByEmail(email);
 	    if (patient != null) {
 	        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 	        if (encoder.matches(password, patient.getPassword())) {
-	            return patient; // ✅ login success
+	            return patient; //login success
 	        }
 	    }
-	    return null; // ❌ login failed
+	    return null; //login failed
 	}
-
-
-
+	
+	
 	@Override
 	@Transactional
 	public List<Doctor> getDoctors(String location, Time time, Date date) {
@@ -97,6 +97,7 @@ public class PatientServiceImpl implements PatientService {
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
+	//Generating random otp and setting in the db
 	@Override
 	@Transactional
 	public void sendOtp(String email) {
@@ -111,6 +112,8 @@ public class PatientServiceImpl implements PatientService {
 	    }
 	}
 
+	
+	//Verifying otp by checking that the patient entry exists or not
 	@Override
 	@Transactional
 	public boolean verifyOtp(String email, String otp) {
@@ -121,6 +124,7 @@ public class PatientServiceImpl implements PatientService {
 	    return false;
 	}
 
+	//Setting the new Password after encoding
 	@Override
 	@Transactional
 	public void resetPassword(String email, String newPassword) {

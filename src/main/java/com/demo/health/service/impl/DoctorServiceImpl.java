@@ -51,17 +51,18 @@ public class DoctorServiceImpl implements DoctorService{
 	public void delete(int doctorId) {
 		doctorDAO.delete(doctorId);
 	}
-
+	
+	//Login doctor and match the encoded password with the stored hashcode 
 	@Override
 	public Doctor loginDoctor(String email, String password) {
 	    Doctor doctor = doctorDAO.findByEmail(email);
 	    if (doctor != null) {
 	        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 	        if (encoder.matches(password, doctor.getPassword())) {
-	            return doctor; // ✅ login success
+	            return doctor; //login success
 	        }
 	    }
-	    return null; // ❌ login failed
+	    return null; //login failed
 	}
 
 
@@ -79,6 +80,7 @@ public class DoctorServiceImpl implements DoctorService{
 	@Autowired
 	private BCryptPasswordEncoder encoder; // reuse for password encoding
  
+	//OTP generator and setting it in db
 	@Override
 	@Transactional
 	public void sendOtp(String email) {
@@ -93,6 +95,7 @@ public class DoctorServiceImpl implements DoctorService{
 	    }
 	}
  
+	//Verifying OTP and finding the doctor based on otp and email
 	@Override
 	@Transactional
 	public boolean verifyOtp(String email, String otp) {
@@ -103,6 +106,7 @@ public class DoctorServiceImpl implements DoctorService{
 	    return false;
 	}
  
+	//hashing the new password and updating it
 	@Override
 	@Transactional
 	public void resetPassword(String email, String newPassword) {
