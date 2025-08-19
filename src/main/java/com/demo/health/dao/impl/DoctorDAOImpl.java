@@ -45,7 +45,7 @@ public class DoctorDAOImpl implements DoctorDAO{
 		if (doctor != null) sessionFactory.getCurrentSession().delete(doctor);	
 	}
 
-	
+	//Using Hql to find the doctor by email id 
 	@Override
 	public Doctor findByEmail(String email) {
 		String hql = "FROM Doctor d WHERE d.email = :email";
@@ -54,7 +54,8 @@ public class DoctorDAOImpl implements DoctorDAO{
 	            .setParameter("email", email)
 	            .uniqueResult();
 	}
-
+	
+	//Using Hql to find the appointment details based on doctor id
 	@Override
 	public List<Appointment> myAppointments(int id) {
 		// TODO Auto-generated method stub
@@ -65,6 +66,7 @@ public class DoctorDAOImpl implements DoctorDAO{
 		            .list();
 	}
 	
+	//Setting otp details into the doctor entity
 	@Override
 	public void updateOtp(String email, String otp, LocalDateTime expiry) {
 	    Doctor doctor = findByEmail(email);
@@ -74,7 +76,8 @@ public class DoctorDAOImpl implements DoctorDAO{
 	        sessionFactory.getCurrentSession().update(doctor);
 	    }
 	}
-
+	
+	//Finding the doctor for password reset based on mail and otp
 	@Override
 	public Doctor findByEmailAndOtp(String email, String otp) {
 	    String hql = "FROM Doctor d WHERE d.email = :email AND d.otp = :otp";
@@ -85,6 +88,7 @@ public class DoctorDAOImpl implements DoctorDAO{
 	            .uniqueResult();
 	}
 
+	//Setting the new Password
 	@Override
 	public void updatePassword(String email, String newPassword) {
 	    Doctor doctor = findByEmail(email);

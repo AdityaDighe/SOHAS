@@ -49,17 +49,17 @@ public class PatientDAOImpl implements PatientDAO{
 			sessionFactory.getCurrentSession().delete(p);
 	}
 	
-
+	//Getting list of doctors using criteria query based on location, date and time
 	@Override
 	public List<Doctor> getDoctors(String location, Time time, Date date) {
-		// Main CriteriaBuilder : 
+		//Main CriteriaBuilder : 
 		CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
 		CriteriaQuery<Doctor> cq = cb.createQuery(Doctor.class);
 		
 		// Root for Doctor Table : 
 		Root<Doctor> doctorRoot = cq.from(Doctor.class);
 		
-//		SubQuery to get busy doctors : 
+         //SubQuery to get busy doctors : 
 		 Subquery<Integer> subquery = cq.subquery(Integer.class);
 		 Root<Appointment> appointmentRoot = subquery.from(Appointment.class);
 		 subquery.select(appointmentRoot.get("doctor").get("doctorId"))
@@ -69,7 +69,7 @@ public class PatientDAOImpl implements PatientDAO{
 		                 cb.equal(appointmentRoot.get("status"), "BOOKED")
 		         );
 		 
-//		 Main Query : 
+         //Main Query : 
 		 cq.select(doctorRoot).where(
 				    cb.and(
 				        cb.equal(doctorRoot.get("city"), location),
@@ -86,7 +86,8 @@ public class PatientDAOImpl implements PatientDAO{
 		
 		return doctors;
 	}
-
+	
+	//Finding patient with certain email id
 	@Override
 	public Patient findByEmail(String email) {
 		String hql = "FROM Patient p WHERE p.email = :email";
@@ -95,7 +96,8 @@ public class PatientDAOImpl implements PatientDAO{
 	            .setParameter("email", email)
 	            .uniqueResult();
 	}
-
+	
+	//Appointment list of the patient 
 	@Override
 	public List<Appointment> getAppointment(int id) {
 		// TODO Auto-generated method stub
@@ -106,6 +108,7 @@ public class PatientDAOImpl implements PatientDAO{
 	            .list();
 	}
 	
+	//set otp for the patient entity
 	@Override
 	public void updateOtp(String email, String otp, LocalDateTime expiry) {
 	    Patient patient = findByEmail(email);
@@ -115,7 +118,8 @@ public class PatientDAOImpl implements PatientDAO{
 	        sessionFactory.getCurrentSession().update(patient);
 	    }
 	}
-
+	
+	//finding the patient using email and otp
 	@Override
 	public Patient findByEmailAndOtp(String email, String otp) {
 	    String hql = "FROM Patient p WHERE p.email = :email AND p.otp = :otp";
@@ -125,7 +129,8 @@ public class PatientDAOImpl implements PatientDAO{
 	            .setParameter("otp", otp)
 	            .uniqueResult();
 	}
-
+	
+	//updating the password from the patient request
 	@Override
 	public void updatePassword(String email, String newPassword) {
 	    Patient patient = findByEmail(email);

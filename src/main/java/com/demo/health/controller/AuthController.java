@@ -22,6 +22,10 @@ import com.demo.health.service.PatientService;
 import com.demo.health.util.JwtUtil;
 import com.demo.health.util.OtpUtil;
 
+
+/*
+Authentication controller used for authorization and authentication purposes
+*/
 @RestController
 public class AuthController {
 
@@ -79,23 +83,24 @@ public class AuthController {
     }
     
 
-  //inject EmailService
-
+    //OTP request to change password
     @PostMapping("/api/request-otp")
     public ResponseEntity<?> requestOtp(@RequestBody Map<String, String> payload) {
         String email = payload.get("email");
 
         Patient patient = patientService.findByEmail(email);
         Doctor doctor = doctorService.findByEmail(email);
-
+        
+        //Check if patient or doctor exists
         if (patient == null && doctor == null) {
             return ResponseEntity.status(404).body(Map.of("message", "Email not found"));
         }
 
-        // generate OTP
-        String otp = OtpUtil.generateOtp();   // ✅ use util
+        //OTP generator to give random 6 digits
+        String otp = OtpUtil.generateOtp(); 
         LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
-
+      
+        //Checking if patient or doctor and setting password
         if (patient != null) {
             patient.setOtp(otp);
             patient.setOtpExpiry(expiry);
@@ -106,8 +111,9 @@ public class AuthController {
             doctorService.update(doctor);
         }
 
+      //Sending email, and sending response of success or failure
         try {
-            emailService.sendOtpEmail(email, otp);   // ✅ send email
+            emailService.sendOtpEmail(email, otp); 
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of("message", "Failed to send OTP"));
         }
@@ -137,6 +143,7 @@ public class AuthController {
 
             boolean updated = false;
 
+            //Check for patient entity requesting for reset password
             if (patient != null && patient.getOtp() != null &&
                 patient.getOtp().equals(otp) &&
                 patient.getOtpExpiry() != null &&
@@ -148,7 +155,8 @@ public class AuthController {
                 patientService.update(patient);
                 updated = true;
             }
-
+            
+            //Check for doctor entity requesting for reset password
             if (doctor != null && doctor.getOtp() != null &&
                 doctor.getOtp().equals(otp) &&
                 doctor.getOtpExpiry() != null &&
@@ -169,7 +177,7 @@ public class AuthController {
             }
 
         } catch (Exception e) {
-            e.printStackTrace(); // ✅ print full error in console
+            e.printStackTrace(); //print full error in console
             return ResponseEntity.status(500).body(Map.of("message", "Server error: " + e.getMessage()));
         }
     }

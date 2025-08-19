@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
+	
+	//Exception Handler for Doctor Not Found and responding with message and status
 	@ExceptionHandler(DoctorNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleDoctorNotFound(DoctorNotFoundException ex) {
         Map<String, Object> errorBody = new HashMap<>();
@@ -20,6 +21,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorBody, HttpStatus.NOT_FOUND);
     }
 	
+	//Exception handling for bean validation and showing at frontEnd the validation errors
 	@ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, Object> errors = new HashMap<>();
