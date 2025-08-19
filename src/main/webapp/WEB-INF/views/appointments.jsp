@@ -195,8 +195,8 @@
 
     <!-- No Doctors Message -->
     <div id="noDoctorsMessage" style="display:none; text-align:center; padding: 20px; font-size: 18px; color: #dc3545;">
-        Sorry, no doctors are available for the selected time and city.
-    </div>
+        
+    </div> 
 </div>
 
 <script>
@@ -236,34 +236,38 @@ $(document).ready(function () {
             type: "GET",
             dataType: "json",
             data: { date: date, time: time, location: city },
-            success: function (doctors) {
-                if (doctors.length === 0) {
-                    $("#doctorsSection").hide();
-                    $("#noDoctorsMessage").show();
-                } else {
-                    let tbody = $("#doctorsTable tbody");
-                    tbody.empty();
+            success: function (response) {
+            	let doctors = response.data;
+            	let tbody = $("#doctorsTable tbody");
+                tbody.empty();
 
-                    doctors.forEach(doc => {
-                        tbody.append(
-                            "<tr>" +
-                            "<td>Dr. " + doc.doctorName + "</td>" +
-                            "<td>" + doc.hospitalName + "</td>" +
-                            "<td>" + doc.speciality + "</td>" +
-                            "<td>" + doc.city + "</td>" +
-                            "<td><button class='book' data-id='" + doc.doctorId + "'>Book</button></td>" +
-                            "</tr>"
-                        );
-                    });
+                doctors.forEach(doc => {
+                    tbody.append(
+                        "<tr>" +
+                        "<td>Dr. " + doc.doctorName + "</td>" +
+                        "<td>" + doc.hospitalName + "</td>" +
+                        "<td>" + doc.speciality + "</td>" +
+                        "<td>" + doc.city + "</td>" +
+                        "<td><button class='book' data-id='" + doc.doctorId + "'>Book</button></td>" +
+                        "</tr>"
+                    );
+                });
 
-                    $("#noDoctorsMessage").hide();
-                    $("#doctorsSection").show();
-                }
+                $("#noDoctorsMessage").hide();
+                $("#doctorsSection").show();
             },
             error: function (xhr) {
-                console.error(xhr);
-                alert("Error fetching doctors. Please try again.");
+            	$("#noDoctorsMessage").empty();  
+                $("#noDoctorsMessage").show();
+                $("#doctorsSection").hide();
+           	 	try {
+                    var errResponse = JSON.parse(xhr.responseText);
+                    $("#noDoctorsMessage").append("<h5 style='color:red;'>" + errResponse.message + "</h5>");
+                } catch (e) {
+                    $("#noDoctorsMessage").append("<h5 style='color:red;'>Unexpected error occurred</h5>");
+                }
             }
+
         });
     });
 

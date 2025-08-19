@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.demo.health.dao.DoctorDAO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
+import com.demo.health.exception.DoctorNotFoundException;
 import com.demo.health.service.DoctorService;
 
 @Service
@@ -23,11 +24,12 @@ public class DoctorServiceImpl implements DoctorService{
 	public void save(Doctor doctor) {
 		doctorDAO.save(doctor);
 	}
-
+	
 	@Override
 	@Transactional
-	public Doctor get(int doctorId) {
-		return doctorDAO.get(doctorId);
+	public Doctor get(int doctorId) throws DoctorNotFoundException {
+		Doctor doctor = doctorDAO.get(doctorId);
+		return doctor;
 	}
 
 	@Override

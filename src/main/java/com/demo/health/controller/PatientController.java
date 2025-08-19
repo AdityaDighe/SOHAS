@@ -2,6 +2,7 @@ package com.demo.health.controller;
  
 import java.sql.Date;
 import java.sql.Time;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
+import com.demo.health.exception.DoctorNotFoundException;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
  
@@ -91,11 +93,29 @@ public class PatientController {
     	patientService.delete(id);
     }
     
+//    @GetMapping("/doctors")
+//    public List<Doctor> getDoctors(@RequestParam String location, @RequestParam String time, @RequestParam String date){
+//    	Time t = Time.valueOf(time);
+//    	Date d = Date.valueOf(date);
+//    	return patientService.getDoctors(location, t, d);
+//    }
+    
     @GetMapping("/doctors")
-    public List<Doctor> getDoctors(@RequestParam String location, @RequestParam String time, @RequestParam String date){
-    	Time t = Time.valueOf(time);
-    	Date d = Date.valueOf(date);
-    	return patientService.getDoctors(location, t, d);
+    public ResponseEntity<?> getDoctors(@RequestParam String location, @RequestParam String time, @RequestParam String date) {
+        Time t = Time.valueOf(time);
+        Date d = Date.valueOf(date);
+ 
+        List<Doctor> doctors = patientService.getDoctors(location, t, d);
+ 
+        if (doctors.isEmpty()) {
+            throw new DoctorNotFoundException("No doctors available for the selected city and time.");
+        }
+ 
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("data", doctors);
+ 
+        return ResponseEntity.ok(response);
     }
     
     @GetMapping("/appointment/{id}")
