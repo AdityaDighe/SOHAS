@@ -7,120 +7,131 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%);
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       margin: 0;
     }
 
     .main-content {
       display: flex;
       justify-content: center;
-      align-items: center;
-      min-height: calc(100vh - 80px); /* adjust based on your header height */
-      padding-top: 10px;
+      align-items: flex-start;
+      padding: 50px 20px;
+      min-height: calc(100vh - 80px);
     }
 
     .profile-wrapper {
       width: 100%;
-      max-width: 400px;
-      background: #fff;
-      padding: 28px;
-      border-radius: 10px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+      max-width: 650px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.5s ease-in-out;
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 30px;
+      font-size: 28px;
+      color: #0d6efd;
+      text-shadow: 0 0 4px rgba(13, 110, 253, 0.5);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media(min-width: 700px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     .profile-field {
-      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
       position: relative;
     }
 
     label {
-      display: block;
       font-weight: 600;
       margin-bottom: 6px;
       color: #333;
+      font-size: 14px;
     }
 
-    input[type="text"], 
-    input[type="number"], 
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
     select {
       width: 100%;
-      padding: 8px 10px;
+      padding: 10px 12px;
+      padding-right: 36px; /* for edit icon */
       font-size: 14px;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       border-radius: 6px;
-      height: 36px;
       box-sizing: border-box;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    input[type="text"]:focus,
-    input[type="number"]:focus,
+    input:focus,
     select:focus {
       border-color: #0d6efd;
+      box-shadow: 0 0 5px rgba(13, 110, 253, 0.3);
       outline: none;
     }
 
     .edit-icon {
       position: absolute;
       right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
+      top: 38px;
       font-size: 16px;
       color: #0d6efd;
       cursor: pointer;
-    }
-
-    select {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      background-image: none;
-      padding-right: 10px;
+      z-index: 2;
     }
 
     .error {
       color: #b00020;
-      font-size: 13px;
-      margin-top: 4px;
+      font-size: 12px;
+      margin-top: 3px;
       min-height: 1em;
     }
 
     .btn-row {
-      text-align: center;
-      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
     }
 
     .btn {
       background: #0d6efd;
-      color: white;
-      padding: 10px 18px;
+      color: #fff;
+      padding: 12px 22px;
       border: none;
       border-radius: 6px;
-      font-weight: bold;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
-      margin-right: 10px;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     .btn.cancel {
-      background: #ccc;
-      color: #000;
+      background: #f1f1f1;
+      color: #333;
     }
 
     .btn:hover {
-      background: #0b5ed7;
-      transform: scale(1.10);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(13, 110, 253, 0.25);
     }
 
     .btn.cancel:hover {
-      background: #999;
-      transform: scale(1.10);
+      background: #ddd;
     }
 
     .success-toast {
@@ -132,136 +143,131 @@
       color: white;
       padding: 12px 24px;
       border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       font-size: 15px;
       display: none;
       z-index: 1000;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .navbar a {
+      text-decoration: none !important;
+      color: inherit;
     }
   </style>
 </head>
 
 <body>
-  <%@ include file="header.jsp" %>
+<%@ include file="header.jsp" %>
 
-  <div class="main-content">
-    <div class="profile-wrapper">
-      <h2>Patient Profile</h2>
-      <form id="profileForm" autocomplete="off" novalidate>
-        <div class="profile-field">
+<div class="main-content">
+  <div class="profile-wrapper">
+    <h2>Patient Profile</h2>
+    <form id="profileForm" autocomplete="off" novalidate>
+      <div class="grid">
+        <div class="profile-field" style="grid-column: 1 / -1;">
           <label for="email">Email</label>
-          <input type="text" id="email" name="email" disabled 
-                 value="${patient.email != null ? patient.email : ''}" />
+          <input type="email" id="email" name="email" disabled value="${patient.email != null ? patient.email : ''}" />
         </div>
-        
+
         <div class="profile-field">
           <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" name="fullName" required
-                 value="${patient.patientName != null ? patient.patientName : ''}" disabled />
+          <input type="text" id="fullName" name="fullName" value="${patient.patientName}" disabled />
           <span class="edit-icon" data-target="fullName">&#9998;</span>
           <div class="error" id="error-fullName"></div>
         </div>
 
         <div class="profile-field">
           <label for="age">Age</label>
-          <input type="text" id="age" name="age" required
-                 value="${patient.age != null ? patient.age : ''}" disabled />
+          <input type="number" id="age" name="age" value="${patient.age}" disabled />
           <span class="edit-icon" data-target="age">&#9998;</span>
           <div class="error" id="error-age"></div>
         </div>
 
         <div class="profile-field">
-          <label for="city">Select City</label>
-          <input type="text" id="city" name="city" required 
-                 value="${patient.city != null ? patient.city : ''}" disabled />
-          <span class="edit-icon" data-target="city">&#9998;</span>
+          <label for="city">City</label>
+          <select id="city" name="city">
+            <option value="">-- Select City --</option>
+            <option value="Mumbai" ${patient.city == 'Mumbai' ? 'selected' : ''}>Mumbai</option>
+            <option value="Chennai" ${patient.city == 'Chennai' ? 'selected' : ''}>Chennai</option>
+            <option value="Pune" ${patient.city == 'Pune' ? 'selected' : ''}>Pune</option>
+            <option value="Bhopal" ${patient.city == 'Bhopal' ? 'selected' : ''}>Bhopal</option>
+          </select>
           <div class="error" id="error-city"></div>
         </div>
+      </div>
 
-        <div class="btn-row">
-          <button type="button" class="btn cancel" id="cancelEdit">Cancel</button>
-          <button type="submit" class="btn">Save Changes</button>
-        </div>
-      </form>
-    </div>
+      <div class="btn-row">
+        <button type="button" class="btn cancel" id="cancelEdit">Cancel</button>
+        <button type="submit" class="btn">Save Changes</button>
+      </div>
+    </form>
   </div>
+</div>
 
-  <div class="success-toast" id="successToast">Updated successfully!</div>
+<div class="success-toast" id="successToast">Profile updated successfully!</div>
 
-  <script>
-    $(document).ready(function () {
-      // Enable edit on click
-      $('.edit-icon').click(function () {
-        const target = $(this).data('target');
-        const $field = $('#' + target);
-        $field.prop('disabled', false).focus();
-        $field.one('blur', function () {
-          $(this).prop('disabled', true);
-        });
-      });
+<script>
+$(document).ready(function() {
+  $('.edit-icon').click(function () {
+    const target = $(this).data('target');
+    const $field = $('#' + target);
+    $field.prop('disabled', false).focus();
+    $field.one('blur', function () {
+      $(this).prop('disabled', true);
+    });
+  });
 
-      // Cancel button resets to original values
-      $('#cancelEdit').click(function () {
-        $('#fullName').val("${patient.patientName != null ? patient.patientName : ''}");
-        $('#age').val("${patient.age != null ? patient.age : ''}");
-        $('#city').val("${patient.city != null ? patient.city : ''}");
-        $('.error').text('');
-        $('input, select');
-      });
+  $('#cancelEdit').click(function () {
+    $('#fullName').val("${patient.patientName}");
+    $('#age').val("${patient.age}");
+    $('#city').val("${patient.city}");
+    $('.error').text('');
+  });
 
-      // AJAX form submit
-      $('#profileForm').submit(function (e) {
-        e.preventDefault();
-        $('.error').text('');
+  $('#profileForm').submit(function (e) {
+    e.preventDefault();
+    $('.error').text('');
 
-        const fullName = $('#fullName').val().trim();
-        const age = $('#age').val();
-        const city = $('#city').val();
+    const fullName = $('#fullName').val().trim();
+    const age = $('#age').val();
+    const city = $('#city').val();
 
-        let hasError = false;
+    let hasError = false;
+    if (!fullName) { $('#error-fullName').text('Full Name is required.'); hasError = true; }
+    if (!age || age < 0 || age > 120) { $('#error-age').text('Age must be 0-120.'); hasError = true; }
+    if (!city) { $('#error-city').text('City is required.'); hasError = true; }
+    if (hasError) return;
 
-        if (!fullName) {
-          $('#error-fullName').text('Full Name is required.');
-          hasError = true;
-        }
-        if (!age || age < 0 || age > 120) {
-          $('#error-age').text('Age must be between 0 and 120.');
-          hasError = true;
-        }
-        if (!city) {
-          $('#error-city').text('Please select a city.');
-          hasError = true;
-        }
-        if (hasError) return;
+    $('input, select, button').prop('disabled', true);
 
-        $('input, select, button').prop('disabled', true);
-
-        $.ajax({
-          url: '${pageContext.request.contextPath}/patients/${patient.patientId}',
-          method: 'PUT',
-          contentType: 'application/json',
-          data: JSON.stringify({ 
-            patientName: fullName,
-            age: parseInt(age),
-            city: city,
-            email: $("#email").val(),
-            password: "${patient.password}"
-          }),
-          success: function () {
-            showToast();
-            $('input, select').prop('disabled', true);
-            $('button').prop('disabled', false);
-          },
-          error: function () {
-            alert('Update failed.');
-            $('input, select, button').prop('disabled', false);
-          }
-        });
-      });
-
-      function showToast() {
+    $.ajax({
+      url: '${pageContext.request.contextPath}/patients/${patient.patientId}',
+      method: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        patientName: fullName,
+        age: parseInt(age),
+        city: city,
+        email: $("#email").val(),
+        password: "${patient.password}"
+      }),
+      success: function () {
         $('#successToast').fadeIn().delay(1500).fadeOut();
+        $('input, select').prop('disabled', true);
+        $('button').prop('disabled', false);
+      },
+      error: function () {
+        alert('Update failed.');
+        $('input, select, button').prop('disabled', false);
       }
     });
-  </script>
+  });
+});
+</script>
 </body>
 </html>

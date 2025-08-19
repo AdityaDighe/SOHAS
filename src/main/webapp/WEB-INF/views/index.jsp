@@ -26,44 +26,12 @@ boolean loggedIn = (user != null);
 		body {
 			margin: 0;
 			font-family: 'Inter', sans-serif;
-			background: linear-gradient(135deg, var(--bg), var(--bg2), var(--bg3));
+			background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
 			color: var(--text-dark);
 			min-height: 100vh;
 		}
 
-		/* ===== Navbar ===== */
-		.navbar {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			padding: 14px 28px;
-			background: rgba(255, 255, 255, 0.08);
-			backdrop-filter: blur(10px);
-			border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-			position: sticky;
-			top: 0;
-			z-index: 1000;
-		}
-
-		.navbar .logo {
-			font-size: 1.5rem;
-			font-weight: 700;
-			background: linear-gradient(90deg, var(--brand), var(--brand2));
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-			text-decoration: none;
-		}
-
-		.nav-links a {
-			color: white;
-			text-decoration: none;
-			margin-left: 20px;
-			font-weight: 500;
-			transition: color 0.3s ease;
-		}
-		.nav-links a:hover {
-			color: var(--brand2);
-		}
+		
 
 		/* Clear Login Button */
 		.btn-login {
@@ -172,6 +140,11 @@ boolean loggedIn = (user != null);
 			color: var(--text-light);
 			font-size: 0.9rem;
 		}
+		
+		.navbar  a {
+		    text-decoration: none !important;
+		    color: inherit;
+		}
 	</style>
 </head>
 <body>
@@ -223,5 +196,14 @@ boolean loggedIn = (user != null);
 	<!-- FOOTER -->
 	<footer> &copy; 2025 SOHAS. All rights reserved. </footer>
 
+<script>
+    // Prevent back navigation after logout
+    if (window.history && window.history.pushState) {
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+            window.history.pushState(null, null, window.location.href);
+        };
+    }
+</script>
 </body>
 </html>

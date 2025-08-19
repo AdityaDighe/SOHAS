@@ -8,7 +8,7 @@
   <style>
     body {
       font-family: "Segoe UI", Arial, sans-serif;
-      background: linear-gradient(180deg, #f0f6ff 0%, #ffffff 100%);
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       margin: 0;
     }
 
@@ -23,24 +23,30 @@
     .profile-wrapper {
       width: 100%;
       max-width: 650px;
-      background: #fff;
-      padding: 40px;
-      border-radius: 16px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.15);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       animation: fadeIn 0.5s ease-in-out;
     }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 28px;
-      color: #0d47a1;
-    }
+	h2 {
+	    text-align: center;
+	    margin-bottom: 30px;
+	    font-size: 28px;
+	    color: #0d6efd;
+	    text-shadow: 0 0 4px rgba(13, 110, 253, 0.5); /* smaller, softer glow */
+	}
 
     .grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px 25px;
+      grid-template-columns: 1fr; /* single column for small screens */
+      gap: 20px;
+    }
+
+    @media(min-width: 700px) {
+      .grid {
+        grid-template-columns: 1fr 1fr; /* two columns on larger screens */
+      }
     }
 
     .profile-field {
@@ -62,9 +68,10 @@
     select {
       width: 100%;
       padding: 10px 12px;
+      padding-right: 36px; /* space for edit icon */
       font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
       box-sizing: border-box;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
@@ -72,21 +79,22 @@
     input:focus,
     select:focus {
       border-color: #0d6efd;
-      box-shadow: 0 0 6px rgba(13, 110, 253, 0.3);
+      box-shadow: 0 0 5px rgba(13, 110, 253, 0.3);
       outline: none;
     }
 
     .edit-icon {
       position: absolute;
-      right: 12px;
-      top: 36px;
+      right: 10px;
+      top: 38px;
       font-size: 16px;
       color: #0d6efd;
       cursor: pointer;
+      z-index: 2;
     }
 
     .error {
-      color: #d32f2f;
+      color: #b00020;
       font-size: 12px;
       margin-top: 3px;
       min-height: 1em;
@@ -96,7 +104,7 @@
       display: flex;
       justify-content: center;
       gap: 15px;
-      margin-top: 35px;
+      margin-top: 30px;
     }
 
     .btn {
@@ -104,7 +112,7 @@
       color: #fff;
       padding: 12px 22px;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
@@ -118,7 +126,7 @@
 
     .btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(13, 110, 253, 0.25);
+      box-shadow: 0 6px 12px rgba(13, 110, 253, 0.25);
     }
 
     .btn.cancel:hover {
@@ -144,6 +152,11 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    
+    .navbar  a {
+		    text-decoration: none !important;
+		    color: inherit;
+		}
   </style>
 </head>
 <body>
@@ -155,7 +168,7 @@
     <h2>Doctor Profile</h2>
     <form id="doctorProfileForm" autocomplete="off" novalidate>
       <div class="grid">
-        <div class="profile-field">
+        <div class="profile-field" style="grid-column: 1 / -1;">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" disabled value="${doctor.email != null ? doctor.email : ''}" />
         </div>
@@ -259,35 +272,12 @@
 
       let hasError = false;
 
-      if (!doctorName) {
-        $('#error-doctorName').text('Name is required.');
-        hasError = true;
-      }
-
-      if (!speciality) {
-        $('#error-speciality').text('Speciality is required.');
-        hasError = true;
-      }
-
-      if (!/^\d{10}$/.test(phoneNumber)) {
-        $('#error-phoneNumber').text('Phone number must be 10 digits.');
-        hasError = true;
-      }
-
-      if (!city) {
-        $('#error-city').text('City is required.');
-        hasError = true;
-      }
-
-      if (!hospitalName) {
-        $('#error-hospitalName').text('Hospital name is required.');
-        hasError = true;
-      }
-
-      if (!startTime || !endTime || endTime <= startTime) {
-        $('#error-endTime').text('End time must be after start time.');
-        hasError = true;
-      }
+      if (!doctorName) { $('#error-doctorName').text('Name is required.'); hasError = true; }
+      if (!speciality) { $('#error-speciality').text('Speciality is required.'); hasError = true; }
+      if (!/^\d{10}$/.test(phoneNumber)) { $('#error-phoneNumber').text('Phone number must be 10 digits.'); hasError = true; }
+      if (!city) { $('#error-city').text('City is required.'); hasError = true; }
+      if (!hospitalName) { $('#error-hospitalName').text('Hospital name is required.'); hasError = true; }
+      if (!startTime || !endTime || endTime <= startTime) { $('#error-endTime').text('End time must be after start time.'); hasError = true; }
 
       if (hasError) return;
 

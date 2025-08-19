@@ -10,36 +10,11 @@
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+           	background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: #fff;
         }
 
-        /* HEADER */
-        .header {
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(12px);
-            box-shadow: 0 4px 25px rgba(0,0,0,0.3);
-            padding: 15px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .header .brand { font-size: 22px; font-weight: bold; }
-        .header .brand span { color: #3399ff; }
-
-        .header .nav a {
-            padding: 8px 14px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
-            color: #fff; text-decoration: none; font-size: 14px; font-weight: 500;
-            margin-left: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .header .nav a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.8);
-        }
+        
 
         /* MAIN CONTAINER */
         .container {
@@ -47,7 +22,7 @@
             margin: 50px auto;
             padding: 30px;
             border-radius: 20px;
-            background: rgba(255,255,255,0.08);
+             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(14px);
             box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
@@ -125,6 +100,11 @@
         }
 
         td.actions { display: flex; justify-content: center; gap: 12px; }
+        
+        .navbar  a {
+		    text-decoration: none !important;
+		    color: inherit;
+		}
     </style>
 </head>
 <body>
@@ -160,7 +140,9 @@
         loadAppointments();
 
         function loadAppointments() {
-            let id = "${id}";
+        	
+
+        	let id = "${id}";
             $.ajax({
                 url: baseUrl + "/doctors/appointment/" + id,
                 method: "GET",
@@ -175,6 +157,13 @@
                     }
 
                     appointments.forEach(function (app) {
+                    	let dateObj = new Date(app.date);
+                        dateObj.setDate(dateObj.getDate() + 1); // timezone adjustment
+ 
+                        let fixedDate = dateObj.getFullYear() + "-" +
+                            String(dateObj.getMonth() + 1).padStart(2, "0") + "-" +
+                            String(dateObj.getDate()).padStart(2, "0");
+ 
                         let isFinished = (app.status === "CANCELLED" || app.status === "COMPLETED");
 
                         let completeBtn = "<button class='btn-status complete " + (isFinished ? "disabled' disabled" : "'") +
@@ -186,7 +175,7 @@
                         tbody.append(
                             "<tr>" +
                             "<td>" + app.patient.patientName + "</td>" +
-                            "<td>" + app.date + "</td>" +
+                            "<td>" + fixedDate + "</td>" +
                             "<td>" + app.time + "</td>" +
                             "<td><span class='status " + app.status.toLowerCase() + "'>" + app.status + "</span></td>" +
                             "<td class='actions'>" + completeBtn + cancelBtn + "</td>" +

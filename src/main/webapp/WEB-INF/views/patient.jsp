@@ -3,159 +3,141 @@
 <head>
     <title>SOHAS • Patient Dashboard</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f5f7fb; margin: 0; background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%); }
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+        }
+
+        /* MAIN CONTAINER */
         .wrap {
-            max-width: 800px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 28px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
 
         h2 {
-            margin-bottom: 20px;
             text-align: center;
+            font-size: 28px;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(0,210,255,0.7);
         }
 
-        label {
-            font-weight: bold;
-        }
-
-        select, button {
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-        }
-
-        .btn {
-            background: #28a745;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background: #218838;
-        }
-
-        .cancel {
-            background: #dc3545;
-            color: #fff;
-            border: none;
-            padding: 6px 10px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        .cancel:hover {
-            background: #b52a37;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-
-        th {
-            background: #f8f9fa;
-        }
-
-        .book-section {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .book-section p {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        .book-btn {
-            background: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .book-btn:hover {
-            background: #0069d9;
-            transform: scale(1.08);
-        }
-
-        button:disabled {
-            display: none;
-        }
-
-        button.cancel {
-            border-radius: 20px;
-        }
-
-        td button {
-            display: block;
-            margin: 0 auto;
-        }
-
-        button:hover {
-            transform: scale(1.20);
-            transition: transform 0.2s ease;
-        }
-
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.85em;
-            font-weight: bold;
-            display: inline-block;
-            text-transform: uppercase;
-        }
-
-        .status-COMPLETED {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .status-BOOKED {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .status-CANCELLED {
-            background-color: #dc3545;
-            color: white;
-        }
-        
-        /* New header flex container for welcome + book button */
         .header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 0 50px 40px 30px; 
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
+
         .welcome-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 6px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-shadow: 0 0 6px rgba(255,255,255,0.4);
         }
-        .welcome-subtext {
-            font-weight: normal;
-            font-size: 1rem;
-            color: #555;
+
+        /* BOOK BUTTON */
+        .book-btn {
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s ease;
+            box-shadow: 0 0 12px rgba(0,212,255,0.6);
+        }
+        .book-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 20px rgba(0,212,255,0.9);
+        }
+
+        /* TABLE */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 14px 18px; text-align: center; }
+        th {
+            font-size: 15px; font-weight: bold; letter-spacing: 1px; color: #fff;
+            text-shadow: 0 0 8px rgba(0,210,255,0.8);
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+        tr {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        tr:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 18px rgba(0, 210, 255, 0.5);
+        }
+
+        /* STATUS BADGES */
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .status-BOOKED {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #000;
+            box-shadow: 0 0 10px rgba(255,220,50,0.9);
+        }
+        .status-COMPLETED {
+            background: linear-gradient(135deg, #56ab2f, #a8e063);
+            color: #000;
+            box-shadow: 0 0 10px rgba(86,171,47,0.8);
+        }
+        .status-CANCELLED {
+            background: linear-gradient(135deg, #ff0844, #ff416c);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255,65,108,0.8);
+        }
+
+        /* CANCEL BUTTON */
+        .cancel {
+            padding: 6px 14px; border: none; border-radius: 20px;
+            font-size: 13px; cursor: pointer; margin: 0 5px;
+            transition: transform 0.2s, box-shadow 0.2s; min-width: 90px;
+            background: linear-gradient(135deg, #ff0844, #ff416c);
+            color: #fff;
+            box-shadow: 0 0 12px rgba(255,65,108,0.8);
+        }
+        .cancel:hover:not(:disabled) {
+            transform: scale(1.1);
+            box-shadow: 0 0 18px rgba(255,255,255,0.9);
+        }
+        .cancel:disabled {
+            background: linear-gradient(135deg, #555, #888);
+            color: #ddd;
+            box-shadow: 0 0 12px rgba(180,180,180,0.8);
+            cursor: not-allowed;
+        }
+
+        /* EMPTY MESSAGE */
+        #noAppointmentsMessage {
+            display:none;
+            text-align:center;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #ddd;
+        }
+
+        /* NAVBAR FIX */
+        .navbar a {
+            text-decoration: none !important;
+            color: inherit;
         }
     </style>
 </head>
@@ -164,24 +146,19 @@
 <%@ include file="header.jsp" %>
 
 <div class="wrap">
-
-    <!-- Header with welcome text left and book button right -->
+    <!-- Header -->
     <div class="header-row">
-        <div>
-            <div class="welcome-text">Looking for a doctor? Book an appointment now</div>
-        </div>
+        <div class="welcome-text">Looking for a doctor? Book an appointment now</div>
         <a href="http://localhost:8080/SOHAS/patientDashboard/appointment" class="book-btn">Book</a>
     </div>
 
-    <!-- Booked Appointments Section -->
-    <h3>Your Appointments</h3>
+    <!-- Appointments -->
+    <h2>Your Appointments</h2>
 
-	<!-- No appointments message -->
-	<div id="noAppointmentsMessage" style="display:none; text-align:center; margin-top: 30px; font-size: 18px; color: #555;">
-	    No appointments booked yet.
-	</div>
-	
-	
+    <div id="noAppointmentsMessage">
+        No appointments booked yet.
+    </div>
+
     <table id="myAppointments" style="display:none;">
         <thead>
         <tr>
@@ -193,8 +170,7 @@
             <th>Action</th>
         </tr>
         </thead>
-        <tbody>
-        </tbody>
+        <tbody></tbody>
     </table>
 </div>
 
@@ -214,12 +190,18 @@ $(document).ready(function() {
                 tbody.empty();
 
                 if (appointments.length === 0) {
-                	$("#myAppointments").hide();
+                    $("#myAppointments").hide();
                     $("#noAppointmentsMessage").show();
                     return;
                 }
-				
+
                 appointments.forEach(function(app) {
+                    let dateObj = new Date(app.date);
+                    dateObj.setDate(dateObj.getDate() + 1); // timezone fix
+                    let fixedDate = dateObj.getFullYear() + "-" +
+                        String(dateObj.getMonth() + 1).padStart(2, "0") + "-" +
+                        String(dateObj.getDate()).padStart(2, "0");
+
                     let disabled = app.status === "CANCELLED" ? "disabled" : "";
                     let btnText = app.status === "CANCELLED" ? "Cancelled" : "Cancel";
 
@@ -227,14 +209,14 @@ $(document).ready(function() {
                         "<tr>" +
                             "<td>Dr. " + app.doctor.doctorName + "</td>" +
                             "<td>" + app.doctor.speciality + "</td>" +
-                            "<td>" + app.date + "</td>" +
+                            "<td>" + fixedDate + "</td>" +
                             "<td>" + app.time + "</td>" +
                             "<td><span class='status-badge status-" + app.status + "'>" + app.status + "</span></td>" +
                             "<td><button class='cancel' data-id='" + app.appointmentId + "' " + disabled + ">" + btnText + "</button></td>" +
                         "</tr>"
                     );
-                    
                 });
+
                 $("#noAppointmentsMessage").hide();
                 $("#myAppointments").show();
             },
