@@ -310,7 +310,7 @@
         },
         success: function () {
           $('#successToast').fadeIn().delay(1500).fadeOut();
-          
+          window.location.href = "${pageContext.request.contextPath}/doctor/profile"
         },
         error: function () {
           console.log(startTime);

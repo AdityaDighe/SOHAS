@@ -259,7 +259,7 @@ $(document).ready(function() {
       },
       success: function () {
         $('#successToast').fadeIn().delay(1500).fadeOut();
-       
+       	window.location.href = "${pageContext.request.contextPath}/patient/profile"
       },
       error: function () {
         alert('Update failed.');
