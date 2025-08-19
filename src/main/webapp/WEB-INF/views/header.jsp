@@ -246,30 +246,31 @@ boolean loggedIn = (user != null);
 
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
-		$(document)
-				.ready(
-						function() {
-							$("#logoutBtn")
-									.click(
-											function() {
-												$
-														.ajax({
-															url : "${pageContext.request.contextPath}/api/logout",
-															type : "POST",
-															success : function(
-																	response) {
-																alert(response);
-																window.location.replace("${pageContext.request.contextPath}/");
-																
-															},
-															error : function(
-																	xhr) {
-																alert("Logout failed: "
-																		+ xhr.responseText);
-															}
-														});
-											});
+		// Helper to get cookie
+	    function getCookie(name) {
+	        let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+	        return match ? match[2] : null;
+	    }
+		
+		let tokenFromCookie = getCookie("jwtToken");
+		$(document).ready(function() {
+			$("#logoutBtn").click(function() {
+				$.ajax({
+						url : "${pageContext.request.contextPath}/api/logout",
+						type : "POST",
+						headers: {
+			                "Authorization": "Bearer " + tokenFromCookie
+			            },
+						success : function(response) {
+							alert(response);
+							window.location.replace("${pageContext.request.contextPath}/");
+						},
+					    error : function(xhr) {
+							alert("Logout failed: "+ xhr.responseText);
+						}
 						});
+				});
+		});
 	</script>
 
 </body>

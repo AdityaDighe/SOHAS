@@ -144,6 +144,11 @@
             color: #ff4c60;
             display: none;
         }
+        .navbar  a {
+		    text-decoration: none !important;
+		    color: inherit;
+		}
+        
     </style>
 </head>
 <body>
@@ -230,6 +235,13 @@
         });
     });
 
+    function getCookie(name) {
+        let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? match[2] : null;
+    }
+	
+	let tokenFromCookie1 = getCookie("jwtToken");
+ 
     $(document).ready(function () {
     	 $("#doctorsTable").hide();
     	$("#searchForm").on("submit", function(event) {
@@ -244,6 +256,9 @@
                 type: "GET",
                 dataType: "json",
                 data: { date: date, time: time, location: city },
+                headers: {
+	                "Authorization": "Bearer " + tokenFromCookie1
+	            },
                 success: function(doctors) {
                 	console.log(doctors)
                     var tbody = $("#doctorsTable tbody");
@@ -299,6 +314,9 @@
                     patient: { patientId: patientId },
                     doctor: { doctorId: id }
                 }),
+                headers: {
+	                "Authorization": "Bearer " + tokenFromCookie
+	            },
                 success: function() {
                     alert("Appointment booked successfully");
                     window.location.href = "${pageContext.request.contextPath}/patientDashboard";

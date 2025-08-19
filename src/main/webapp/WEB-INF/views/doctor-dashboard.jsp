@@ -105,6 +105,82 @@
 		    text-decoration: none !important;
 		    color: inherit;
 		}
+		
+		.modal-overlay {
+	    position: fixed;
+	    top: 0; left: 0; right: 0;
+	    height: 100%;
+	    background: rgba(0,0,0,0.4);
+	    display: flex;
+	    justify-content: center;
+	    align-items: flex-start; /* Pushes modal to top */
+	    padding-top: 40px; /* Space from top */
+	    z-index: 9998;
+	}
+	
+	/* Modal Box */
+	.modal {
+	    background: rgba(255, 255, 255, 0.15);
+	    backdrop-filter: blur(12px);
+	    border-radius: 12px;
+	    padding: 20px 25px;
+	    width: 350px;
+	    text-align: center;
+	    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+	    color: #fff;
+	    animation: slideDown 0.3s ease;
+	}
+	
+	.modal-buttons {
+	    margin-top: 15px;
+	    display: flex;
+	    justify-content: space-around;
+	}
+	
+	.modal-btn {
+	    padding: 8px 16px;
+	    border: none;
+	    border-radius: 8px;
+	    cursor: pointer;
+	    font-weight: bold;
+	    transition: 0.2s;
+	}
+	
+	#confirmYes {
+	    background: linear-gradient(135deg, #56ab2f, #a8e063);
+	    color: #000;
+	}
+	#confirmNo {
+	    background: linear-gradient(135deg, #ff0844, #ff416c);
+	    color: #fff;
+	}
+	
+	.modal-btn:hover {
+	    transform: scale(1.05);
+	}
+	
+	/* Slide animation */
+	@keyframes slideDown {
+	    from { transform: translateY(-30px); opacity: 0; }
+	    to { transform: translateY(0); opacity: 1; }
+	}
+	
+	/* Toast Notification */
+	#toast {
+	    display: none;
+	    position: fixed;
+	    bottom: 30px;
+	    left: 50%;
+	    transform: translateX(-50%); /* Center horizontally */
+	    padding: 12px 20px;
+	    background: #ffc107;
+	    color: #000;
+	    font-weight: bold;
+	    border-radius: 8px;
+	    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+	    z-index: 9999;
+	    text-align: center;
+	}
     </style>
 </head>
 <body>
@@ -135,43 +211,70 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     const baseUrl = "${pageContext.request.contextPath}";
-
+ 	
+    function getCookie(name) {
+        let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? match[2] : null;
+    }
+	
+	let tokenFromCookie1 = getCookie("jwtToken");
     $(document).ready(function () {
+    	let appointmentToUpdate = null;
+        let actionToPerform = null;
+        
         loadAppointments();
-
+     
         function loadAppointments() {
-        	
-
-        	let id = "${id}";
+            let id = "${id}";
             $.ajax({
                 url: baseUrl + "/doctors/appointment/" + id,
                 method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + tokenFromCookie
+                },
                 success: function (appointments) {
                     let tbody = $("#appointmentTable tbody");
                     tbody.empty();
-
+ 
                     if (appointments.length === 0) {
                         $("#appointmentTable").hide();
                         $("#noAppointmentsMessage").show();
                         return;
                     }
-
+ 
                     appointments.forEach(function (app) {
-                    	let dateObj = new Date(app.date);
+                        let isFinished = (app.status === "CANCELLED" || app.status === "COMPLETED");
+						
+                        let disabled = "";
+                        let cancelBtnText = "Cancel";
+ 
+                        let dateObj = new Date(app.date);
                         dateObj.setDate(dateObj.getDate() + 1); // timezone adjustment
  
                         let fixedDate = dateObj.getFullYear() + "-" +
                             String(dateObj.getMonth() + 1).padStart(2, "0") + "-" +
                             String(dateObj.getDate()).padStart(2, "0");
  
-                        let isFinished = (app.status === "CANCELLED" || app.status === "COMPLETED");
-
+                        let appointmentDateTime = new Date(fixedDate + "T" + app.time);
+                        let now = new Date();
+                        
+                        // Check if the appointment has expired or is already cancelled
+                        if (appointmentDateTime < now && app.status !== "CANCELLED") {
+                            disabled = "disabled";
+                            cancelBtnText = "Expired";
+                        }
+                        
+                        if (app.status === "CANCELLED") {
+                            disabled = "disabled";
+                            cancelBtnText = "Cancelled";
+                        }
+ 
                         let completeBtn = "<button class='btn-status complete " + (isFinished ? "disabled' disabled" : "'") +
                             " data-id='" + app.appointmentId + "'>Complete</button>";
-
+ 
                         let cancelBtn = "<button class='btn-status cancel " + (isFinished ? "disabled' disabled" : "'") +
                             " data-id='" + app.appointmentId + "'>Cancel</button>";
-
+ 
                         tbody.append(
                             "<tr>" +
                             "<td>" + app.patient.patientName + "</td>" +
@@ -186,45 +289,124 @@
                     $("#appointmentTable").show();
                 },
                 error: function () {
-                    alert("Failed to load appointments.");
+                	showToast("Failed to load appointments", "error");
+                    //alert("Failed to load appointments.");
                 }
             });
         }
-
+        
+     // Toast Function
+        function showToast(message, type = "info") {
+            const toast = $("#toast");
+            toast.text(message);
+            toast.css({
+                backgroundColor: type === "error" ? "#dc3545" :
+                                 type === "success" ? "#28a745" :
+                                 "#ffc107",
+                color: "#fff"
+            });
+            toast.fadeIn(200).delay(3000).fadeOut(400);
+        }
+ 
+        // Confirmation Modal Logic
+        function showConfirmation(message, callback) {
+            $(".modal-message").text(message);
+            $("#confirmModal").fadeIn(200);
+ 
+            $("#confirmYes").off("click").on("click", function () {
+                $("#confirmModal").fadeOut(200);
+                callback(true);
+            });
+ 
+            $("#confirmNo").off("click").on("click", function () {
+                $("#confirmModal").fadeOut(200);
+                callback(false);
+            });
+        }
+ 
+ 
         $(document).on("click", ".btn-status.complete:not(.disabled)", function () {
             let id = $(this).data("id");
-            $.ajax({
-                url: baseUrl + "/appointment/" + id,
-                method: "PUT",
-                contentType: "application/json",
-                data: JSON.stringify({status: "COMPLETED"}),
-                success: function () {
-                    alert("Appointment completed successfully");
-                    loadAppointments();
-                },
-                error: function (xhr) {
-                    alert("Error: " + xhr.responseText);
+            
+            showConfirmation("Mark this appointment as completed?", function (confirmed) {
+                if (confirmed) {
+		            $.ajax({
+		                url: baseUrl + "/appointment/" + id,
+		                method: "PUT",
+		                contentType: "application/json",
+		                data: JSON.stringify({status: "COMPLETED"}),
+		                headers: {
+		                    "Authorization": "Bearer " + tokenFromCookie
+		                },
+		                success: function () {
+		                	showToast("Appointment marked as completed", "success");
+		                	//alert("Appointment completed successfully");
+		                    loadAppointments();
+		                },
+		                error: function (xhr) {
+		                	showToast("Error: " + xhr.responseText, "error");
+		                	//alert("Error: " + xhr.responseText);
+		                }
+		            });
                 }
-            });
-        });
-
+        	});
+		});
+ 
         $(document).on("click", ".btn-status.cancel:not(.disabled)", function () {
             let id = $(this).data("id");
-            $.ajax({
-                url: baseUrl + "/appointment/" + id,
-                method: "PUT",
-                contentType: "application/json",
-                data: JSON.stringify({status: "CANCELLED"}),
-                success: function () {
-                    alert("Appointment cancelled successfully");
-                    loadAppointments();
-                },
-                error: function (xhr) {
-                    alert("Error: " + xhr.responseText);
-                }
-            });
+            
+            let row = $(this).closest("tr");
+ 
+            let dateStr = row.find("td:eq(1)").text(); // yyyy-MM-dd
+            let timeStr = row.find("td:eq(2)").text(); // HH:mm:ss
+            let appointmentDateTime = new Date(dateStr + "T" + timeStr);
+            let now = new Date();
+ 
+            let diffInMs = appointmentDateTime - now;
+            let diffInHours = diffInMs / (1000 * 60 * 60);
+            
+            if (diffInHours >= 2) {
+                showConfirmation("Are you sure you want to cancel this appointment?", function (confirmed) {
+                    if (confirmed) {
+			            $.ajax({
+			                url: baseUrl + "/appointment/" + id,
+			                method: "PUT",
+			                contentType: "application/json",
+			                data: JSON.stringify({status: "CANCELLED"}),
+			                headers: {
+			                    "Authorization": "Bearer " + tokenFromCookie
+			                },
+			                success: function () {
+			                	showToast("Appointment cancelled successfully", "success");
+			                	//alert("Appointment cancelled successfully");
+			                    loadAppointments();
+			                },
+			                error: function (xhr) {
+			                	showToast("Error: " + xhr.responseText, "error");
+			                	//alert("Error: " + xhr.responseText);
+			                }
+			            });
+                    }
+        		});
+            } else {
+                showToast("Cannot cancel less than 2 hours before appointment.", "error");
+            }
         });
     });
 </script>
+ 
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+        <p class="modal-message">Are you sure?</p>
+        <div class="modal-buttons">
+            <button id="confirmYes" class="modal-btn">Yes</button>
+            <button id="confirmNo" class="modal-btn">No</button>
+        </div>
+    </div>
+</div>
+ 
+<!-- Toast Notification -->
+<div id="toast" style="display:none; position:fixed; bottom:30px; right:30px; padding:12px 20px; background:#ffc107; color:#000; font-weight:bold; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.3); z-index:9999;"></div>
 </body>
 </html>

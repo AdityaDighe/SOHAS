@@ -228,7 +228,12 @@ $(document).ready(function() {
     $('#city').val("${patient.city}");
     $('.error').text('');
   });
-
+  function getCookie(name) {
+      let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+  }
+	
+	let tokenFromCookie = getCookie("jwtToken");
   $('#profileForm').submit(function (e) {
     e.preventDefault();
     $('.error').text('');
@@ -256,6 +261,9 @@ $(document).ready(function() {
         email: $("#email").val(),
         password: "${patient.password}"
       }),
+      headers: {
+          "Authorization": "Bearer " + tokenFromCookie
+      },
       success: function () {
         $('#successToast').fadeIn().delay(1500).fadeOut();
         $('input, select').prop('disabled', true);

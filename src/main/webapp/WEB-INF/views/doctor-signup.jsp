@@ -130,6 +130,11 @@
 		    text-decoration: none !important;
 		    color: inherit;
 		}
+		
+		select option {
+        background-color:  #203a43; /* grey background */
+        color: white;           /* white text */
+    	}
 
     </style>
 </head>

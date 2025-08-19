@@ -139,6 +139,85 @@
             text-decoration: none !important;
             color: inherit;
         }
+        
+        /* MODAL OVERLAY */
+	
+	
+	.modal-overlay {
+	    position: fixed;
+	    top: 0; left: 0; right: 0;
+	    height: 100%;
+	    background: rgba(0,0,0,0.4);
+	    display: flex;
+	    justify-content: center;
+	    align-items: flex-start; /* Pushes modal to top */
+	    padding-top: 40px; /* Space from top */
+	    z-index: 9998;
+	}
+	
+	/* Modal Box */
+	.modal {
+	    background: rgba(255, 255, 255, 0.15);
+	    backdrop-filter: blur(12px);
+	    border-radius: 12px;
+	    padding: 20px 25px;
+	    width: 350px;
+	    text-align: center;
+	    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+	    color: #fff;
+	    animation: slideDown 0.3s ease;
+	}
+	
+	.modal-buttons {
+	    margin-top: 15px;
+	    display: flex;
+	    justify-content: space-around;
+	}
+	
+	.modal-btn {
+	    padding: 8px 16px;
+	    border: none;
+	    border-radius: 8px;
+	    cursor: pointer;
+	    font-weight: bold;
+	    transition: 0.2s;
+	}
+	
+	#confirmYes {
+	    background: linear-gradient(135deg, #56ab2f, #a8e063);
+	    color: #000;
+	}
+	#confirmNo {
+	    background: linear-gradient(135deg, #ff0844, #ff416c);
+	    color: #fff;
+	}
+	
+	.modal-btn:hover {
+	    transform: scale(1.05);
+	}
+	
+	/* Slide animation */
+	@keyframes slideDown {
+	    from { transform: translateY(-30px); opacity: 0; }
+	    to { transform: translateY(0); opacity: 1; }
+	}
+	
+	/* Toast Notification */
+	#toast {
+	    display: none;
+	    position: fixed;
+	    bottom: 30px;
+	    left: 50%;
+	    transform: translateX(-50%); /* Center horizontally */
+	    padding: 12px 20px;
+	    background: #ffc107;
+	    color: #000;
+	    font-weight: bold;
+	    border-radius: 8px;
+	    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+	    z-index: 9999;
+	    text-align: center;
+	}
     </style>
 </head>
 <body>
@@ -177,7 +256,12 @@
 <script>
 $(document).ready(function() {
     var patientId = "${id}";
-
+    function getCookie(name) {
+        let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? match[2] : null;
+    }
+	
+	let tokenFromCookie = getCookie("jwtToken");
     loadAppointments();
 
     function loadAppointments() {
@@ -185,6 +269,9 @@ $(document).ready(function() {
             url: "/SOHAS/patients/appointment/" + patientId,
             method: "GET",
             contentType: "application/json",
+            headers: {
+                "Authorization": "Bearer " + tokenFromCookie
+            },
             success: function(appointments) {
                 var tbody = $("#myAppointments tbody");
                 tbody.empty();
@@ -202,9 +289,6 @@ $(document).ready(function() {
                         String(dateObj.getMonth() + 1).padStart(2, "0") + "-" +
                         String(dateObj.getDate()).padStart(2, "0");
 
-                    let disabled = app.status === "CANCELLED" ? "disabled" : "";
-                    let btnText = app.status === "CANCELLED" ? "Cancelled" : "Cancel";
-
                     tbody.append(
                         "<tr>" +
                             "<td>Dr. " + app.doctor.doctorName + "</td>" +
@@ -212,7 +296,7 @@ $(document).ready(function() {
                             "<td>" + fixedDate + "</td>" +
                             "<td>" + app.time + "</td>" +
                             "<td><span class='status-badge status-" + app.status + "'>" + app.status + "</span></td>" +
-                            "<td><button class='cancel' data-id='" + app.appointmentId + "' " + disabled + ">" + btnText + "</button></td>" +
+                            "<td><button class='cancel' data-id='" + app.appointmentId + "' data-date='" + fixedDate + "' data-time='" + app.time + "' " + (app.status === "CANCELLED" ? "disabled" : "") + ">" + (app.status === "CANCELLED" ? "Cancelled" : "Cancel") + "</button></td>" +
                         "</tr>"
                     );
                 });
@@ -227,25 +311,83 @@ $(document).ready(function() {
         });
     }
 
-    $(document).on("click", ".cancel", function() {
+    $(document).on("click", ".cancel:not(:disabled)", function () {
         let id = $(this).data("id");
-        $.ajax({
-            url: "/SOHAS/appointment/" + id,
-            method: "PUT",
-            contentType: "application/json",
-            data: JSON.stringify({status: "CANCELLED"}),
-            success: function() {
-                alert("Appointment cancelled successfully");
-                loadAppointments();
-            },
-            error: function(xhr) {
-                alert("Error: " + xhr.responseText);
-                console.log(xhr);
-            }
-        });
+        let dateStr = $(this).data("date"); // yyyy-MM-dd
+        let timeStr = $(this).data("time"); // HH:mm:ss
+
+        let appointmentDateTime = new Date(dateStr + "T" + timeStr);
+        let now = new Date();
+
+        let diffInMs = appointmentDateTime - now;
+        let diffInHours = diffInMs / (1000 * 60 * 60);
+
+        if (diffInHours >= 2) {
+            // Show confirmation modal
+            showConfirmation("Are you sure you want to cancel this appointment?", function (confirmed) {
+                if (confirmed) {
+                    $.ajax({
+                        url: "/SOHAS/appointment/" + id,
+                        method: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify({ status: "CANCELLED" }),
+                        headers: {
+                            "Authorization": "Bearer " + tokenFromCookie
+                        },
+                        success: function () {
+                            showToast("Appointment cancelled successfully", "success");
+                            loadAppointments();
+                        },
+                        error: function (xhr) {
+                            showToast("Error: " + xhr.responseText, "error");
+                        }
+                    });
+                }
+            });
+        } else {
+            // Direct toast if less than 2 hours
+            showToast("Cannot cancel less than 2 hours before appointment.", "error");
+        }
     });
+
+    function showConfirmation(message, callback) {
+        $("#confirmModal .modal-message").text(message);
+        $("#confirmModal").fadeIn();
+
+        $("#confirmYes").off("click").on("click", function () {
+            $("#confirmModal").fadeOut();
+            callback(true);
+        });
+        $("#confirmNo").off("click").on("click", function () {
+            $("#confirmModal").fadeOut();
+            callback(false);
+        });
+    }
+
+    function showToast(message, type) {
+        let toast = $("#toast");
+        toast.removeClass("toast-success toast-error");
+        toast.addClass(type === "success" ? "toast-success" : "toast-error");
+        toast.text(message).fadeIn();
+
+        setTimeout(() => { toast.fadeOut(); }, 3000);
+    }
+
 });
 </script>
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+        <p class="modal-message">Are you sure?</p>
+        <div class="modal-buttons">
+            <button id="confirmYes" class="modal-btn">Yes</button>
+            <button id="confirmNo" class="modal-btn">No</button>
+        </div>
+    </div>
+</div>
 
+<!-- Toast Notification -->
+<div id="toast" style="display:none; position:fixed; bottom:30px; right:30px; padding:12px 20px; background:#ffc107; color:#000; font-weight:bold; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.3); z-index:9999;">
+</div>
 </body>
 </html>

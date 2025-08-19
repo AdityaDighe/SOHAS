@@ -35,25 +35,26 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+   
 
     //Login with BCrypt, single API for both Patient and Doctor entities
     @PostMapping(value = "/api/login", produces = "application/json")
     public ResponseEntity<?> doLogin(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
         String rawPassword = credentials.get("password");
-
+        
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         // Check patient and check if password encoded matches, return token
         Patient p = patientService.findByEmail(email);
         if (p != null && passwordEncoder.matches(rawPassword, p.getPassword())) {
-            String token = JwtUtil.generateToken(p.getPatientId(), p.getPatientName(), "PATIENT");
+            String token = JwtUtil.generateToken(p.getPatientId(), email, "PATIENT");
             return ResponseEntity.ok(Map.of("token", token));
         }
 
         // Check doctor and check if password encoded matches, return token
         Doctor d = doctorService.findByEmail(email);
         if (d != null && passwordEncoder.matches(rawPassword, d.getPassword())) {
-            String token = JwtUtil.generateToken(d.getDoctorId(), d.getDoctorName(), "DOCTOR");
+            String token = JwtUtil.generateToken(d.getDoctorId(), email, "DOCTOR");
             return ResponseEntity.ok(Map.of("token", token));
         }
         
@@ -122,7 +123,7 @@ public class AuthController {
         String newPassword = payload.get("newPassword");
 
         System.out.println("DEBUG => email: " + email + ", otp: " + otp);
-
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         try {
             Patient patient = patientService.findByEmail(email);
             Doctor doctor = doctorService.findByEmail(email);

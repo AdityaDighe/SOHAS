@@ -157,6 +157,10 @@
 		    text-decoration: none !important;
 		    color: inherit;
 		}
+	select option {
+        background-color:  #203a43; /* grey background */
+        color: white;           /* white text */
+    	}
   </style>
 </head>
 <body>
@@ -282,7 +286,15 @@
       if (hasError) return;
 
       $('input, select, button').prop('disabled', true);
-
+	  
+      
+      function getCookie(name) {
+	        let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+	        return match ? match[2] : null;
+	    }
+		
+		let tokenFromCookie = getCookie("jwtToken");
+		
       $.ajax({
         url: '${pageContext.request.contextPath}/doctors/${doctor.doctorId}',
         method: 'PUT',
@@ -298,6 +310,9 @@
           startTime: startTime,
           endTime: endTime
         }),
+        headers: {
+            "Authorization": "Bearer " + tokenFromCookie
+        },
         success: function () {
           $('#successToast').fadeIn().delay(1500).fadeOut();
           $('input, select').prop('disabled', true);
