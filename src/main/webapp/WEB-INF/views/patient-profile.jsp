@@ -176,15 +176,15 @@
 
         <div class="profile-field">
           <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" name="fullName" value="${patient.patientName}" disabled />
-          <span class="edit-icon" data-target="fullName">&#9998;</span>
+          <input type="text" id="fullName" name="fullName" value="${patient.patientName}"/>
+         
           <div class="error" id="error-fullName"></div>
         </div>
 
         <div class="profile-field">
           <label for="age">Age</label>
-          <input type="number" id="age" name="age" value="${patient.age}" disabled />
-          <span class="edit-icon" data-target="age">&#9998;</span>
+          <input type="number" id="age" name="age" value="${patient.age}"/>
+         
           <div class="error" id="error-age"></div>
         </div>
 
@@ -213,14 +213,7 @@
 
 <script>
 $(document).ready(function() {
-  $('.edit-icon').click(function () {
-    const target = $(this).data('target');
-    const $field = $('#' + target);
-    $field.prop('disabled', false).focus();
-    $field.one('blur', function () {
-      $(this).prop('disabled', true);
-    });
-  });
+ 
 
   $('#cancelEdit').click(function () {
     $('#fullName').val("${patient.patientName}");
@@ -248,7 +241,7 @@ $(document).ready(function() {
     if (!city) { $('#error-city').text('City is required.'); hasError = true; }
     if (hasError) return;
 
-    $('input, select, button').prop('disabled', true);
+  
 
     $.ajax({
       url: '${pageContext.request.contextPath}/patients/${patient.patientId}',
@@ -266,12 +259,11 @@ $(document).ready(function() {
       },
       success: function () {
         $('#successToast').fadeIn().delay(1500).fadeOut();
-        $('input, select').prop('disabled', true);
-        $('button').prop('disabled', false);
+       
       },
       error: function () {
         alert('Update failed.');
-        $('input, select, button').prop('disabled', false);
+       
       }
     });
   });

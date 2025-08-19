@@ -28,6 +28,7 @@ public class Doctor {
     @Size(max = 100, message = "Specialty cannot exceed 100 characters")
 	private String speciality;
 	
+	
 	private Time startTime;
 
 	private Time endTime;

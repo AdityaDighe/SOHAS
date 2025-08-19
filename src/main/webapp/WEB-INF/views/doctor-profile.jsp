@@ -179,22 +179,22 @@
 
         <div class="profile-field">
           <label for="doctorName">Full Name</label>
-          <input type="text" id="doctorName" name="doctorName" value="${doctor.doctorName}" disabled />
-          <span class="edit-icon" data-target="doctorName">&#9998;</span>
+          <input type="text" id="doctorName" name="doctorName" value="${doctor.doctorName}"  />
+          
           <div class="error" id="error-doctorName"></div>
         </div>
 
         <div class="profile-field">
           <label for="speciality">Speciality</label>
-          <input type="text" id="speciality" name="speciality" value="${doctor.speciality}" disabled />
-          <span class="edit-icon" data-target="speciality">&#9998;</span>
+          <input type="text" id="speciality" name="speciality" value="${doctor.speciality}"  />
+          
           <div class="error" id="error-speciality"></div>
         </div>
 
         <div class="profile-field">
           <label for="number">Phone Number</label>
-          <input type="text" id="number" name="number" value="${doctor.phoneNumber}" disabled />
-          <span class="edit-icon" data-target="number">&#9998;</span>
+          <input type="text" id="number" name="number" value="${doctor.phoneNumber}"  />
+        
           <div class="error" id="error-phoneNumber"></div>
         </div>
 
@@ -212,8 +212,8 @@
 
         <div class="profile-field">
           <label for="hospitalName">Hospital Name</label>
-          <input type="text" id="hospitalName" name="hospitalName" value="${doctor.hospitalName}" disabled />
-          <span class="edit-icon" data-target="hospitalName">&#9998;</span>
+          <input type="text" id="hospitalName" name="hospitalName" value="${doctor.hospitalName}"  />
+        
           <div class="error" id="error-hospitalName"></div>
         </div>
 
@@ -242,14 +242,7 @@
 
 <script>
   $(document).ready(function () {
-    $('.edit-icon').click(function () {
-      const target = $(this).data('target');
-      const $field = $('#' + target);
-      $field.prop('disabled', false).focus();
-      $field.one('blur', function () {
-        $(this).prop('disabled', true);
-      });
-    });
+    
 
     $('#cancelEdit').click(function () {
       $('#doctorName').val("${doctor.doctorName}");
@@ -273,7 +266,7 @@
       const hospitalName = $('#hospitalName').val().trim();
       const startTime = $('#startTime').val() || "09:00:00";
       const endTime = $('#endTime').val() || "17:00:00";
-
+	
       let hasError = false;
 
       if (!doctorName) { $('#error-doctorName').text('Name is required.'); hasError = true; }
@@ -285,7 +278,6 @@
 
       if (hasError) return;
 
-      $('input, select, button').prop('disabled', true);
 	  
       
       function getCookie(name) {
@@ -294,7 +286,10 @@
 	    }
 		
 		let tokenFromCookie = getCookie("jwtToken");
-		
+	  function normalizeTime(t) {
+		    if (!t) return null;
+		    return t.length === 5 ? t + ":00" : t;  // if HH:mm -> add :00
+		  }
       $.ajax({
         url: '${pageContext.request.contextPath}/doctors/${doctor.doctorId}',
         method: 'PUT',
@@ -307,20 +302,20 @@
           hospitalName: hospitalName,
           email: $("#email").val(),
           password: "${doctor.password}",
-          startTime: startTime,
-          endTime: endTime
+          startTime: normalizeTime(startTime),
+          endTime: normalizeTime(endTime)
         }),
         headers: {
             "Authorization": "Bearer " + tokenFromCookie
         },
         success: function () {
           $('#successToast').fadeIn().delay(1500).fadeOut();
-          $('input, select').prop('disabled', true);
-          $('button').prop('disabled', false);
+          
         },
         error: function () {
-          alert('Update failed.');
-          $('input, select, button').prop('disabled', false);
+          console.log(startTime);
+        	alert('Update failed.');
+          
         }
       });
     });
