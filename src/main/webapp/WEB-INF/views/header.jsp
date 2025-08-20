@@ -3,6 +3,9 @@
 String user = (String) request.getAttribute("username");
 String role = (String) request.getAttribute("role");
 boolean loggedIn = (user != null);
+response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+response.setHeader("Pragma", "no-cache"); 
+response.setDateHeader("Expires", 0); 
 %>
 
 <!DOCTYPE html>
@@ -263,7 +266,11 @@ boolean loggedIn = (user != null);
 			            },
 						success : function(response) {
 							alert(response);
-							window.location.replace("${pageContext.request.contextPath}/");
+							history.pushState(null, null, "/SOHAS/");
+							window.onpopstate = function () {
+							    history.go(1);
+							};
+							window.location.href = "${pageContext.request.contextPath}/";
 						},
 					    error : function(xhr) {
 							alert("Logout failed: "+ xhr.responseText);

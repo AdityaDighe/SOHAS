@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,13 +72,18 @@ public class AuthController {
 
     //Logout, entering null cookie and removing jwtToken
     @PostMapping("/api/logout")
-    public String logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("jwtToken", null);
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    	HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+    	
+    	Cookie cookie = new Cookie("jwtToken", null);
         cookie.setHttpOnly(true);
         cookie.setSecure(false);   // set true if using HTTPS
         cookie.setPath("/");
         cookie.setMaxAge(0);
-
+        
         response.addCookie(cookie);
 
         return "Logged out successfully!";

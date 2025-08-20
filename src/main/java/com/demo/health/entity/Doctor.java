@@ -47,10 +47,6 @@ public class Doctor {
 	
 	@NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
-//    @Pattern(
-//       regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$",
-//       message = "Password must contain upper, lower, number and special character"
-//    )
 	private String password;
 	
 	@NotBlank(message = "Hospital name is required")

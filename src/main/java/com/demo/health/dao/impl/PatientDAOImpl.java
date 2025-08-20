@@ -54,10 +54,10 @@ public class PatientDAOImpl implements PatientDAO{
 	public List<Doctor> getDoctors(String location, Time time, Date date) {
 		//Main CriteriaBuilder : 
 		CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
-		CriteriaQuery<Doctor> cq = cb.createQuery(Doctor.class);
+		CriteriaQuery<Doctor> cq = cb.createQuery(Doctor.class);// Return Doctor object
 		
 		// Root for Doctor Table : 
-		Root<Doctor> doctorRoot = cq.from(Doctor.class);
+		Root<Doctor> doctorRoot = cq.from(Doctor.class); //Access data from doctor table
 		
          //SubQuery to get busy doctors : 
 		 Subquery<Integer> subquery = cq.subquery(Integer.class);

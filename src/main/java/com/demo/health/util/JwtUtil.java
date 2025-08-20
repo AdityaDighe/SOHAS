@@ -27,6 +27,7 @@ public class JwtUtil {
                 .compact();
     }
 
+   
     public static Jws<Claims> validateToken(String token) throws JwtException {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
     }
