@@ -324,33 +324,59 @@
             });
         }
  
- 
+ // the logic for complete button, allowing complete only after the time slot
         $(document).on("click", ".btn-status.complete:not(.disabled)", function () {
             let id = $(this).data("id");
-            
-            showConfirmation("Mark this appointment as completed?", function (confirmed) {
-                if (confirmed) {
-		            $.ajax({
-		                url: baseUrl + "/appointment/" + id,
-		                method: "PUT",
-		                contentType: "application/json",
-		                data: JSON.stringify({status: "COMPLETED"}),
-		                headers: {
-		                    "Authorization": "Bearer " + tokenFromCookie
-		                },
-		                success: function () {
-		                	showToast("Appointment marked as completed", "success");
-		                	//alert("Appointment completed successfully");
-		                    loadAppointments();
-		                },
-		                error: function (xhr) {
-		                	showToast("Error: " + xhr.responseText, "error");
-		                	//alert("Error: " + xhr.responseText);
-		                }
-		            });
-                }
-        	});
-		});
+            let row = $(this).closest("tr");
+
+            let dateStr = row.find("td:eq(1)").text(); // yyyy-MM-dd
+            let timeStr = row.find("td:eq(2)").text(); // HH:mm:ss
+            let appointmentDateTime = new Date(dateStr + "T" + timeStr);
+            let now = new Date();
+
+            if (now >= appointmentDateTime) {
+                
+                showConfirmation("Mark this appointment as completed?", function (confirmed) {
+                    if (confirmed) {
+                        $.ajax({
+                            url: baseUrl + "/appointment/" + id,
+                            method: "PUT",
+                            contentType: "application/json",
+                            data: JSON.stringify({ status: "COMPLETED" }),
+                            headers: {
+                                "Authorization": "Bearer " + tokenFromCookie
+                            },
+                            success: function () {
+                                showToast("Appointment marked as completed", "success");
+                                loadAppointments();
+                            },
+                            error: function (xhr) {
+                                showToast("Error: " + xhr.responseText, "error");
+                            }
+                        });
+                    }
+                });
+            } else {
+                // ❌ Before timeslot → show popup
+                showErrorPopup("Cant complete before timeslot");
+            }
+        });
+ 
+ 
+        function showErrorPopup(message) {
+            $(".modal-message").text(message);
+            $("#confirmYes").hide();   // hide Yes button
+            $("#confirmNo").text("OK"); // rename No → OK
+            $("#confirmModal").fadeIn(200);
+
+            $("#confirmNo").off("click").on("click", function () {
+                $("#confirmModal").fadeOut(200);
+                // Reset modal back for next use
+                $("#confirmYes").show();
+                $("#confirmNo").text("No");
+            });
+        }
+
  
         $(document).on("click", ".btn-status.cancel:not(.disabled)", function () {
             let id = $(this).data("id");
