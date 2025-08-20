@@ -206,28 +206,139 @@
         $("#" + id).css("border-color", "");
     }
 
-    $("input, select").on("blur", function() {
-        const id = $(this).attr("id");
-        if(!$(this).val()) showError(id, "Required");
-        else clearError(id);
-    });
+ // 🔹 Validation Functions
+	function validateDoctorName() {
+	    const val = $("#doctorName").val().trim();
+	    if (!val) {
+	        showError("doctorName", "Doctor Name is required");
+	        return false;
+	    } else if (val.length < 3 || val.length > 100) {
+	        showError("doctorName", "Name must be between 3 and 100 characters");
+	        return false;
+	    }
+	    return true;
+	}
 
-    $("input, select").on("focus input change", function () {
-        clearError($(this).attr("id"));
-    });
+	function validateSpeciality() {
+	    const val = $("#speciality").val().trim();
+	    if (!val) {
+	        showError("speciality", "Speciality is required");
+	        return false;
+	    } else if (val.length > 100) {
+	        showError("speciality", "Speciality must be at most 100 characters");
+	        return false;
+	    }
+	    return true;
+	}
+
+	function validatePhoneNumber() {
+	    const val = $("#phoneNumber").val().trim();
+	    if (!val) {
+	        showError("phoneNumber", "Phone Number is required");
+	        return false;
+	    } else if (!/^\d{10}$/.test(val)) {
+	        showError("phoneNumber", "Phone Number must be 10 digits");
+	        return false;
+	    }
+	    return true;
+	}
+
+	function validateCity() {
+	    const val = $("#city").val();
+	    if (!val) {
+	        showError("city", "City is required");
+	        return false;
+	    }
+	    return true;
+	}
+
+	function validateHospitalName() {
+	    const val = $("#hospitalName").val().trim();
+	    if (!val) {
+	        showError("hospitalName", "Hospital Name is required");
+	        return false;
+	    }
+	    return true;
+	}
+
+	function validateEmail() {
+	    const val = $("#email").val().trim();
+	    if (!val) {
+	        showError("email", "Email is required");
+	        return false;
+	    } else if (!/^\S+@\S+\.\S+$/.test(val)) {
+	        showError("email", "Invalid Email format");
+	        return false;
+	    }
+	    return true;
+	}
+
+	function validatePassword() {
+	    const val = $("#password").val();
+	    const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+	    if (!val) {
+	        showError("password", "Password is required");
+	        return false;
+	    } else if (!pattern.test(val)) {
+	        showError("password", "Password must be at least 8 characters with uppercase, lowercase, number, and special character");
+	        return false;
+	    }
+	    return true;
+	}
+
+	function validateStartEndTime() {
+	    const startTime = $("#startTime").val();
+	    const endTime = $("#endTime").val();
+	    let isValid = true;
+
+	    if (!startTime) {
+	        showError("startTime", "Start Time is required");
+	        isValid = false;
+	    }
+
+	    if (!endTime) {
+	        showError("endTime", "End Time is required");
+	        isValid = false;
+	    }
+
+	    if (startTime && endTime && endTime <= startTime) {
+	        showError("endTime", "End Time must be after Start Time");
+	        isValid = false;
+	    }
+
+	    return isValid;
+	}
+	
+	$("#doctorName").on("blur", validateDoctorName);
+	$("#speciality").on("blur", validateSpeciality);
+	$("#phoneNumber").on("blur", validatePhoneNumber);
+	$("#city").on("blur", validateCity);
+	$("#hospitalName").on("blur", validateHospitalName);
+	$("#email").on("blur", validateEmail);
+	$("#password").on("blur", validatePassword);
+	$("#startTime, #endTime").on("blur", validateStartEndTime);
+	
+	$("input, select").on("focus input change", function() {
+	    const id = $(this).attr("id");
+	    clearError(id);
+	});
+	
 
     $("#doctorSignUp").click(function(event){
         event.preventDefault();
 
-        let valid = true;
-        $("input, select").each(function(){
-            if(!$(this).val()) {
-                showError($(this).attr("id"), "Required");
-                valid = false;
-            }
-        });
+        const isValid = [
+            validateDoctorName(),
+            validateSpeciality(),
+            validatePhoneNumber(),
+            validateCity(),
+            validateHospitalName(),
+            validateEmail(),
+            validatePassword(),
+            validateStartEndTime()
+        ].every(Boolean);
 
-        if(!valid) return;
+        if(!isValid) return;
 
         $.ajax({
             url: "/SOHAS/doctors/signup",
@@ -253,7 +364,18 @@
                 }, 1500);
             },
             error: function(xhr) {
-                alert("Signup failed: " + xhr.status);
+            	if (xhr.status === 400) {
+                    const errors = xhr.responseJSON;
+
+                    $(".error").text(""); // Clear previous errors
+                    $("input").css("border-color", ""); // Reset borders
+
+                    for (const field in errors) {
+                        $("#error-" + field).text(errors[field]);
+                        $("#" + field).css("border-color", "#b00020"); // Highlight field
+                    }
+                }
+                //alert("Signup failed: " + xhr.status);
             }
         });
     });

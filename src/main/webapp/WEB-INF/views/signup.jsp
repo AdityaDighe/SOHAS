@@ -180,49 +180,92 @@
         $("#error-" + id).text("");
         $("#" + id).css("border-color", "");
     }
+	
+    function validatePatientName() {
+        const val = $("#patientName").val().trim();
+        if (!val) {
+            showError("patientName", "Patient Name is required");
+            return false;
+        } else if (val.length < 3 || val.length > 100) {
+            showError("patientName", "Name must be between 3 and 100 characters");
+            return false;
+        }
+        return true;
+    }
 
-    $("#patientName").on("blur", function() {
-        const val = $(this).val().trim();
-        if (!val) showError("patientName", "Name is required");
-        else clearError("patientName");
-    });
+    function validateAge() {
+    	const age = $("#age").val().trim();
+    	if (!age) {
+    		showError("age", "Age is required");
+    		return false;
+    	}
+        const val = parseInt($("#age").val(), 10);
+        if (isNaN(val)) {
+            showError("age", "Age should be a number");
+            return false;
+        } else if (val < 0 || val > 120) {
+            showError("age", "Age must be between 0 and 120");
+            return false;
+        }
+        return true;
+    }
 
-    $("#age").on("blur", function() {
-        const val = parseInt($(this).val());
-        if (isNaN(val) || val < 0 || val > 120) showError("age", "Age must be 0-120");
-        else clearError("age");
-    });
+    function validateCity() {
+        const val = $("#city").val().trim();
+        if (!val) {
+            showError("city", "City is required");
+            return false;
+        }
+        return true;
+    }
 
-    $("#city").on("blur", function() {
-        const val = $(this).val().trim();
-        if (!val) showError("city", "City is required");
-        else clearError("city");
-    });
+    function validateEmail() {
+        const val = $("#email").val().trim();
+        if (!val) {
+            showError("email", "Email is required");
+            return false;
+        } else if (!/^\S+@\S+\.\S+$/.test(val)) {
+            showError("email", "Invalid Email format");
+            return false;
+        }
+        return true;
+    }
 
-    $("#email").on("blur", function() {
-        const val = $(this).val().trim();
-        if (!val) showError("email", "Email is required");
-        else if (!/^\S+@\S+\.\S+$/.test(val)) showError("email", "Invalid Email");
-        else clearError("email");
-    });
-
-    $("#password").on("blur", function() {
-        const val = $(this).val();
+    function validatePassword() {
+        const val = $("#password").val();
         const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-        if (!val) showError("password", "Password is required");
-        else if (!pattern.test(val)) showError("password", "Include uppercase, lowercase, number, special char");
-        else clearError("password");
+        if (!val) {
+            showError("password", "Password is required");
+            return false;
+        } else if (!pattern.test(val)) {
+            showError("password", "Password must include uppercase, lowercase, number, and special character");
+            return false;
+        }
+        return true;
+    }
+    
+  	// Blur (exit) triggers
+    $("#patientName").on("blur", validatePatientName);
+    $("#age").on("blur", validateAge);
+    $("#city").on("blur", validateCity);
+    $("#email").on("blur", validateEmail);
+    $("#password").on("blur", validatePassword);
+    
+ 	//  Clear error on typing/focus/change
+    $("input").on("focus input change", function () {
+        const id = $(this).attr("id");
+        clearError(id);
     });
 
     $("#patientSignUp").click(function(event) {
         event.preventDefault();
 
         const isValid = [
-            $("#patientName").val().trim() !== "",
-            parseInt($("#age").val()) >= 0,
-            $("#city").val().trim() !== "",
-            $("#email").val().trim() !== "",
-            $("#password").val().length >= 8
+            validatePatientName(),
+            validateAge(),
+            validateCity(),
+            validateEmail(),
+            validatePassword()
         ].every(Boolean);
 
         if (!isValid) return;
@@ -247,7 +290,18 @@
                 }, 1500);
             },
             error: function(xhr) {
-                alert("Signup failed: " + xhr.status);
+            	if (xhr.status === 400) {
+                    const errors = xhr.responseJSON;
+
+                    $(".error").text(""); // Clear previous errors
+                    $("input").css("border-color", ""); // Reset borders
+
+                    for (const field in errors) {
+                        $("#error-" + field).text(errors[field]);
+                        $("#" + field).css("border-color", "#b00020"); // Highlight field
+                    }
+                }
+            	//alert("Signup failed: " + xhr.status);
             }
         });
     });
