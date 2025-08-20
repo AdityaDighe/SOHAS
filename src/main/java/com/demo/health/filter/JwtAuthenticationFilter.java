@@ -55,7 +55,10 @@ public class JwtAuthenticationFilter implements Filter{
                 || path.contains("/doctorSignup")
                 || path.contains("/patientSignup")
                 || path.contains("/forgot-password")
-                || path.contains("/signup")) {
+                || path.contains("/signup")
+                || path.contains("/api/reset-password")
+                || path.contains("/api/request-otp")
+        		) {
         	chain.doFilter(req, res);
         	return ;
         }
