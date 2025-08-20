@@ -121,6 +121,11 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+
+
+
+
 // keep your same validation + ajax code
 function showError(id, message) {
     $("#error-" + id).text(message);

@@ -1,8 +1,6 @@
 package com.demo.health.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
 
 import javax.transaction.Transactional;
 
@@ -17,7 +15,7 @@ import com.demo.health.exception.DoctorNotFoundException;
 import com.demo.health.service.DoctorService;
 
 @Service
-public class DoctorServiceImpl implements DoctorService{
+public class DoctorServiceImpl implements DoctorService {
 	@Autowired
 	private DoctorDAO doctorDAO;
 
@@ -26,7 +24,7 @@ public class DoctorServiceImpl implements DoctorService{
 	public void save(Doctor doctor) {
 		doctorDAO.save(doctor);
 	}
-	
+
 	@Override
 	@Transactional
 	public Doctor get(int doctorId) throws DoctorNotFoundException {
@@ -51,20 +49,19 @@ public class DoctorServiceImpl implements DoctorService{
 	public void delete(int doctorId) {
 		doctorDAO.delete(doctorId);
 	}
-	
-	//Login doctor and match the encoded password with the stored hashcode 
+
+	// Login doctor and match the encoded password with the stored hashcode
 	@Override
 	public Doctor loginDoctor(String email, String password) {
-	    Doctor doctor = doctorDAO.findByEmail(email);
-	    if (doctor != null) {
-	        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-	        if (encoder.matches(password, doctor.getPassword())) {
-	            return doctor; //login success
-	        }
-	    }
-	    return null; //login failed
+		Doctor doctor = doctorDAO.findByEmail(email);
+		if (doctor != null) {
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			if (encoder.matches(password, doctor.getPassword())) {
+				return doctor; // login success
+			}
+		}
+		return null; // login failed
 	}
-
 
 	@Override
 	public Doctor findByEmail(String email) {
@@ -76,43 +73,8 @@ public class DoctorServiceImpl implements DoctorService{
 		// TODO Auto-generated method stub
 		return doctorDAO.myAppointments(id);
 	}
-	
+
 	@Autowired
 	private BCryptPasswordEncoder encoder; // reuse for password encoding
- 
-	//OTP generator and setting it in db
-	@Override
-	@Transactional
-	public void sendOtp(String email) {
-	    Doctor doctor = doctorDAO.findByEmail(email);
-	    if (doctor != null) {
-	        String otp = String.format("%06d", new Random().nextInt(999999));
-	        LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
- 
-	        doctorDAO.updateOtp(email, otp, expiry);
- 
-	        // TODO: call EmailService to send OTP to doctor.getEmail()
-	    }
-	}
- 
-	//Verifying OTP and finding the doctor based on otp and email
-	@Override
-	@Transactional
-	public boolean verifyOtp(String email, String otp) {
-	    Doctor doctor = doctorDAO.findByEmailAndOtp(email, otp);
-	    if (doctor != null && doctor.getOtpExpiry().isAfter(LocalDateTime.now())) {
-	        return true;
-	    }
-	    return false;
-	}
- 
-	//hashing the new password and updating it
-	@Override
-	@Transactional
-	public void resetPassword(String email, String newPassword) {
-	    String hashed = encoder.encode(newPassword);
-	    doctorDAO.updatePassword(email, hashed);
-	}
+
 }
-
-

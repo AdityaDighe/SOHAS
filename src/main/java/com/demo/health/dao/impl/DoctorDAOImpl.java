@@ -1,6 +1,5 @@
 package com.demo.health.dao.impl;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -15,7 +14,7 @@ import com.demo.health.entity.Doctor;
 
 @Repository
 @Transactional
-public class DoctorDAOImpl implements DoctorDAO{
+public class DoctorDAOImpl implements DoctorDAO {
 	@Autowired
 	private SessionFactory sessionFactory;
 
@@ -42,62 +41,57 @@ public class DoctorDAOImpl implements DoctorDAO{
 	@Override
 	public void delete(int doctorId) {
 		Doctor doctor = sessionFactory.getCurrentSession().get(Doctor.class, doctorId);
-		if (doctor != null) sessionFactory.getCurrentSession().delete(doctor);	
+		if (doctor != null) {
+			sessionFactory.getCurrentSession().delete(doctor);
+		}
 	}
 
-	//Using Hql to find the doctor by email id 
+	// Using Hql to find the doctor by email id
 	@Override
 	public Doctor findByEmail(String email) {
 		String hql = "FROM Doctor d WHERE d.email = :email";
-	    return sessionFactory.getCurrentSession()
-	            .createQuery(hql, Doctor.class)
-	            .setParameter("email", email)
-	            .uniqueResult();
+		return sessionFactory.getCurrentSession().createQuery(hql, Doctor.class).setParameter("email", email)
+				.uniqueResult();
 	}
-	
-	//Using Hql to find the appointment details based on doctor id
+
+	// Using Hql to find the appointment details based on doctor id
 	@Override
 	public List<Appointment> myAppointments(int id) {
 		// TODO Auto-generated method stub
 		String hql = "FROM Appointment a WHERE a.doctor.doctorId = :id";
-		 return sessionFactory.getCurrentSession()
-		            .createQuery(hql, Appointment.class)
-		            .setParameter("id", id)
-		            .list();
-	}
-	
-	//Setting otp details into the doctor entity
-	@Override
-	public void updateOtp(String email, String otp, LocalDateTime expiry) {
-	    Doctor doctor = findByEmail(email);
-	    if (doctor != null) {
-	        doctor.setOtp(otp);
-	        doctor.setOtpExpiry(expiry);
-	        sessionFactory.getCurrentSession().update(doctor);
-	    }
-	}
-	
-	//Finding the doctor for password reset based on mail and otp
-	@Override
-	public Doctor findByEmailAndOtp(String email, String otp) {
-	    String hql = "FROM Doctor d WHERE d.email = :email AND d.otp = :otp";
-	    return sessionFactory.getCurrentSession()
-	            .createQuery(hql, Doctor.class)
-	            .setParameter("email", email)
-	            .setParameter("otp", otp)
-	            .uniqueResult();
+		return sessionFactory.getCurrentSession().createQuery(hql, Appointment.class).setParameter("id", id).list();
 	}
 
-	//Setting the new Password
-	@Override
-	public void updatePassword(String email, String newPassword) {
-	    Doctor doctor = findByEmail(email);
-	    if (doctor != null) {
-	        doctor.setPassword(newPassword);
-	        doctor.setOtp(null); // clear OTP after use
-	        doctor.setOtpExpiry(null);
-	        sessionFactory.getCurrentSession().update(doctor);
-	    }
-	}
+	// Setting otp details into the doctor entity
+//	@Override
+//	public void updateOtp(String email, String otp, LocalDateTime expiry) {
+//	    Doctor doctor = findByEmail(email);
+//	    if (doctor != null) {
+//	        doctor.setOtp(otp);
+//	        doctor.setOtpExpiry(expiry);
+//	        sessionFactory.getCurrentSession().update(doctor);
+//	    }
+//	}
 
+	// Finding the doctor for password reset based on mail and otp
+//	@Override
+//	public Doctor findByEmailAndOtp(String email, String otp) {
+//	    String hql = "FROM Doctor d WHERE d.email = :email AND d.otp = :otp";
+//	    return sessionFactory.getCurrentSession()
+//	            .createQuery(hql, Doctor.class)
+//	            .setParameter("email", email)
+//	            .setParameter("otp", otp)
+//	            .uniqueResult();
+//	}
+
+//	//Setting the new Password
+//	@Override
+//	public void updatePassword(String email, String newPassword) {
+//	    Doctor doctor = findByEmail(email);
+//	    if (doctor != null) {
+//	        doctor.setPassword(newPassword);
+//	        doctor.setOtp(null); // clear OTP after use
+//	        doctor.setOtpExpiry(null);
+//	        sessionFactory.getCurrentSession().update(doctor);
+//	    }
 }

@@ -8,15 +8,19 @@ import com.demo.health.exception.DoctorNotFoundException;
 
 public interface DoctorService {
 	void save(Doctor doctor);
+
 	Doctor get(int doctorId) throws DoctorNotFoundException;
+
 	List<Doctor> list();
+
 	void update(Doctor doctor);
+
 	void delete(int doctorId);
+
 	Doctor loginDoctor(String email, String password);
+
 	Doctor findByEmail(String email);
+
 	List<Appointment> myAppointments(int id);
-	
-	void sendOtp(String email);
-	boolean verifyOtp(String email, String otp);
-	void resetPassword(String email, String newPassword);
+
 }

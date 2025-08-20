@@ -72,21 +72,23 @@ response.setDateHeader("Expires", 0);
 	position: relative;
 }
 
-/* Toast Notification */
 #toast {
-	display: none;
-	position: fixed;
-	bottom: 30px;
-	left: 50%;
-	transform: translateX(-50%); /* Center horizontally */
-	padding: 12px 20px;
-	background: #ffc107;
-	color: #000;
-	font-weight: bold;
-	border-radius: 8px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-	z-index: 9999;
-	text-align: center;
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 12px 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    color: white;
+}
+.toast-success {
+    background: #28a745; /* green */
+}
+.toast-error {
+    background: #dc3545; /* red */
 }
 
 .btn-blue {
@@ -262,55 +264,56 @@ response.setDateHeader("Expires", 0);
 		</div>
 	</header>
 
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script>
-	
-	
-	
-	 function showToast(message, type) {
-	        let toast = $("#toast");
-	        toast.removeClass("toast-success toast-error");
-	        toast.addClass(type === "success" ? "toast-success" : "toast-error");
-	        toast.text(message).fadeIn();
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Toast Helper
+    function showToast(message, type) {
+        let toast = $("#toast");
+        toast.removeClass("toast-success toast-error");
+        toast.addClass(type === "success" ? "toast-success" : "toast-error");
+        toast.text(message).fadeIn();
 
-	        setTimeout(() => { toast.fadeOut(); }, 3000);
-	    }
-	 
-	 
-		// Helper to get cookie
-	    function getCookie(name) {
-	        let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-	        return match ? match[2] : null;
-	    }
-		
-		let tokenFromCookie = getCookie("jwtToken");
-		$(document).ready(function() {
-			$("#logoutBtn").click(function() {
-				$.ajax({
-						url : "${pageContext.request.contextPath}/api/logout",
-						type : "POST",
-						headers: {
-			                "Authorization": "Bearer " + tokenFromCookie
-			            },
-						success : function(response) {
-							alert(response);
-							history.pushState(null, null, "/SOHAS/");
-							window.onpopstate = function () {
-							    history.go(1);
-							};
-							window.location.href = "${pageContext.request.contextPath}/";
-						},
-					    error : function(xhr) {
-							alert("Logout failed: "+ xhr.responseText);
-						}
-						});
-				});
-		});
-	</script>
+        setTimeout(() => { toast.fadeOut(); }, 3000);
+    }
+
+    // Cookie Helper
+    function getCookie(name) {
+        let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? match[2] : null;
+    }
+
+    let tokenFromCookie = getCookie("jwtToken");
+
+    $(document).ready(function () {
+        $("#logoutBtn").click(function () {
+            $.ajax({
+                url: "${pageContext.request.contextPath}/api/logout",
+                type: "POST",
+                headers: {
+                    "Authorization": "Bearer " + tokenFromCookie
+                },
+                success: function (response) {
+                    showToast(  response, "success");
+                    history.pushState(null, null, "/SOHAS/");
+                    window.onpopstate = function () {
+                        history.go(1);
+                    };
+                    setTimeout(() => {
+                        window.location.href = "${pageContext.request.contextPath}/";
+                    }, 1200); // redirect after toast
+                },
+                error: function (xhr) {
+                    showToast(" Logout failed: " + xhr.responseText, "error");
+                }
+            });
+        });
+    });
+</script>
 
 
-	<div id="toast"
-		style="display: none; position: fixed; bottom: 30px; right: 30px; padding: 12px 20px; background: #ffc107; color: #000; font-weight: bold; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); z-index: 9999;">
-	</div>
+<!-- Toast -->
+<div id="toast"></div>
+
+
 </body>
 </html>
