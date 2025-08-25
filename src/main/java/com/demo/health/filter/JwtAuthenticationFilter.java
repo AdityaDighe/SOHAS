@@ -1,7 +1,8 @@
 package com.demo.health.filter;
  
 import java.io.IOException;
- 
+import java.util.Collections;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -11,28 +12,32 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
- 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
- 
+import org.springframework.web.filter.OncePerRequestFilter;
+
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
 import com.demo.health.util.JwtUtil;
- 
+
 import io.jsonwebtoken.Claims;
  
 /**
 * JWT Authentication Filter for protecting secured endpoints.
 */
 @Component
-public class JwtAuthenticationFilter implements Filter{
+public class JwtAuthenticationFilter extends OncePerRequestFilter{
  
     @Autowired
     PatientService patientService;
     @Autowired
     DoctorService doctorService;
+    
     
 	public JwtAuthenticationFilter() {
         super();
@@ -42,8 +47,8 @@ public class JwtAuthenticationFilter implements Filter{
     public void destroy() {
         // nothing special to destroy
     }
- 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException  {
     	HttpServletRequest req = (HttpServletRequest) request;
     	HttpServletResponse res = (HttpServletResponse) response;
@@ -96,6 +101,12 @@ public class JwtAuthenticationFilter implements Filter{
                 Claims claims = JwtUtil.validateToken(jwtToken).getBody();
                 int id = claims.get("id", Integer.class);
                 String role = claims.get("role", String.class);
+                String email = claims.getSubject();
+                if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                 }
                 
                 if (role.equalsIgnoreCase("patient")) {
                     Patient p = patientService.get(id);
@@ -126,6 +137,12 @@ public class JwtAuthenticationFilter implements Filter{
             Claims claims = JwtUtil.validateToken(token).getBody();
             int id = claims.get("id", Integer.class);
             String role = claims.get("role", String.class);
+            String email = claims.getSubject();
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UsernamePasswordAuthenticationToken auth =
+                    new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+             }
             
             if (role.equalsIgnoreCase("patient")) {
                 Patient p = patientService.get(id);
@@ -134,6 +151,7 @@ public class JwtAuthenticationFilter implements Filter{
                 Doctor d = doctorService.get(id);          
                 req.setAttribute("username", d.getDoctorName());     
             }
+            
             req.setAttribute("id", claims.get("id", Integer.class));
             req.setAttribute("role", claims.get("role", String.class));
             chain.doFilter(req, res);
@@ -155,8 +173,5 @@ public class JwtAuthenticationFilter implements Filter{
         return null;
     }
  
-    @Override
-    public void init(FilterConfig fConfig) throws ServletException {
-      
-    }
+   
 }

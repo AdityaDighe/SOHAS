@@ -22,6 +22,7 @@ public class JwtUtil {
                 .setSubject(email)
                 .claim("id", id)
                 .claim("role", role)
+                .setIssuer("SOHAS")
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(key)
                 .compact();
