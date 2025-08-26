@@ -296,7 +296,10 @@ $(document).ready(function() {
                             "<td>" + fixedDate + "</td>" +
                             "<td>" + app.time + "</td>" +
                             "<td><span class='status-badge status-" + app.status + "'>" + app.status + "</span></td>" +
-                            "<td><button class='cancel' data-id='" + app.appointmentId + "' data-date='" + fixedDate + "' data-time='" + app.time + "' " + (app.status === "CANCELLED" ? "disabled" : "") + ">" + (app.status === "CANCELLED" ? "Cancelled" : "Cancel") + "</button></td>" +
+                            "<td><button class='cancel' data-id='" + app.appointmentId + "' data-date='" + fixedDate + "' data-time='" + app.time + "' " +
+                            ((app.status === "CANCELLED" || app.status === "COMPLETED") ? "disabled" : "") + ">" +
+                            (app.status === "CANCELLED" ? "Cancelled" : (app.status === "COMPLETED" ? "Completed" : "Cancel")) +
+                        "</button></td>" +
                         "</tr>"
                     );
                 });
