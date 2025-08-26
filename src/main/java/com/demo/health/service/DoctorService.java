@@ -17,7 +17,7 @@ public interface DoctorService {
 
 	void delete(int doctorId);
 
-	Doctor loginDoctor(String email, String password);
+	
 
 	Doctor findByEmail(String email);
 

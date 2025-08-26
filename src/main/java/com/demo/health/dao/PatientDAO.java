@@ -19,14 +19,11 @@ public interface PatientDAO {
 
 	void delete(int patientId);
 
-//    Patient loginPatient(String email, String password);
+
 	List<Doctor> getDoctors(String location, Time time, Date date);
 
 	Patient findByEmail(String email);
 
 	List<Appointment> getAppointment(int id);
 
-//	void updateOtp(String email, String otp, LocalDateTime expiry);
-//	Patient findByEmailAndOtp(String email, String otp);
-//	void updatePassword(String email, String newPassword);
 }

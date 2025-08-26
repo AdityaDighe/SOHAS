@@ -59,18 +59,7 @@ public class PatientServiceImpl implements PatientService {
 
 	}
 
-	// Logging the patient and matching the hashcode with encoded password
-	@Override
-	public Patient loginPatient(String email, String password) {
-		Patient patient = patientdao.findByEmail(email);
-		if (patient != null) {
-			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-			if (encoder.matches(password, patient.getPassword())) {
-				return patient; // login success
-			}
-		}
-		return null; // login failed
-	}
+	
 
 	@Override
 	@Transactional

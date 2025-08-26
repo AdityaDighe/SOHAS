@@ -27,16 +27,16 @@ import com.demo.health.util.JwtUtil;
 
 import io.jsonwebtoken.Claims;
  
-/**
-* JWT Authentication Filter for protecting secured endpoints.
+/*
+ JWT Authentication Filter for protecting secured endpoints.
 */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
  
     @Autowired
-    PatientService patientService;
+    private PatientService patientService;
     @Autowired
-    DoctorService doctorService;
+    private DoctorService doctorService;
     
     
 	public JwtAuthenticationFilter() {
@@ -161,7 +161,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         	return;
         }
     }
- 
+
     private String getJwtFromCookies(HttpServletRequest req) {
         if (req.getCookies() != null) {
             for (Cookie cookie : req.getCookies()) {

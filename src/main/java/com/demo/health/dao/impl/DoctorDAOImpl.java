@@ -62,36 +62,5 @@ public class DoctorDAOImpl implements DoctorDAO {
 		return sessionFactory.getCurrentSession().createQuery(hql, Appointment.class).setParameter("id", id).list();
 	}
 
-	// Setting otp details into the doctor entity
-//	@Override
-//	public void updateOtp(String email, String otp, LocalDateTime expiry) {
-//	    Doctor doctor = findByEmail(email);
-//	    if (doctor != null) {
-//	        doctor.setOtp(otp);
-//	        doctor.setOtpExpiry(expiry);
-//	        sessionFactory.getCurrentSession().update(doctor);
-//	    }
-//	}
-
-	// Finding the doctor for password reset based on mail and otp
-//	@Override
-//	public Doctor findByEmailAndOtp(String email, String otp) {
-//	    String hql = "FROM Doctor d WHERE d.email = :email AND d.otp = :otp";
-//	    return sessionFactory.getCurrentSession()
-//	            .createQuery(hql, Doctor.class)
-//	            .setParameter("email", email)
-//	            .setParameter("otp", otp)
-//	            .uniqueResult();
-//	}
-
-//	//Setting the new Password
-//	@Override
-//	public void updatePassword(String email, String newPassword) {
-//	    Doctor doctor = findByEmail(email);
-//	    if (doctor != null) {
-//	        doctor.setPassword(newPassword);
-//	        doctor.setOtp(null); // clear OTP after use
-//	        doctor.setOtpExpiry(null);
-//	        sessionFactory.getCurrentSession().update(doctor);
-//	    }
+	
 }

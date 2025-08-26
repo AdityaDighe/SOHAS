@@ -59,6 +59,7 @@ public class AuthController {
     											user.getAuthorities().iterator().next().getAuthority());
     	return ResponseEntity.ok(Map.of("token", token));
     }
+    
     //Login with BCrypt, single API for both Patient and Doctor entities
 //    @PostMapping(value = "/api/login", produces = "application/json")
 //    public ResponseEntity<?> doLogin(@RequestBody Map<String, String> credentials) {

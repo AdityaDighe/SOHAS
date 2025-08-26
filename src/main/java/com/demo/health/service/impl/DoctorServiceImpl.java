@@ -51,17 +51,7 @@ public class DoctorServiceImpl implements DoctorService {
 	}
 
 	// Login doctor and match the encoded password with the stored hashcode
-	@Override
-	public Doctor loginDoctor(String email, String password) {
-		Doctor doctor = doctorDAO.findByEmail(email);
-		if (doctor != null) {
-			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-			if (encoder.matches(password, doctor.getPassword())) {
-				return doctor; // login success
-			}
-		}
-		return null; // login failed
-	}
+	
 
 	@Override
 	public Doctor findByEmail(String email) {

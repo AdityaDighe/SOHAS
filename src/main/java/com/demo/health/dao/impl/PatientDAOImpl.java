@@ -98,35 +98,6 @@ public class PatientDAOImpl implements PatientDAO {
 				.list();
 	}
 
-//	//set otp for the patient entity
-//	@Override
-//	public void updateOtp(String email, String otp, LocalDateTime expiry) {
-//	    Patient patient = findByEmail(email);
-//	    if (patient != null) {
-//	        patient.setOtp(otp);
-//	        patient.setOtpExpiry(expiry);
-//	        sessionFactory.getCurrentSession().update(patient);
-//	    }
-//	}
-//	
-	// finding the patient using email and otp
-//	@Override
-//	public Patient findByEmailAndOtp(String email, String otp) {
-//		String hql = "FROM Patient p WHERE p.email = :email AND p.otp = :otp";
-//		return sessionFactory.getCurrentSession().createQuery(hql, Patient.class).setParameter("email", email)
-//				.setParameter("otp", otp).uniqueResult();
-//	}
 
-	// updating the password from the patient request
-//	@Override
-//	public void updatePassword(String email, String newPassword) {
-//	    Patient patient = findByEmail(email);
-//	    if (patient != null) {
-//	        patient.setPassword(newPassword);
-//	        patient.setOtp(null); // clear OTP after use
-//	        patient.setOtpExpiry(null);
-//	        sessionFactory.getCurrentSession().update(patient);
-//	    }
-//	}
 
 }
