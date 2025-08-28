@@ -13,6 +13,7 @@ public class LoginDTO {
     @Size(min = 8, message = "Password must be at least 8 characters long")
 	private String password;
 	
+	public LoginDTO() {}
 	
 	public String getEmail() {
 		return email;

@@ -50,6 +50,7 @@ public class DoctorDTO {
 	
 	private LocalDateTime otpExpiry;
 	
+	public DoctorDTO() {}
 	
 	public DoctorDTO(Doctor doctor) {
 		this.doctorId = doctor.getDoctorId();
