@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.health.dao.PatientDAO;
+import com.demo.health.dto.PatientDTO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
@@ -23,16 +24,15 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Transactional
-	public void save(Patient patient) {
+	public String save(PatientDTO patientDTO) {
 		// TODO Auto-generated method stub
-		patientdao.save(patient);
-		;
-
+		patientdao.save(patientDTO);
+		
 	}
 
 	@Override
 	@Transactional
-	public Patient get(int patientId) {
+	public PatientDTO get(int patientId) {
 		// TODO Auto-generated method stub
 		return patientdao.get(patientId);
 	}
