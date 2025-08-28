@@ -2,9 +2,9 @@ package com.demo.health.dao.impl;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,54 +13,123 @@ import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 
 @Repository
-@Transactional
 public class DoctorDAOImpl implements DoctorDAO {
-	@Autowired
-	private SessionFactory sessionFactory;
 
-	@Override
-	public void save(Doctor doctor) {
-		sessionFactory.getCurrentSession().save(doctor);
-	}
+    @Autowired
+    private SessionFactory sessionFactory;
 
-	@Override
-	public Doctor get(int doctorId) {
-		return sessionFactory.getCurrentSession().get(Doctor.class, doctorId);
-	}
+    @Override
+    public void save(Doctor doctor) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.save(doctor);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 
-	@Override
-	public List<Doctor> list() {
-		return sessionFactory.getCurrentSession().createQuery("from Doctor", Doctor.class).list();
-	}
+    @Override
+    public Doctor get(int doctorId) {
+        Session session = sessionFactory.openSession();
+        Doctor doctor = null;
+        try {
+            doctor = session.get(Doctor.class, doctorId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return doctor;
+    }
 
-	@Override
-	public void update(Doctor doctor) {
-		sessionFactory.getCurrentSession().merge(doctor);
-	}
+    @Override
+    public List<Doctor> list() {
+        Session session = sessionFactory.openSession();
+        List<Doctor> doctors = null;
+        try {
+            doctors = session.createQuery("from Doctor", Doctor.class).list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return doctors;
+    }
 
-	@Override
-	public void delete(int doctorId) {
-		Doctor doctor = sessionFactory.getCurrentSession().get(Doctor.class, doctorId);
-		if (doctor != null) {
-			sessionFactory.getCurrentSession().delete(doctor);
-		}
-	}
+    @Override
+    public void update(Doctor doctor) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.merge(doctor); // merged to handle detached object update
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 
-	// Using Hql to find the doctor by email id
-	@Override
-	public Doctor findByEmail(String email) {
-		String hql = "FROM Doctor d WHERE d.email = :email";
-		return sessionFactory.getCurrentSession().createQuery(hql, Doctor.class).setParameter("email", email)
-				.uniqueResult();
-	}
+    @Override
+    public void delete(int doctorId) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Doctor doctor = session.get(Doctor.class, doctorId);
+            if (doctor != null) {
+                session.delete(doctor);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 
-	// Using Hql to find the appointment details based on doctor id
-	@Override
-	public List<Appointment> myAppointments(int id) {
-		// TODO Auto-generated method stub
-		String hql = "FROM Appointment a WHERE a.doctor.doctorId = :id";
-		return sessionFactory.getCurrentSession().createQuery(hql, Appointment.class).setParameter("id", id).list();
-	}
+    // Using HQL to find the doctor by email id
+    @Override
+    public Doctor findByEmail(String email) {
+        Session session = sessionFactory.openSession();
+        Doctor doctor = null;
+        try {
+            String hql = "FROM Doctor d WHERE d.email = :email";
+            doctor = session.createQuery(hql, Doctor.class)
+                            .setParameter("email", email)
+                            .uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return doctor;
+    }
 
-	
+    // Using HQL to find the appointment details based on doctor id
+    @Override
+    public List<Appointment> myAppointments(int id) {
+        Session session = sessionFactory.openSession();
+        List<Appointment> appointments = null;
+        try {
+            String hql = "FROM Appointment a WHERE a.doctor.doctorId = :id";
+            appointments = session.createQuery(hql, Appointment.class)
+                                  .setParameter("id", id)
+                                  .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return appointments;
+    }
 }

@@ -36,7 +36,6 @@ public class DoctorServiceImpl implements DoctorService {
 	private BCryptPasswordEncoder passwordEncoder; 
 
 	@Override
-	@Transactional
 	public ResponseEntity<?> save(@Valid DoctorDTO doctorDTO, BindingResult result) {
 		//Check for validation errors and return
 		if (result.hasErrors()) {
@@ -73,7 +72,6 @@ public class DoctorServiceImpl implements DoctorService {
 	}
 
 	@Override
-	@Transactional
 	public DoctorDTO get(int doctorId) throws UserNotFoundException {
 		Doctor doctor = doctorDAO.get(doctorId);
 		DoctorDTO doctorDTO = new DoctorDTO(doctor);
@@ -81,7 +79,6 @@ public class DoctorServiceImpl implements DoctorService {
 	}
 
 	@Override
-	@Transactional
 	public List<DoctorDTO> list() {
 		List<Doctor> doctorList =  doctorDAO.list();
 		List<DoctorDTO> doctorDTOlist = new ArrayList<>();
@@ -94,7 +91,6 @@ public class DoctorServiceImpl implements DoctorService {
 	}
 
 	@Override
-	@Transactional
 	public void update(int id, DoctorDTO doctorDTO) {
 		Doctor doctor = new Doctor(doctorDTO);
 		doctor.setDoctorId(id);
@@ -102,20 +98,17 @@ public class DoctorServiceImpl implements DoctorService {
 	}
 
 	@Override
-	@Transactional
 	public void delete(int doctorId) {
 		doctorDAO.delete(doctorId);
 	}
 
 	@Override
-	@Transactional
 	public DoctorDTO findByEmail(String email) {
 		Doctor doctor = doctorDAO.findByEmail(email);
 		return doctor != null ? new DoctorDTO(doctor) : null;
 	}
 
 	@Override
-	@Transactional
 	public List<DashboardDTO> myAppointments(int id) {
 		// TODO Auto-generated method stub
 		List<Appointment> doctorList = doctorDAO.myAppointments(id);

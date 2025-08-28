@@ -42,7 +42,6 @@ public class PatientServiceImpl implements PatientService {
 	private DoctorService doctorService;
 
 	@Override
-	@Transactional
 	public ResponseEntity<?> save(@Valid PatientDTO patientDTO, BindingResult result) {
 		// TODO Auto-generated method stub
 		//Check for validation errors and return
@@ -74,7 +73,6 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	@Transactional
 	public PatientDTO get(int patientId) {
 		// TODO Auto-generated method stub
 		Patient patient = patientdao.get(patientId);
@@ -82,7 +80,6 @@ public class PatientServiceImpl implements PatientService {
 	}
 	
 	@Override
-	@Transactional
 	public List<PatientDTO> list() {
 		// TODO Auto-generated method stub
 		List<Patient> patientList =  patientdao.list();
@@ -94,7 +91,6 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	@Transactional
 	public void update(int id, PatientDTO patientDTO) {
 		// TODO Auto-generated method stub
 		Patient patient = new Patient(patientDTO);
@@ -103,7 +99,6 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	@Transactional
 	public void delete(int patientId) {
 		// TODO Auto-generated method stub
 		patientdao.delete(patientId);
@@ -111,7 +106,6 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	@Transactional
 	public ResponseEntity<?> getDoctors(String location, Time time, Date date) {
 		// TODO Auto-generated method stub
 		List<Doctor> doctorList = patientdao.getDoctors(location, time, date);
@@ -134,14 +128,12 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	@Transactional
 	public PatientDTO findByEmail(String email) {
 		Patient patient = patientdao.findByEmail(email);
 		return patient != null ? new PatientDTO(patient) : null;
 	}
 
 	@Override
-	@Transactional
 	public List<DashboardDTO> getAppointment(int id) {
 		// TODO Auto-generated method stub
 		List<Appointment> appointmentList =  patientdao.getAppointment(id);

@@ -34,7 +34,6 @@ public class AppointmentServiceImpl implements AppointmentService{
 	private DoctorDAO doctorDAO;
 	
 	@Override
-	@Transactional
 	public void save(AppointmentDTO appointmentDTO) {
 		Appointment appointment = new Appointment(appointmentDTO);
 		Patient patient = patientDAO.get(appointmentDTO.getPatientId());
@@ -48,7 +47,6 @@ public class AppointmentServiceImpl implements AppointmentService{
 	}
 
 	@Override
-	@Transactional
 	public AppointmentDTO get(int appointmentId) {
 		// TODO Auto-generated method stub
 		Appointment appointment = appointmentdao.get(appointmentId);
@@ -57,7 +55,6 @@ public class AppointmentServiceImpl implements AppointmentService{
 	}
 
 	@Override
-	@Transactional
 	public List<AppointmentDTO> list() {
 		// TODO Auto-generated method stub
 			List<Appointment> appointmentList = appointmentdao.list();
@@ -70,7 +67,6 @@ public class AppointmentServiceImpl implements AppointmentService{
 
 	
 	@Override
-	@Transactional
 	public void updateStatus(int id, String status) {
 		// TODO Auto-generated method stub
 		Appointment appointment = appointmentdao.get(id);
