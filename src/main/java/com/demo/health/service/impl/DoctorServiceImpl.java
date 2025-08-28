@@ -1,5 +1,6 @@
 package com.demo.health.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.demo.health.dao.DoctorDAO;
+import com.demo.health.dto.DoctorDTO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.exception.UserNotFoundException;
@@ -18,29 +20,43 @@ import com.demo.health.service.DoctorService;
 public class DoctorServiceImpl implements DoctorService {
 	@Autowired
 	private DoctorDAO doctorDAO;
+	
+	@Autowired
+	private BCryptPasswordEncoder encoder; 
 
 	@Override
 	@Transactional
-	public void save(Doctor doctor) {
+	public void save(DoctorDTO doctorDTO) {
+		Doctor doctor = new Doctor(doctorDTO);
 		doctorDAO.save(doctor);
 	}
 
 	@Override
 	@Transactional
-	public Doctor get(int doctorId) throws UserNotFoundException {
+	public DoctorDTO get(int doctorId) throws UserNotFoundException {
 		Doctor doctor = doctorDAO.get(doctorId);
-		return doctor;
+		DoctorDTO doctorDTO = new DoctorDTO(doctor);
+		return doctorDTO;
 	}
 
 	@Override
 	@Transactional
-	public List<Doctor> list() {
-		return doctorDAO.list();
+	public List<DoctorDTO> list() {
+		List<Doctor> doctorList =  doctorDAO.list();
+		List<DoctorDTO> doctorDTOlist = new ArrayList<>();
+		for(Doctor d : doctorList) {
+			doctorDTOlist.add(new DoctorDTO(d));
+		}
+		return doctorDTOlist;
+		
+		
 	}
 
 	@Override
 	@Transactional
-	public void update(Doctor doctor) {
+	public void update(int id, DoctorDTO doctorDTO) {
+		Doctor doctor = new Doctor(doctorDTO);
+		doctor.setDoctorId(id);
 		doctorDAO.update(doctor);
 	}
 
@@ -50,12 +66,10 @@ public class DoctorServiceImpl implements DoctorService {
 		doctorDAO.delete(doctorId);
 	}
 
-	// Login doctor and match the encoded password with the stored hashcode
-	
-
 	@Override
-	public Doctor findByEmail(String email) {
-		return doctorDAO.findByEmail(email);
+	public DoctorDTO findByEmail(String email) {
+		Doctor doctor = doctorDAO.findByEmail(email);
+		return new DoctorDTO(doctor);
 	}
 
 	@Override
@@ -64,7 +78,5 @@ public class DoctorServiceImpl implements DoctorService {
 		return doctorDAO.myAppointments(id);
 	}
 
-	@Autowired
-	private BCryptPasswordEncoder encoder; // reuse for password encoding
 
 }

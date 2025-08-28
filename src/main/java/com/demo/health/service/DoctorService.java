@@ -2,24 +2,24 @@ package com.demo.health.service;
 
 import java.util.List;
 
+import com.demo.health.dto.DoctorDTO;
 import com.demo.health.entity.Appointment;
-import com.demo.health.entity.Doctor;
 import com.demo.health.exception.UserNotFoundException;
 
 public interface DoctorService {
-	void save(Doctor doctor);
+	void save(DoctorDTO doctorDTO);
 
-	Doctor get(int doctorId) throws UserNotFoundException;
+	DoctorDTO get(int doctorId) throws UserNotFoundException;
 
-	List<Doctor> list();
+	List<DoctorDTO> list();
 
-	void update(Doctor doctor);
+	void update(int id, DoctorDTO doctorDTO);
 
 	void delete(int doctorId);
 
 	
 
-	Doctor findByEmail(String email);
+	DoctorDTO findByEmail(String email);
 
 	List<Appointment> myAppointments(int id);
 

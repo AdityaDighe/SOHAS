@@ -2,6 +2,7 @@ package com.demo.health.service.impl;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.health.dao.PatientDAO;
+import com.demo.health.dto.DoctorDTO;
 import com.demo.health.dto.PatientDTO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
@@ -24,9 +26,10 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Transactional
-	public String save(PatientDTO patientDTO) {
+	public void save(PatientDTO patientDTO) {
 		// TODO Auto-generated method stub
-		patientdao.save(patientDTO);
+		Patient patient = new Patient(patientDTO);
+		patientdao.save(patient);
 		
 	}
 
@@ -34,20 +37,28 @@ public class PatientServiceImpl implements PatientService {
 	@Transactional
 	public PatientDTO get(int patientId) {
 		// TODO Auto-generated method stub
-		return patientdao.get(patientId);
+		Patient patient = patientdao.get(patientId);
+		return new PatientDTO(patient);
 	}
 
 	@Override
 	@Transactional
-	public List<Patient> list() {
+	public List<PatientDTO> list() {
 		// TODO Auto-generated method stub
-		return patientdao.list();
+		List<Patient> patientList =  patientdao.list();
+		List<PatientDTO> patientDTOlist = new ArrayList<>();
+		for(Patient p: patientList) {
+			patientDTOlist.add(new PatientDTO(p));
+		}
+		return patientDTOlist;
 	}
 
 	@Override
 	@Transactional
-	public void update(Patient patient) {
+	public void update(int id, PatientDTO patientDTO) {
 		// TODO Auto-generated method stub
+		Patient patient = new Patient(patientDTO);
+		patient.setPatientId(id);
 		patientdao.update(patient);
 	}
 
@@ -63,20 +74,26 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Transactional
-	public List<Doctor> getDoctors(String location, Time time, Date date) {
+	public List<DoctorDTO> getDoctors(String location, Time time, Date date) {
 		// TODO Auto-generated method stub
-		return patientdao.getDoctors(location, time, date);
+		List<Doctor> doctorList = patientdao.getDoctors(location, time, date);
+		List<DoctorDTO> doctorDTOlist = new ArrayList<>();
+		for(Doctor d : doctorList) {
+			doctorDTOlist.add(new DoctorDTO(d));
+		}
+		return doctorDTOlist;
 	}
 
 	@Override
 	@Transactional
-	public Patient findByEmail(String email) {
-		return patientdao.findByEmail(email);
+	public PatientDTO findByEmail(String email) {
+		Patient patient = patientdao.findByEmail(email);
+		return new PatientDTO(patient);
 	}
 
 	@Override
 	@Transactional
-	public List<Appointment> getAppointment(int id) {
+	public List<AppointmentDTO> getAppointment(int id) {
 		// TODO Auto-generated method stub
 		return patientdao.getAppointment(id);
 	}

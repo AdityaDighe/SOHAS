@@ -55,7 +55,7 @@ public class AuthController {
     		        new UsernamePasswordAuthenticationToken(email, rawPassword)
     	);
     	CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
-    	String token = JwtUtil.generateToken( user.getId(), user.getUsername(), 
+    	String token = JwtUtil.generateToken(user.getId(), user.getUsername(), 
     											user.getAuthorities().iterator().next().getAuthority());
     	return ResponseEntity.ok(Map.of("token", token));
     }
