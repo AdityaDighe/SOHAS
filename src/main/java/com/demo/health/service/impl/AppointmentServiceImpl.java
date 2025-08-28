@@ -43,7 +43,7 @@ public class AppointmentServiceImpl implements AppointmentService{
 		
 		appointmentdao.save(appointment);
 		
-//		emailService.sendAppointmentConfirmationEmail(doctor.getEmail(), patient.getEmail(), doctor.getDoctorName(), patient.getPatientName(), appointment.getDate(), appointment.getTime());
+		emailService.sendAppointmentConfirmationEmail(doctor, patient, appointment);
 	}
 
 	@Override

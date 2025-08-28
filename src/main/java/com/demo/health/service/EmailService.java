@@ -8,6 +8,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.demo.health.entity.Appointment;
+import com.demo.health.entity.Doctor;
+import com.demo.health.entity.Patient;
+
 @Service
 public class EmailService {
 
@@ -44,7 +48,7 @@ public class EmailService {
     	String mailSubject = "SOHAS • Appointment Confirmed";
     	String mailBody = "Dear " + patientName + ",\n\nYour appointment with Dr. " + doctorName + 
              " has been successfully booked.\n\nDate: " + date + "\nTime: " + time + 
-             "\n\nThank you for using SOHAS.\n\nRegards,\nSOHAS Team";
+             "\nThank you for using SOHAS.\nRegards,\nSOHAS Team";
     			
         sendEmail(patientEmail, mailSubject, mailBody);
         System.out.println("Appointment confirmation emails sent to patient.");
@@ -54,13 +58,21 @@ public class EmailService {
     	String mailSubject = "SOHAS • New Appointment Booked";
     	String mailBody = "Dear Dr. " + doctorName + ",\n\nYou have a new appointment booked by " + patientName + 
              ".\n\nDate: " + date + "\nTime: " + time + 
-             "\n\nPlease be available.\n\nRegards,\nSOHAS Team";
+             "\nPlease be available.\nRegards,\nSOHAS Team";
     	
         sendEmail(doctorEmail, mailSubject, mailBody);
         System.out.println("Appointment confirmation emails sent to doctor.");
     }
     
-    public void sendAppointmentConfirmationEmail(String doctorEmail, String patientEmail, String doctorName, String patientName, Date date, Time time) {
+    public void sendAppointmentConfirmationEmail(Doctor doctor, Patient patient, Appointment appointment) {
+    	String patientEmail = patient.getEmail();
+    	String patientName = patient.getPatientName();
+    	String doctorEmail = doctor.getEmail();
+    	String doctorName = doctor.getDoctorName();
+    	
+    	Date date = appointment.getDate();
+    	Time time = appointment.getTime();
+    	
     	sendAppointmentConfirmationToPatient(patientEmail, patientName, doctorName, date, time);
     	sendAppointmentConfirmationToDoctor(doctorEmail, doctorName, patientName, date, time);
     }

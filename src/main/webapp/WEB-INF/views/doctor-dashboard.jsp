@@ -1,4 +1,3 @@
-
 <html>
 <head>
     <title>SOHAS</title>
@@ -437,7 +436,7 @@ to {
         function showErrorPopup(message) {
             $(".modal-message").text(message);
             $("#confirmYes").hide();   // hide Yes button
-            $("#confirmNo").text("OK"); // rename No → OK
+            $("#confirmNo").text("OK"); // rename No OK
             $("#confirmModal").fadeIn(200);
 
             $("#confirmNo").off("click").on("click", function () {
