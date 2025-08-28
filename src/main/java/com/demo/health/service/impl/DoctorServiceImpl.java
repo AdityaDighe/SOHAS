@@ -37,7 +37,7 @@ public class DoctorServiceImpl implements DoctorService {
 	public DoctorDTO get(int doctorId) throws UserNotFoundException {
 		Doctor doctor = doctorDAO.get(doctorId);
 		DoctorDTO doctorDTO = new DoctorDTO(doctor);
-		return doctorDTO;
+		return doctor != null ? doctorDTO : null;
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class DoctorServiceImpl implements DoctorService {
 		for(Doctor d : doctorList) {
 			doctorDTOlist.add(new DoctorDTO(d));
 		}
-		return doctorDTOlist;
+		return doctorList != null ? doctorDTOlist : null;
 		
 		
 	}
@@ -70,8 +70,10 @@ public class DoctorServiceImpl implements DoctorService {
 	@Override
 	@Transactional
 	public DoctorDTO findByEmail(String email) {
+		System.out.println(email + "service");
 		Doctor doctor = doctorDAO.findByEmail(email);
-		return new DoctorDTO(doctor);
+		System.out.println(doctor);
+		return doctor != null ? new DoctorDTO(doctor) : null;
 	}
 
 	@Override
@@ -83,7 +85,7 @@ public class DoctorServiceImpl implements DoctorService {
 		for(Appointment d : doctorList) {
 			doctorDTOlist.add(new AppointmentDTO(d));
 		}
-		return doctorDTOlist;
+		return doctorList != null ? doctorDTOlist : null;
 	}
 
 

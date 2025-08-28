@@ -66,18 +66,21 @@ public class AuthController {
         
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         // Check patient and check if password encoded matches, return token
+        DoctorDTO d = doctorService.findByEmail(email);
+        System.out.println(d);
+        if (d != null && passwordEncoder.matches(rawPassword, d.getPassword())) {
+        	System.out.println("Doctor found !!!!");
+        	String token = JwtUtil.generateToken(d.getDoctorId(), email, "DOCTOR");
+        	return ResponseEntity.ok(Map.of("token", token));
+        }
         PatientDTO p = patientService.findByEmail(email);
         if (p != null && passwordEncoder.matches(rawPassword, p.getPassword())) {
-            String token = JwtUtil.generateToken(p.getPatientId(), email, "PATIENT");
+        	String token = JwtUtil.generateToken(p.getPatientId(), email, "PATIENT");
             return ResponseEntity.ok(Map.of("token", token));
         }
 
         // Check doctor and check if password encoded matches, return token
-        DoctorDTO d = doctorService.findByEmail(email);
-        if (d != null && passwordEncoder.matches(rawPassword, d.getPassword())) {
-            String token = JwtUtil.generateToken(d.getDoctorId(), email, "DOCTOR");
-            return ResponseEntity.ok(Map.of("token", token));
-        }
+        System.out.println("AUTH login!!!");
         
         //Unauthorized access (wrong password or email)
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

@@ -42,7 +42,7 @@ public class PatientServiceImpl implements PatientService {
 	public PatientDTO get(int patientId) {
 		// TODO Auto-generated method stub
 		Patient patient = patientdao.get(patientId);
-		return new PatientDTO(patient);
+		return patient != null ? new PatientDTO(patient) : null;
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class PatientServiceImpl implements PatientService {
 		for(Patient p: patientList) {
 			patientDTOlist.add(new PatientDTO(p));
 		}
-		return patientDTOlist;
+		return patientList != null ? patientDTOlist : null;
 	}
 
 	@Override
@@ -83,14 +83,14 @@ public class PatientServiceImpl implements PatientService {
 		for(Doctor d : doctorList) {
 			doctorDTOlist.add(new DoctorDTO(d));
 		}
-		return doctorDTOlist;
+		return doctorList != null ? doctorDTOlist : null;
 	}
 
 	@Override
 	@Transactional
 	public PatientDTO findByEmail(String email) {
 		Patient patient = patientdao.findByEmail(email);
-		return new PatientDTO(patient);
+		return patient != null ? new PatientDTO(patient) : null;
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class PatientServiceImpl implements PatientService {
 			appointmentDTOlist.add(new AppointmentDTO(app));
 		}
 		
-		return appointmentDTOlist;
+		return appointmentList != null ? appointmentDTOlist : null;
 	}
 
 	

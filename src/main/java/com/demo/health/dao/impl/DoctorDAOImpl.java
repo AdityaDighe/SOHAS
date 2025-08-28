@@ -49,6 +49,7 @@ public class DoctorDAOImpl implements DoctorDAO {
 	// Using Hql to find the doctor by email id
 	@Override
 	public Doctor findByEmail(String email) {
+		System.out.println(email + " DAO");
 		String hql = "FROM Doctor d WHERE d.email = :email";
 		return sessionFactory.getCurrentSession().createQuery(hql, Doctor.class).setParameter("email", email)
 				.uniqueResult();
