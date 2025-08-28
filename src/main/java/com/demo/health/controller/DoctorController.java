@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demo.health.dto.DashboardDTO;
 import com.demo.health.dto.DoctorDTO;
 import com.demo.health.service.DoctorService;
-import com.demo.health.service.PatientService;
 
 /*
  REST controller for handling doctor-related operations such as registration,
@@ -30,31 +29,28 @@ public class DoctorController {
 	@Autowired
 	private DoctorService doctorService;
 	
-	@Autowired
-	private PatientService patientService;
-	
 	@GetMapping("/{id}")
-    public DoctorDTO getDoctor(@PathVariable int id) {
-        return doctorService.get(id);
+    public DoctorDTO getDoctorById(@PathVariable int id) {
+        return doctorService.getDoctorById(id);
     }
 	
 	/*
      Registers a new doctor.
     */
 	@PostMapping("/signup")
-	public ResponseEntity<?> addDoctor(@RequestBody DoctorDTO doctorDTO, BindingResult result) {
-	    return doctorService.save(doctorDTO, result);
+	public ResponseEntity<?> registerDoctor(@RequestBody DoctorDTO doctorDTO, BindingResult result) {
+	    return doctorService.registerDoctor(doctorDTO, result);
 	   
 	}
 
     @PutMapping("/{id}")
     public void updateDoctor(@PathVariable int id, @RequestBody DoctorDTO doctorDTO) {
-        doctorService.update(id, doctorDTO);
+        doctorService.updateDoctor(id, doctorDTO);
     }
     
     @DeleteMapping("/{id}")
     public void deleteDoctor(@PathVariable int id) {
-        doctorService.delete(id);
+        doctorService.deleteDoctor(id);
     }
     
     @GetMapping("/appointment/{id}")

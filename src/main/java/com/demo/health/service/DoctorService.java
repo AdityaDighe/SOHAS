@@ -10,15 +10,15 @@ import com.demo.health.dto.DoctorDTO;
 import com.demo.health.exception.UserNotFoundException;
 
 public interface DoctorService {
-	ResponseEntity<?> save(DoctorDTO doctorDTO, BindingResult result);
+	ResponseEntity<?> registerDoctor(DoctorDTO doctorDTO, BindingResult result);
 
-	DoctorDTO get(int doctorId) throws UserNotFoundException;
+	DoctorDTO getDoctorById(int doctorId) throws UserNotFoundException;
 
-	List<DoctorDTO> list();
+	List<DoctorDTO> listDoctors();
 
-	void update(int id, DoctorDTO doctorDTO);
+	void updateDoctor(int id, DoctorDTO doctorDTO);
 
-	void delete(int doctorId);
+	void deleteDoctor(int doctorId);
 
 	
 

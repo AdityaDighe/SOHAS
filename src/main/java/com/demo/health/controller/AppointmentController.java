@@ -28,18 +28,18 @@ public class AppointmentController {
 
     @PostMapping
     public void addAppointment(@RequestBody AppointmentDTO appointmentDTO) {
-    	appointService.save(appointmentDTO);
+    	appointService.bookAppointment(appointmentDTO);
     }
 
     @GetMapping
     public List<AppointmentDTO> listAppointments() {
-        return appointService.list();
+        return appointService.listAppointments();
     }
 
     @PutMapping("/{id}")
     public void updateAppointment(@PathVariable int id, @RequestBody Map<String, String> request) {
         String status = request.get("status");
-        appointService.updateStatus(id, status);
+        appointService.updateAppointmentStatus(id, status);
     }
 
     

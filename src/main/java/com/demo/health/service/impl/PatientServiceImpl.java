@@ -42,7 +42,8 @@ public class PatientServiceImpl implements PatientService {
 	private DoctorService doctorService;
 
 	@Override
-	public ResponseEntity<?> save(@Valid PatientDTO patientDTO, BindingResult result) {
+	@Transactional
+	public ResponseEntity<?> registerPatient(@Valid PatientDTO patientDTO, BindingResult result) {
 		// TODO Auto-generated method stub
 		//Check for validation errors and return
         if (result.hasErrors()) {
@@ -73,14 +74,16 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	public PatientDTO get(int patientId) {
+	@Transactional
+	public PatientDTO getPatientById(int patientId) {
 		// TODO Auto-generated method stub
 		Patient patient = patientdao.get(patientId);
 		return patient != null ? new PatientDTO(patient) : null;
 	}
 	
 	@Override
-	public List<PatientDTO> list() {
+	@Transactional
+	public List<PatientDTO> listPatients() {
 		// TODO Auto-generated method stub
 		List<Patient> patientList =  patientdao.list();
 		List<PatientDTO> patientDTOlist = new ArrayList<>();
@@ -91,7 +94,8 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	public void update(int id, PatientDTO patientDTO) {
+	@Transactional
+	public void updatePatient(int id, PatientDTO patientDTO) {
 		// TODO Auto-generated method stub
 		Patient patient = new Patient(patientDTO);
 		patient.setPatientId(id);
@@ -99,14 +103,16 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	public void delete(int patientId) {
+	@Transactional
+	public void deletePatient(int patientId) {
 		// TODO Auto-generated method stub
 		patientdao.delete(patientId);
 
 	}
 
 	@Override
-	public ResponseEntity<?> getDoctors(String location, Time time, Date date) {
+	@Transactional
+	public ResponseEntity<?> getAvailableDoctors(String location, Time time, Date date) {
 		// TODO Auto-generated method stub
 		List<Doctor> doctorList = patientdao.getDoctors(location, time, date);
 		//Handling DoctorsNotFoundException and sending custom message
@@ -128,13 +134,15 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	@Transactional
 	public PatientDTO findByEmail(String email) {
 		Patient patient = patientdao.findByEmail(email);
 		return patient != null ? new PatientDTO(patient) : null;
 	}
 
 	@Override
-	public List<DashboardDTO> getAppointment(int id) {
+	@Transactional
+	public List<DashboardDTO> getPatientAppointments(int id) {
 		// TODO Auto-generated method stub
 		List<Appointment> appointmentList =  patientdao.getAppointment(id);
 		List<DashboardDTO> appointmentDTOlist = new ArrayList<>();

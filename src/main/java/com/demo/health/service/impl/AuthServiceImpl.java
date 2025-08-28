@@ -76,7 +76,7 @@ public class AuthServiceImpl implements AuthService{
         
         response.addCookie(cookie);
         
-        return ResponseEntity.ok(Map.of("message", "Logout Successfully!!!"));
+        return ResponseEntity.ok(Map.of("message", "Logout Successful!!!"));
 	}
 
 	@Override
@@ -98,11 +98,11 @@ public class AuthServiceImpl implements AuthService{
         if (patientDTO != null) {
             patientDTO.setOtp(otp);
             patientDTO.setOtpExpiry(expiry);
-            patientService.update(patientDTO.getPatientId(), patientDTO);
+            patientService.updatePatient(patientDTO.getPatientId(), patientDTO);
         } else {
             doctorDTO.setOtp(otp);
             doctorDTO.setOtpExpiry(expiry);
-            doctorService.update(doctorDTO.getDoctorId(), doctorDTO);
+            doctorService.updateDoctor(doctorDTO.getDoctorId(), doctorDTO);
         }
 
         //Sending email, and sending response of success or failure
@@ -142,7 +142,7 @@ public class AuthServiceImpl implements AuthService{
             	patient.setPassword(passwordEncoder.encode(newPassword));
                 patient.setOtp(null);
                 patient.setOtpExpiry(null);
-                patientService.update(patient.getPatientId(), patient);
+                patientService.updatePatient(patient.getPatientId(), patient);
                 updated = true;
             }
             
@@ -155,7 +155,7 @@ public class AuthServiceImpl implements AuthService{
             	doctor.setPassword(passwordEncoder.encode(newPassword)); 
                 doctor.setOtp(null);
                 doctor.setOtpExpiry(null);
-                doctorService.update(doctor.getDoctorId(), doctor);
+                doctorService.updateDoctor(doctor.getDoctorId(), doctor);
                 updated = true;
             }
             

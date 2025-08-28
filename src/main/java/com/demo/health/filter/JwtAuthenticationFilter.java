@@ -73,10 +73,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                 String role = claims.get("role", String.class);
                 
                 if (role.equalsIgnoreCase("patient")) {
-                    PatientDTO p = patientService.get(id);
+                    PatientDTO p = patientService.getPatientById(id);
                     req.setAttribute("username", p.getPatientName());
                 } else if (role.equalsIgnoreCase("doctor")) {
-                    DoctorDTO d = doctorService.get(id);          
+                    DoctorDTO d = doctorService.getDoctorById(id);          
                     req.setAttribute("username", d.getDoctorName());     
                 }
                 req.setAttribute("id", claims.get("id", Integer.class));
@@ -105,10 +105,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                  }
                 
                 if (role.equalsIgnoreCase("patient")) {
-                    PatientDTO p = patientService.get(id);
+                    PatientDTO p = patientService.getPatientById(id);
                     req.setAttribute("username", p.getPatientName());
                 } else if (role.equalsIgnoreCase("doctor")) {
-                    DoctorDTO d = doctorService.get(id);          
+                    DoctorDTO d = doctorService.getDoctorById(id);          
                     req.setAttribute("username", d.getDoctorName());     
                 }
                 req.setAttribute("id", claims.get("id", Integer.class));
@@ -141,10 +141,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
              }
             
             if (role.equalsIgnoreCase("patient")) {
-                PatientDTO p = patientService.get(id);
+                PatientDTO p = patientService.getPatientById(id);
                 req.setAttribute("username", p.getPatientName());
             } else if (role.equalsIgnoreCase("doctor")) {
-                DoctorDTO d = doctorService.get(id);          
+                DoctorDTO d = doctorService.getDoctorById(id);          
                 req.setAttribute("username", d.getDoctorName());     
             }
             

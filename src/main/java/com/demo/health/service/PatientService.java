@@ -8,24 +8,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
 import com.demo.health.dto.DashboardDTO;
-import com.demo.health.dto.DoctorDTO;
 import com.demo.health.dto.PatientDTO;
 
 public interface PatientService {
-	ResponseEntity<?> save(PatientDTO patientDTO, BindingResult result);
+	ResponseEntity<?> registerPatient(PatientDTO patientDTO, BindingResult result);
 
-	PatientDTO get(int patientId);
+	PatientDTO getPatientById(int patientId);
 
-	List<PatientDTO> list();
+	List<PatientDTO> listPatients();
 
-	void update(int id, PatientDTO patientDTO);
+	void updatePatient(int id, PatientDTO patientDTO);
 
-	void delete(int patientId);
+	void deletePatient(int patientId);
 	
-	ResponseEntity<?> getDoctors(String location, Time time, Date date);
+	ResponseEntity<?> getAvailableDoctors(String location, Time time, Date date);
 
 	PatientDTO findByEmail(String email);
 
-	List<DashboardDTO> getAppointment(int id);
+	List<DashboardDTO> getPatientAppointments(int id);
 
 }

@@ -36,7 +36,7 @@ public class DoctorServiceImpl implements DoctorService {
 	private BCryptPasswordEncoder passwordEncoder; 
 
 	@Override
-	public ResponseEntity<?> save(@Valid DoctorDTO doctorDTO, BindingResult result) {
+	public ResponseEntity<?> registerDoctor(@Valid DoctorDTO doctorDTO, BindingResult result) {
 		//Check for validation errors and return
 		if (result.hasErrors()) {
 	        Map<String, String> errors = result.getFieldErrors().stream()
@@ -72,33 +72,31 @@ public class DoctorServiceImpl implements DoctorService {
 	}
 
 	@Override
-	public DoctorDTO get(int doctorId) throws UserNotFoundException {
+	public DoctorDTO getDoctorById(int doctorId) throws UserNotFoundException {
 		Doctor doctor = doctorDAO.get(doctorId);
 		DoctorDTO doctorDTO = new DoctorDTO(doctor);
 		return doctor != null ? doctorDTO : null;
 	}
 
 	@Override
-	public List<DoctorDTO> list() {
+	public List<DoctorDTO> listDoctors() {
 		List<Doctor> doctorList =  doctorDAO.list();
 		List<DoctorDTO> doctorDTOlist = new ArrayList<>();
 		for(Doctor d : doctorList) {
 			doctorDTOlist.add(new DoctorDTO(d));
 		}
 		return doctorList != null ? doctorDTOlist : null;
-		
-		
 	}
 
 	@Override
-	public void update(int id, DoctorDTO doctorDTO) {
+	public void updateDoctor(int id, DoctorDTO doctorDTO) {
 		Doctor doctor = new Doctor(doctorDTO);
 		doctor.setDoctorId(id);
 		doctorDAO.update(doctor);
 	}
 
 	@Override
-	public void delete(int doctorId) {
+	public void deleteDoctor(int doctorId) {
 		doctorDAO.delete(doctorId);
 	}
 

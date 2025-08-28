@@ -37,37 +37,37 @@ public class PatientController {
      Registers a new patient 
      */
     @PostMapping("/signup")
-    public ResponseEntity<?> addPatient(@RequestBody PatientDTO patientDTO, BindingResult result) {
-        return patientService.save(patientDTO, result);
+    public ResponseEntity<?> registerPatient(@RequestBody PatientDTO patientDTO, BindingResult result) {
+        return patientService.registerPatient(patientDTO, result);
     }
 
     @GetMapping("/{id}")
-    public PatientDTO getPatient(@PathVariable int id) {
-    	return patientService.get(id);
+    public PatientDTO getPatientById(@PathVariable int id) {
+    	return patientService.getPatientById(id);
     }
  
     @PutMapping("/{id}")
     public void updatePatient(@PathVariable int id, @RequestBody PatientDTO patientDTO) {
-    	patientService.update(id, patientDTO);
+    	patientService.updatePatient(id, patientDTO);
     }
  
     @DeleteMapping("/{id}")
     public void deletePatient(@PathVariable int id) {
-    	patientService.delete(id);
+    	patientService.deletePatient(id);
     }
     
     //getting all the doctors list based on parameters
     @GetMapping("/doctors")
-    public ResponseEntity<?> getDoctors(@RequestParam String location, @RequestParam String time, @RequestParam String date) {
+    public ResponseEntity<?> getAvailableDoctors(@RequestParam String location, @RequestParam String time, @RequestParam String date) {
         Time t = Time.valueOf(time);
         Date d = Date.valueOf(date);
  
-        return patientService.getDoctors(location, t, d);        
+        return patientService.getAvailableDoctors(location, t, d);        
     }
     
     @GetMapping("/appointment/{id}")
-    public List<DashboardDTO> getAppointment(@PathVariable int id){
-    	return patientService.getAppointment(id);
+    public List<DashboardDTO> getPatientAppointments(@PathVariable int id){
+    	return patientService.getPatientAppointments(id);
     }
     
 }

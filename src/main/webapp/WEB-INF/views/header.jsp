@@ -293,7 +293,7 @@ response.setDateHeader("Expires", 0);
                     "Authorization": "Bearer " + tokenFromCookie
                 },
                 success: function (response) {
-                    showToast(  response, "success");
+                    showToast(  response.message, "success");
                     history.pushState(null, null, "/SOHAS/");
                     window.onpopstate = function () {
                         history.go(1);
