@@ -15,9 +15,8 @@ import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
 import com.demo.health.service.AppointmentService;
-import com.demo.health.service.DoctorService;
 import com.demo.health.service.EmailService;
-import com.demo.health.service.PatientService;
+
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService{
@@ -42,9 +41,10 @@ public class AppointmentServiceImpl implements AppointmentService{
 		appointment.setPatient(patient);
 		Doctor doctor = doctorDAO.get(appointmentDTO.getDoctorId());
 		appointment.setDoctor(doctor);
+		
 		appointmentdao.save(appointment);
 		
-		emailService.sendAppointmentConfirmationEmail(doctor.getEmail(), patient.getEmail(), doctor.getDoctorName(), patient.getPatientName(), appointment.getDate(), appointment.getTime());
+//		emailService.sendAppointmentConfirmationEmail(doctor.getEmail(), patient.getEmail(), doctor.getDoctorName(), patient.getPatientName(), appointment.getDate(), appointment.getTime());
 	}
 
 	@Override

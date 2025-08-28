@@ -21,7 +21,9 @@ public class AppointmentDTO {
     private int patientId;
 	
     private int doctorId;
-
+    
+    public AppointmentDTO() {}
+    
 	public AppointmentDTO(Appointment appointment) {
 		this.appointmentId = appointment.getAppointmentId();
 		this.status = appointment.getStatus();

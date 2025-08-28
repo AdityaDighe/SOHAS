@@ -27,8 +27,9 @@ public class AppointmentController {
     private AppointmentService appointService;
 
     @PostMapping
-    public void addAppointment(@RequestBody AppointmentDTO appointment) {
-        appointService.save(appointment);
+    public void addAppointment(@RequestBody AppointmentDTO appointmentDTO) {
+        System.out.println(appointmentDTO);
+    	appointService.save(appointmentDTO);
     }
 
     @GetMapping

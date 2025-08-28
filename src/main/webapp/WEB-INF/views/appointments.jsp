@@ -311,8 +311,8 @@
                 data: JSON.stringify({
                     date: date,
                     time: time,
-                    patient: { patientId: patientId },
-                    doctor: { doctorId: id }
+                    patientId: patientId ,
+                    doctorId: id 
                 }),
                 headers: {
 	                "Authorization": "Bearer " + tokenFromCookie
