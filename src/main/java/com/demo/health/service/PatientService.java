@@ -18,9 +18,7 @@ public interface PatientService {
 	void update(int id, PatientDTO patientDTO);
 
 	void delete(int patientId);
-
 	
-
 	List<DoctorDTO> getDoctors(String location, Time time, Date date);
 
 	PatientDTO findByEmail(String email);

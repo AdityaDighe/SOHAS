@@ -3,9 +3,6 @@ package com.demo.health.dto;
 import java.sql.Time;
 import java.time.LocalDateTime;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -14,8 +11,7 @@ import javax.validation.constraints.Size;
 import com.demo.health.entity.Doctor;
 
 public class DoctorDTO {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	
 	private int doctorId;
 	
 	@NotBlank (message = "Name is required")

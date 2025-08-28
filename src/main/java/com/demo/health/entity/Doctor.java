@@ -41,7 +41,6 @@ public class Doctor {
 	private LocalDateTime otpExpiry;
 	
 	public Doctor(DoctorDTO doctorDTO) {
-		this.doctorId = doctorDTO.getDoctorId();
 		this.doctorName = doctorDTO.getDoctorName();
 		this.speciality = doctorDTO.getSpeciality();
 		this.startTime = doctorDTO.getStartTime();

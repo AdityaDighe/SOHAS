@@ -38,7 +38,6 @@ public class Patient {
 	private LocalDateTime otpExpiry;
 	
 	public Patient(PatientDTO patientDTO) {
-		this.patientId = patientDTO.getPatientId();
 		this.patientName = patientDTO.getPatientName();
 		this.age = patientDTO.getAge();
 		this.city = patientDTO.getCity();

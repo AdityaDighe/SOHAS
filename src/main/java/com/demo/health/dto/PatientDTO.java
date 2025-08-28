@@ -14,16 +14,9 @@ import javax.validation.constraints.Size;
 import com.demo.health.entity.Patient;
 
 public class PatientDTO {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	
 	private int patientId;
 	
-	public int getPatientId() {
-		return patientId;
-	}
-	public void setPatientId(int patientId) {
-		this.patientId = patientId;
-	}
 	@NotBlank(message = "Name is required")
     @Size(min = 3, max = 100, message = "Name must be between 3 and 100 characters")
     private String patientName;
@@ -62,6 +55,12 @@ public class PatientDTO {
 	}
 	
 	//getters and setters
+	public int getPatientId() {
+		return patientId;
+	}
+	public void setPatientId(int patientId) {
+		this.patientId = patientId;
+	}
 	public String getPatientName() {
 		return patientName;
 	}

@@ -23,6 +23,9 @@ public class PatientServiceImpl implements PatientService {
 
 	@Autowired
 	private PatientDAO patientdao;
+	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 
 	@Override
 	@Transactional
@@ -98,7 +101,6 @@ public class PatientServiceImpl implements PatientService {
 		return patientdao.getAppointment(id);
 	}
 
-	@Autowired
-	private BCryptPasswordEncoder encoder;
+	
 
 }

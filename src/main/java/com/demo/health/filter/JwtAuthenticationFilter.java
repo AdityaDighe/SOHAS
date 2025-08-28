@@ -3,12 +3,8 @@ package com.demo.health.filter;
 import java.io.IOException;
 import java.util.Collections;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,8 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.demo.health.entity.Doctor;
-import com.demo.health.entity.Patient;
+import com.demo.health.dto.DoctorDTO;
+import com.demo.health.dto.PatientDTO;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
 import com.demo.health.util.JwtUtil;
@@ -77,10 +73,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                 String role = claims.get("role", String.class);
                 
                 if (role.equalsIgnoreCase("patient")) {
-                    Patient p = patientService.get(id);
+                    PatientDTO p = patientService.get(id);
                     req.setAttribute("username", p.getPatientName());
                 } else if (role.equalsIgnoreCase("doctor")) {
-                    Doctor d = doctorService.get(id);          
+                    DoctorDTO d = doctorService.get(id);          
                     req.setAttribute("username", d.getDoctorName());     
                 }
                 req.setAttribute("id", claims.get("id", Integer.class));
@@ -109,10 +105,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                  }
                 
                 if (role.equalsIgnoreCase("patient")) {
-                    Patient p = patientService.get(id);
+                    PatientDTO p = patientService.get(id);
                     req.setAttribute("username", p.getPatientName());
                 } else if (role.equalsIgnoreCase("doctor")) {
-                    Doctor d = doctorService.get(id);          
+                    DoctorDTO d = doctorService.get(id);          
                     req.setAttribute("username", d.getDoctorName());     
                 }
                 req.setAttribute("id", claims.get("id", Integer.class));
@@ -145,10 +141,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
              }
             
             if (role.equalsIgnoreCase("patient")) {
-                Patient p = patientService.get(id);
+                PatientDTO p = patientService.get(id);
                 req.setAttribute("username", p.getPatientName());
             } else if (role.equalsIgnoreCase("doctor")) {
-                Doctor d = doctorService.get(id);          
+                DoctorDTO d = doctorService.get(id);          
                 req.setAttribute("username", d.getDoctorName());     
             }
             
