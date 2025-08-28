@@ -291,8 +291,8 @@ $(document).ready(function() {
 
                     tbody.append(
                         "<tr>" +
-                            "<td>Dr. " + app.doctor.doctorName + "</td>" +
-                            "<td>" + app.doctor.speciality + "</td>" +
+                            "<td>Dr. " + app.doctorName + "</td>" +
+                            "<td>" + app.speciality + "</td>" +
                             "<td>" + fixedDate + "</td>" +
                             "<td>" + app.time + "</td>" +
                             "<td><span class='status-badge status-" + app.status + "'>" + app.status + "</span></td>" +

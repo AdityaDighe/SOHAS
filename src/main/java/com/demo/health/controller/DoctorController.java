@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.health.dto.AppointmentDTO;
+import com.demo.health.dto.DashboardDTO;
 import com.demo.health.dto.DoctorDTO;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
@@ -94,7 +94,7 @@ public class DoctorController {
     }
     
     @GetMapping("/appointment/{id}")
-    public List<AppointmentDTO> myAppointments(@PathVariable int id){
+    public List<DashboardDTO> myAppointments(@PathVariable int id){
     	return doctorService.myAppointments(id);
     }
 }

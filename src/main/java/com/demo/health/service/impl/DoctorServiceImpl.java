@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.demo.health.dao.DoctorDAO;
 import com.demo.health.dto.AppointmentDTO;
+import com.demo.health.dto.DashboardDTO;
 import com.demo.health.dto.DoctorDTO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
@@ -70,20 +71,18 @@ public class DoctorServiceImpl implements DoctorService {
 	@Override
 	@Transactional
 	public DoctorDTO findByEmail(String email) {
-		System.out.println(email + "service");
 		Doctor doctor = doctorDAO.findByEmail(email);
-		System.out.println(doctor);
 		return doctor != null ? new DoctorDTO(doctor) : null;
 	}
 
 	@Override
 	@Transactional
-	public List<AppointmentDTO> myAppointments(int id) {
+	public List<DashboardDTO> myAppointments(int id) {
 		// TODO Auto-generated method stub
-		List<Appointment> doctorList =  doctorDAO.myAppointments(id);
-		List<AppointmentDTO> doctorDTOlist = new ArrayList<>();
+		List<Appointment> doctorList = doctorDAO.myAppointments(id);
+		List<DashboardDTO> doctorDTOlist = new ArrayList<>();
 		for(Appointment d : doctorList) {
-			doctorDTOlist.add(new AppointmentDTO(d));
+			doctorDTOlist.add(new DashboardDTO(d));
 		}
 		return doctorList != null ? doctorDTOlist : null;
 	}

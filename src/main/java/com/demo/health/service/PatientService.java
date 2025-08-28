@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
-import com.demo.health.dto.AppointmentDTO;
+import com.demo.health.dto.DashboardDTO;
 import com.demo.health.dto.DoctorDTO;
 import com.demo.health.dto.PatientDTO;
 
@@ -23,6 +23,6 @@ public interface PatientService {
 
 	PatientDTO findByEmail(String email);
 
-	List<AppointmentDTO> getAppointment(int id);
+	List<DashboardDTO> getAppointment(int id);
 
 }

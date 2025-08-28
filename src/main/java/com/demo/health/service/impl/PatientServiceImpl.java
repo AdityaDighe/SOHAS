@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.health.dao.PatientDAO;
 import com.demo.health.dto.AppointmentDTO;
+import com.demo.health.dto.DashboardDTO;
 import com.demo.health.dto.DoctorDTO;
 import com.demo.health.dto.PatientDTO;
 import com.demo.health.entity.Appointment;
@@ -95,12 +96,12 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Transactional
-	public List<AppointmentDTO> getAppointment(int id) {
+	public List<DashboardDTO> getAppointment(int id) {
 		// TODO Auto-generated method stub
 		List<Appointment> appointmentList =  patientdao.getAppointment(id);
-		List<AppointmentDTO> appointmentDTOlist = new ArrayList<>();
+		List<DashboardDTO> appointmentDTOlist = new ArrayList<>();
 		for(Appointment app : appointmentList) {
-			appointmentDTOlist.add(new AppointmentDTO(app));
+			appointmentDTOlist.add(new DashboardDTO(app));
 		}
 		
 		return appointmentList != null ? appointmentDTOlist : null;

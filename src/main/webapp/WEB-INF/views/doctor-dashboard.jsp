@@ -313,7 +313,8 @@ to {
                     }
  
                     appointments.forEach(function (app) {
-                        let isFinished = (app.status === "CANCELLED" || app.status === "COMPLETED");
+                       
+                    	let isFinished = (app.status === "CANCELLED" || app.status === "COMPLETED");
 						
                         let disabled = "";
                         let cancelBtnText = "Cancel";
@@ -347,7 +348,7 @@ to {
  
                         tbody.append(
                             "<tr>" +
-                            "<td>" + app.patient.patientName + "</td>" +
+                            "<td>" + app.patientName + "</td>" +
                             "<td>" + fixedDate + "</td>" +
                             "<td>" + app.time + "</td>" +
                             "<td><span class='status " + app.status.toLowerCase() + "'>" + app.status + "</span></td>" +

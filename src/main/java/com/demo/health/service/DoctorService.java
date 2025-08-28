@@ -2,7 +2,7 @@ package com.demo.health.service;
 
 import java.util.List;
 
-import com.demo.health.dto.AppointmentDTO;
+import com.demo.health.dto.DashboardDTO;
 import com.demo.health.dto.DoctorDTO;
 import com.demo.health.exception.UserNotFoundException;
 
@@ -21,6 +21,6 @@ public interface DoctorService {
 
 	DoctorDTO findByEmail(String email);
 
-	List<AppointmentDTO> myAppointments(int id);
+	List<DashboardDTO> myAppointments(int id);
 
 }
