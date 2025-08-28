@@ -29,7 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
-import com.demo.health.exception.DoctorNotFoundException;
+import com.demo.health.exception.UserNotFoundException;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
 
@@ -109,7 +109,7 @@ public class PatientController {
         
         //Handling DoctorsNotFoundException and sending custom message
         if (doctors.isEmpty()) {
-            throw new DoctorNotFoundException("No doctors available for the selected city and time.");
+            throw new UserNotFoundException("No doctors available for the selected city and time.");
         }
  
         Map<String, Object> response = new HashMap<>();

@@ -4,12 +4,12 @@ import java.util.List;
 
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
-import com.demo.health.exception.DoctorNotFoundException;
+import com.demo.health.exception.UserNotFoundException;
 
 public interface DoctorService {
 	void save(Doctor doctor);
 
-	Doctor get(int doctorId) throws DoctorNotFoundException;
+	Doctor get(int doctorId) throws UserNotFoundException;
 
 	List<Doctor> list();
 
