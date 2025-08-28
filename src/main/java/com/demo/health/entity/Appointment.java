@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.demo.health.dto.AppointmentDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
@@ -36,6 +37,12 @@ public class Appointment {
 	@ManyToOne
     @JoinColumn(name = "doctorId")
     private Doctor doctor;
+
+	public Appointment(AppointmentDTO appointmentdto) {
+		this.status = appointmentdto.getStatus();
+		this.date = appointmentdto.getDate();
+		this.time = appointmentdto.getTime();
+	}
 	
 	public int getAppointmentId() {
 		return appointmentId;
