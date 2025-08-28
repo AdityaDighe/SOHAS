@@ -59,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                 || path.contains("/signup")
                 || path.contains("/api/reset-password")
                 || path.contains("/api/request-otp")
-        		) {
+        		|| path.contains("/api/login")) {
         	chain.doFilter(req, res);
         	return ;
         }

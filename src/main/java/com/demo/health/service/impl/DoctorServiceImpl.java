@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.demo.health.dao.DoctorDAO;
+import com.demo.health.dto.AppointmentDTO;
 import com.demo.health.dto.DoctorDTO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
@@ -67,15 +68,22 @@ public class DoctorServiceImpl implements DoctorService {
 	}
 
 	@Override
+	@Transactional
 	public DoctorDTO findByEmail(String email) {
 		Doctor doctor = doctorDAO.findByEmail(email);
 		return new DoctorDTO(doctor);
 	}
 
 	@Override
-	public List<Appointment> myAppointments(int id) {
+	@Transactional
+	public List<AppointmentDTO> myAppointments(int id) {
 		// TODO Auto-generated method stub
-		return doctorDAO.myAppointments(id);
+		List<Appointment> doctorList =  doctorDAO.myAppointments(id);
+		List<AppointmentDTO> doctorDTOlist = new ArrayList<>();
+		for(Appointment d : doctorList) {
+			doctorDTOlist.add(new AppointmentDTO(d));
+		}
+		return doctorDTOlist;
 	}
 
 

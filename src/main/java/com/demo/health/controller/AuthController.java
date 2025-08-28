@@ -9,18 +9,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.health.entity.Doctor;
-import com.demo.health.entity.Patient;
-import com.demo.health.security.CustomUserDetails;
+import com.demo.health.dto.DoctorDTO;
+import com.demo.health.dto.PatientDTO;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.EmailService;
 import com.demo.health.service.PatientService;
@@ -46,45 +44,45 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
    
-    @PostMapping(value = "/api/login", produces = "application/json")
-    public ResponseEntity<?> doLogin(@RequestBody Map<String, String> credentials){
-    	 String email = credentials.get("email");
-    	 String rawPassword = credentials.get("password");
-    	 
-    	 Authentication auth = authenticationManager.authenticate(
-    		        new UsernamePasswordAuthenticationToken(email, rawPassword)
-    	);
-    	CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
-    	String token = JwtUtil.generateToken(user.getId(), user.getUsername(), 
-    											user.getAuthorities().iterator().next().getAuthority());
-    	return ResponseEntity.ok(Map.of("token", token));
-    }
-    
-    //Login with BCrypt, single API for both Patient and Doctor entities
 //    @PostMapping(value = "/api/login", produces = "application/json")
-//    public ResponseEntity<?> doLogin(@RequestBody Map<String, String> credentials) {
-//        String email = credentials.get("email");
-//        String rawPassword = credentials.get("password");
-//        
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        // Check patient and check if password encoded matches, return token
-//        Patient p = patientService.findByEmail(email);
-//        if (p != null && passwordEncoder.matches(rawPassword, p.getPassword())) {
-//            String token = JwtUtil.generateToken(p.getPatientId(), email, "PATIENT");
-//            return ResponseEntity.ok(Map.of("token", token));
-//        }
-//
-//        // Check doctor and check if password encoded matches, return token
-//        Doctor d = doctorService.findByEmail(email);
-//        if (d != null && passwordEncoder.matches(rawPassword, d.getPassword())) {
-//            String token = JwtUtil.generateToken(d.getDoctorId(), email, "DOCTOR");
-//            return ResponseEntity.ok(Map.of("token", token));
-//        }
-//        
-//        //Unauthorized access (wrong password or email)
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                .body(Map.of("error", "Invalid credentials"));
+//    public ResponseEntity<?> doLogin(@RequestBody Map<String, String> credentials){
+//    	 String email = credentials.get("email");
+//    	 String rawPassword = credentials.get("password");
+//    	 
+//    	 Authentication auth = authenticationManager.authenticate(
+//    		        new UsernamePasswordAuthenticationToken(email, rawPassword)
+//    	);
+//    	CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+//    	String token = JwtUtil.generateToken(user.getId(), user.getUsername(), 
+//    											user.getAuthorities().iterator().next().getAuthority());
+//    	return ResponseEntity.ok(Map.of("token", token));
 //    }
+//    
+    //Login with BCrypt, single API for both Patient and Doctor entities
+    @PostMapping(value = "/api/login", produces = "application/json")
+    public ResponseEntity<?> doLogin(@RequestBody Map<String, String> credentials) {
+        String email = credentials.get("email");
+        String rawPassword = credentials.get("password");
+        
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        // Check patient and check if password encoded matches, return token
+        PatientDTO p = patientService.findByEmail(email);
+        if (p != null && passwordEncoder.matches(rawPassword, p.getPassword())) {
+            String token = JwtUtil.generateToken(p.getPatientId(), email, "PATIENT");
+            return ResponseEntity.ok(Map.of("token", token));
+        }
+
+        // Check doctor and check if password encoded matches, return token
+        DoctorDTO d = doctorService.findByEmail(email);
+        if (d != null && passwordEncoder.matches(rawPassword, d.getPassword())) {
+            String token = JwtUtil.generateToken(d.getDoctorId(), email, "DOCTOR");
+            return ResponseEntity.ok(Map.of("token", token));
+        }
+        
+        //Unauthorized access (wrong password or email)
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "Invalid credentials"));
+    }
 
 
     //Logout, entering null cookie and removing jwtToken
@@ -112,8 +110,8 @@ public class AuthController {
     public ResponseEntity<?> requestOtp(@RequestBody Map<String, String> payload) {
         String email = payload.get("email");
 
-        Patient patient = patientService.findByEmail(email);
-        Doctor doctor = doctorService.findByEmail(email);
+        PatientDTO patient = patientService.findByEmail(email);
+        DoctorDTO doctor = doctorService.findByEmail(email);
         
         //Check if patient or doctor exists
         if (patient == null && doctor == null) {
@@ -128,11 +126,11 @@ public class AuthController {
         if (patient != null) {
             patient.setOtp(otp);
             patient.setOtpExpiry(expiry);
-            patientService.update(patient);
+            patientService.update(patient.getPatientId(), patient);
         } else {
             doctor.setOtp(otp);
             doctor.setOtpExpiry(expiry);
-            doctorService.update(doctor);
+            doctorService.update(doctor.getDoctorId(), doctor);
         }
 
       //Sending email, and sending response of success or failure
@@ -155,8 +153,8 @@ public class AuthController {
         System.out.println("DEBUG => email: " + email + ", otp: " + otp);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         try {
-            Patient patient = patientService.findByEmail(email);
-            Doctor doctor = doctorService.findByEmail(email);
+            PatientDTO patient = patientService.findByEmail(email);
+            DoctorDTO doctor = doctorService.findByEmail(email);
             //Try updating patient password
             if (patient != null) {
                 System.out.println("DEBUG => Patient OTP: " + patient.getOtp() + ", Expiry: " + patient.getOtpExpiry());
@@ -176,7 +174,7 @@ public class AuthController {
             	patient.setPassword(passwordEncoder.encode(newPassword));
                 patient.setOtp(null);
                 patient.setOtpExpiry(null);
-                patientService.update(patient);
+                patientService.update(patient.getPatientId(), patient);
                 updated = true;
             }
             
@@ -189,7 +187,7 @@ public class AuthController {
             	doctor.setPassword(passwordEncoder.encode(newPassword)); 
                 doctor.setOtp(null);
                 doctor.setOtpExpiry(null);
-                doctorService.update(doctor);
+                doctorService.update(doctor.getDoctorId(), doctor);
                 updated = true;
             }
             

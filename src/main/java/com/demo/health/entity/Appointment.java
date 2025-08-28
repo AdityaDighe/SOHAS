@@ -37,7 +37,9 @@ public class Appointment {
 	@ManyToOne
     @JoinColumn(name = "doctorId")
     private Doctor doctor;
-
+	
+	public Appointment() {}
+	
 	public Appointment(AppointmentDTO appointmentdto) {
 		this.status = appointmentdto.getStatus();
 		this.date = appointmentdto.getDate();

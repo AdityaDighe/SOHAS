@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.health.dao.PatientDAO;
+import com.demo.health.dto.AppointmentDTO;
 import com.demo.health.dto.DoctorDTO;
 import com.demo.health.dto.PatientDTO;
 import com.demo.health.entity.Appointment;
@@ -43,7 +44,7 @@ public class PatientServiceImpl implements PatientService {
 		Patient patient = patientdao.get(patientId);
 		return new PatientDTO(patient);
 	}
-
+	
 	@Override
 	@Transactional
 	public List<PatientDTO> list() {
@@ -73,8 +74,6 @@ public class PatientServiceImpl implements PatientService {
 
 	}
 
-	
-
 	@Override
 	@Transactional
 	public List<DoctorDTO> getDoctors(String location, Time time, Date date) {
@@ -98,7 +97,13 @@ public class PatientServiceImpl implements PatientService {
 	@Transactional
 	public List<AppointmentDTO> getAppointment(int id) {
 		// TODO Auto-generated method stub
-		return patientdao.getAppointment(id);
+		List<Appointment> appointmentList =  patientdao.getAppointment(id);
+		List<AppointmentDTO> appointmentDTOlist = new ArrayList<>();
+		for(Appointment app : appointmentList) {
+			appointmentDTOlist.add(new AppointmentDTO(app));
+		}
+		
+		return appointmentDTOlist;
 	}
 
 	

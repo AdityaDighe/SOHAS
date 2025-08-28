@@ -2,8 +2,8 @@ package com.demo.health.service;
 
 import java.util.List;
 
+import com.demo.health.dto.AppointmentDTO;
 import com.demo.health.dto.DoctorDTO;
-import com.demo.health.entity.Appointment;
 import com.demo.health.exception.UserNotFoundException;
 
 public interface DoctorService {
@@ -21,6 +21,6 @@ public interface DoctorService {
 
 	DoctorDTO findByEmail(String email);
 
-	List<Appointment> myAppointments(int id);
+	List<AppointmentDTO> myAppointments(int id);
 
 }

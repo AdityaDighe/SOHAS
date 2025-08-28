@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.demo.health.entity.Doctor;
-import com.demo.health.entity.Patient;
+import com.demo.health.dto.DoctorDTO;
+import com.demo.health.dto.PatientDTO;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
 
@@ -116,7 +116,7 @@ public class InitialController {
     	//Ensuring only patients has access and rendering patient-profile.jsp (Changing any user details)
     	if (role.equalsIgnoreCase("patient")) {
     		int id = (Integer) request.getAttribute("id"); // get logged-in username
-            Patient patient = patientService.get(id); // fetch patient data
+            PatientDTO patient = patientService.get(id); // fetch patient data
             model.addAttribute("patient", patient);
             return "patient-profile";
     	}
@@ -131,7 +131,7 @@ public class InitialController {
 		//Ensuring only doctor has access and rendering doctor-profile.jsp (Changing any user details)
     	if (role.equalsIgnoreCase("doctor")) {
     		int id = (Integer) request.getAttribute("id"); 
-    		Doctor doctor = doctorService.get(id); 
+    		DoctorDTO doctor = doctorService.get(id); 
     		model.addAttribute("doctor", doctor);
     		return "doctor-profile";
     	}

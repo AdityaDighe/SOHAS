@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.health.dto.AppointmentDTO;
 import com.demo.health.dto.DoctorDTO;
 import com.demo.health.dto.PatientDTO;
-import com.demo.health.entity.Appointment;
 import com.demo.health.exception.UserNotFoundException;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
@@ -122,7 +122,7 @@ public class PatientController {
     }
     
     @GetMapping("/appointment/{id}")
-    public List<Appointment> getAppointment(@PathVariable int id){
+    public List<AppointmentDTO> getAppointment(@PathVariable int id){
     	return patientService.getAppointment(id);
     }
     
