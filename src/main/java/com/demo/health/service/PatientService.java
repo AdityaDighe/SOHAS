@@ -4,12 +4,15 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+
 import com.demo.health.dto.DashboardDTO;
 import com.demo.health.dto.DoctorDTO;
 import com.demo.health.dto.PatientDTO;
 
 public interface PatientService {
-	void save(PatientDTO patientDTO);
+	ResponseEntity<?> save(PatientDTO patientDTO, BindingResult result);
 
 	PatientDTO get(int patientId);
 
@@ -19,7 +22,7 @@ public interface PatientService {
 
 	void delete(int patientId);
 	
-	List<DoctorDTO> getDoctors(String location, Time time, Date date);
+	ResponseEntity<?> getDoctors(String location, Time time, Date date);
 
 	PatientDTO findByEmail(String email);
 

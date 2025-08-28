@@ -35,7 +35,7 @@ public class DoctorDAOImpl implements DoctorDAO {
 
 	@Override
 	public void update(Doctor doctor) {
-		sessionFactory.getCurrentSession().update(doctor);
+		sessionFactory.getCurrentSession().merge(doctor);
 	}
 
 	@Override

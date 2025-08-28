@@ -28,7 +28,6 @@ public class AppointmentController {
 
     @PostMapping
     public void addAppointment(@RequestBody AppointmentDTO appointmentDTO) {
-        System.out.println(appointmentDTO);
     	appointService.save(appointmentDTO);
     }
 

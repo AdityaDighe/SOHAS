@@ -3,12 +3,20 @@ package com.demo.health.service.impl;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import com.demo.health.dao.PatientDAO;
 import com.demo.health.dto.DashboardDTO;
@@ -17,6 +25,8 @@ import com.demo.health.dto.PatientDTO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
+import com.demo.health.exception.UserNotFoundException;
+import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
 
 @Service
@@ -26,14 +36,40 @@ public class PatientServiceImpl implements PatientService {
 	private PatientDAO patientdao;
 	
 	@Autowired
-	private BCryptPasswordEncoder encoder;
+	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private DoctorService doctorService;
 
 	@Override
 	@Transactional
-	public void save(PatientDTO patientDTO) {
+	public ResponseEntity<?> save(@Valid PatientDTO patientDTO, BindingResult result) {
 		// TODO Auto-generated method stub
+		//Check for validation errors and return
+        if (result.hasErrors()) {
+            Map<String, String> errors = result.getFieldErrors().stream()
+                .collect(Collectors.toMap(
+                    FieldError::getField,
+                    FieldError::getDefaultMessage,
+                    (existing, replacement) -> existing
+                ));
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        // Check if the email is unique or not across Doctor & Patient Tables
+        if (findByEmail(patientDTO.getEmail()) != null || 
+            doctorService.findByEmail(patientDTO.getEmail()) != null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("email", "Email already registered"));
+        }
+
+        //Encrypt password before saving
+        patientDTO.setPassword(passwordEncoder.encode(patientDTO.getPassword()));
+
 		Patient patient = new Patient(patientDTO);
 		patientdao.save(patient);
+		
+		return ResponseEntity.ok("Patient added successfully");
 		
 	}
 
@@ -76,14 +112,25 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Transactional
-	public List<DoctorDTO> getDoctors(String location, Time time, Date date) {
+	public ResponseEntity<?> getDoctors(String location, Time time, Date date) {
 		// TODO Auto-generated method stub
 		List<Doctor> doctorList = patientdao.getDoctors(location, time, date);
+		//Handling DoctorsNotFoundException and sending custom message
+        if (doctorList.isEmpty()) {
+            throw new UserNotFoundException("No doctors available for the selected city and time.");
+        }
+        
 		List<DoctorDTO> doctorDTOlist = new ArrayList<>();
 		for(Doctor d : doctorList) {
 			doctorDTOlist.add(new DoctorDTO(d));
 		}
-		return doctorList != null ? doctorDTOlist : null;
+		
+		Map<String, Object> response = new HashMap<>();
+	    response.put("status", "success");
+	    response.put("data", doctorDTOlist);
+	    
+	    return ResponseEntity.ok(response);
+		
 	}
 
 	@Override

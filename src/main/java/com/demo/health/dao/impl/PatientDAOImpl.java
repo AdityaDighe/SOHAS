@@ -42,7 +42,7 @@ public class PatientDAOImpl implements PatientDAO {
 
 	@Override
 	public void update(Patient patient) {
-		sessionFactory.getCurrentSession().update(patient);
+		sessionFactory.getCurrentSession().merge(patient);
 	}
 
 	@Override

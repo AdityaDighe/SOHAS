@@ -182,7 +182,7 @@ $("#sendOtpBtn").on("click", function() {
             $("#step2").fadeIn();
         },
         error: function(xhr) {
-            alert(xhr.responseJSON.message || "Error sending OTP");
+        	alert(xhr.responseJSON?.message || xhr.responseText || xhr.message || "Error sending OTP");
         }
     });
 });
