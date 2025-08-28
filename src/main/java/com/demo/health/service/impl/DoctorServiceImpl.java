@@ -66,21 +66,21 @@ public class DoctorServiceImpl implements DoctorService {
 	    doctorDTO.setPassword(passwordEncoder.encode(doctorDTO.getPassword()));
 		
 	    Doctor doctor = new Doctor(doctorDTO);
-		doctorDAO.save(doctor);
+		doctorDAO.addDoctor(doctor);
 		
 		return ResponseEntity.ok("Doctor added successfully");
 	}
 
 	@Override
 	public DoctorDTO getDoctorById(int doctorId) throws UserNotFoundException {
-		Doctor doctor = doctorDAO.get(doctorId);
+		Doctor doctor = doctorDAO.getDoctorById(doctorId);
 		DoctorDTO doctorDTO = new DoctorDTO(doctor);
 		return doctor != null ? doctorDTO : null;
 	}
 
 	@Override
 	public List<DoctorDTO> listDoctors() {
-		List<Doctor> doctorList =  doctorDAO.list();
+		List<Doctor> doctorList =  doctorDAO.listDoctors();
 		List<DoctorDTO> doctorDTOlist = new ArrayList<>();
 		for(Doctor d : doctorList) {
 			doctorDTOlist.add(new DoctorDTO(d));
@@ -92,12 +92,12 @@ public class DoctorServiceImpl implements DoctorService {
 	public void updateDoctor(int id, DoctorDTO doctorDTO) {
 		Doctor doctor = new Doctor(doctorDTO);
 		doctor.setDoctorId(id);
-		doctorDAO.update(doctor);
+		doctorDAO.updateDoctor(doctor);
 	}
 
 	@Override
 	public void deleteDoctor(int doctorId) {
-		doctorDAO.delete(doctorId);
+		doctorDAO.deleteDoctor(doctorId);
 	}
 
 	@Override

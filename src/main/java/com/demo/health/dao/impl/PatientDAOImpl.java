@@ -27,7 +27,7 @@ public class PatientDAOImpl implements PatientDAO {
     private SessionFactory sessionFactory;
 
     @Override
-    public void save(Patient patient) {
+    public void addPatient(Patient patient) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         try {
@@ -43,7 +43,7 @@ public class PatientDAOImpl implements PatientDAO {
     }
 
     @Override
-    public Patient get(int patientId) {
+    public Patient getPatientById(int patientId) {
         Session session = sessionFactory.openSession();
         Patient patient = null;
         try {
@@ -57,7 +57,7 @@ public class PatientDAOImpl implements PatientDAO {
     }
 
     @Override
-    public List<Patient> list() {
+    public List<Patient> listPatients() {
         Session session = sessionFactory.openSession();
         List<Patient> patients = null;
         try {
@@ -71,7 +71,7 @@ public class PatientDAOImpl implements PatientDAO {
     }
 
     @Override
-    public void update(Patient patient) {
+    public void updatePatient(Patient patient) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         try {
@@ -87,7 +87,7 @@ public class PatientDAOImpl implements PatientDAO {
     }
 
     @Override
-    public void delete(int patientId) {
+    public void deletePatient(int patientId) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         try {
@@ -107,7 +107,7 @@ public class PatientDAOImpl implements PatientDAO {
 
     // Getting list of doctors using criteria query based on location, date and time
     @Override
-    public List<Doctor> getDoctors(String location, Time time, Date date) {
+    public List<Doctor> getAvailableDoctors(String location, Time time, Date date) {
         Session session = sessionFactory.openSession();
         List<Doctor> doctors = null;
         try {
@@ -163,7 +163,7 @@ public class PatientDAOImpl implements PatientDAO {
 
     // Appointment list of the patient
     @Override
-    public List<Appointment> getAppointment(int id) {
+    public List<Appointment> getPatientAppointments(int id) {
         Session session = sessionFactory.openSession();
         List<Appointment> appointments = null;
         try {

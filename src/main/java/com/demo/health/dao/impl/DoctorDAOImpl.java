@@ -19,7 +19,7 @@ public class DoctorDAOImpl implements DoctorDAO {
     private SessionFactory sessionFactory;
 
     @Override
-    public void save(Doctor doctor) {
+    public void addDoctor(Doctor doctor) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         try {
@@ -35,7 +35,7 @@ public class DoctorDAOImpl implements DoctorDAO {
     }
 
     @Override
-    public Doctor get(int doctorId) {
+    public Doctor getDoctorById(int doctorId) {
         Session session = sessionFactory.openSession();
         Doctor doctor = null;
         try {
@@ -49,7 +49,7 @@ public class DoctorDAOImpl implements DoctorDAO {
     }
 
     @Override
-    public List<Doctor> list() {
+    public List<Doctor> listDoctors() {
         Session session = sessionFactory.openSession();
         List<Doctor> doctors = null;
         try {
@@ -63,7 +63,7 @@ public class DoctorDAOImpl implements DoctorDAO {
     }
 
     @Override
-    public void update(Doctor doctor) {
+    public void updateDoctor(Doctor doctor) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         try {
@@ -79,7 +79,7 @@ public class DoctorDAOImpl implements DoctorDAO {
     }
 
     @Override
-    public void delete(int doctorId) {
+    public void deleteDoctor(int doctorId) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         try {

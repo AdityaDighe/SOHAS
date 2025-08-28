@@ -6,16 +6,15 @@ import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 
 public interface DoctorDAO {
-	void save(Doctor doctor);
+	void addDoctor(Doctor doctor);
 
-	Doctor get(int doctorId);
+	Doctor getDoctorById(int doctorId);
 
-	List<Doctor> list();
+	List<Doctor> listDoctors();
 
-	void update(Doctor doctor);
+	void updateDoctor(Doctor doctor);
 
-	void delete(int doctorId);
-
+	void deleteDoctor(int doctorId);
 
 	Doctor findByEmail(String email);
 

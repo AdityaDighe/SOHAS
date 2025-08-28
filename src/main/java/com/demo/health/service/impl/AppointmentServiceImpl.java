@@ -36,12 +36,12 @@ public class AppointmentServiceImpl implements AppointmentService{
 	@Override
 	public void bookAppointment(AppointmentDTO appointmentDTO) {
 		Appointment appointment = new Appointment(appointmentDTO);
-		Patient patient = patientDAO.get(appointmentDTO.getPatientId());
+		Patient patient = patientDAO.getPatientById(appointmentDTO.getPatientId());
 		appointment.setPatient(patient);
-		Doctor doctor = doctorDAO.get(appointmentDTO.getDoctorId());
+		Doctor doctor = doctorDAO.getDoctorById(appointmentDTO.getDoctorId());
 		appointment.setDoctor(doctor);
 		
-		appointmentdao.save(appointment);
+		appointmentdao.addAppointment(appointment);
 		
 		emailService.sendAppointmentConfirmationEmail(doctor, patient, appointment);
 	}
@@ -49,7 +49,7 @@ public class AppointmentServiceImpl implements AppointmentService{
 	@Override
 	public AppointmentDTO getAppointmentById(int appointmentId) {
 		// TODO Auto-generated method stub
-		Appointment appointment = appointmentdao.get(appointmentId);
+		Appointment appointment = appointmentdao.getAppointmentById(appointmentId);
 		AppointmentDTO appointmentDTO = new AppointmentDTO(appointment);
 		return appointmentDTO;
 	}
@@ -57,7 +57,7 @@ public class AppointmentServiceImpl implements AppointmentService{
 	@Override
 	public List<AppointmentDTO> listAppointments() {
 		// TODO Auto-generated method stub
-			List<Appointment> appointmentList = appointmentdao.list();
+			List<Appointment> appointmentList = appointmentdao.listAppointments();
 			List<AppointmentDTO> appointmentDTOList = new ArrayList<>();
 			for(Appointment a: appointmentList) {
 				appointmentDTOList.add(new AppointmentDTO(a));
@@ -69,8 +69,8 @@ public class AppointmentServiceImpl implements AppointmentService{
 	@Override
 	public void updateAppointmentStatus(int id, String status) {
 		// TODO Auto-generated method stub
-		Appointment appointment = appointmentdao.get(id);
+		Appointment appointment = appointmentdao.getAppointmentById(id);
 		appointment.setStatus(status);
-		appointmentdao.updateStatus(appointment);	
+		appointmentdao.updateAppointmentStatus(appointment);	
 	}
 }

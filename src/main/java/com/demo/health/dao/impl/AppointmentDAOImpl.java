@@ -18,7 +18,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     private SessionFactory sessionFactory;
 
     @Override
-    public void save(Appointment appointment) {
+    public void addAppointment(Appointment appointment) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         try {
@@ -34,7 +34,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     }
 
     @Override
-    public Appointment get(int appointmentId) {
+    public Appointment getAppointmentById(int appointmentId) {
         Session session = sessionFactory.openSession();
         Appointment appointment = null;
         try {
@@ -48,7 +48,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     }
 
     @Override
-    public List<Appointment> list() {
+    public List<Appointment> listAppointments() {
         Session session = sessionFactory.openSession();
         List<Appointment> appointments = null;
         try {
@@ -63,7 +63,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     
     //Updating the status of appointment
     @Override
-    public void updateStatus(Appointment apt) {
+    public void updateAppointmentStatus(Appointment apt) {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
         try {

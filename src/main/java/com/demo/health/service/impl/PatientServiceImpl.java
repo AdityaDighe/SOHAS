@@ -67,7 +67,7 @@ public class PatientServiceImpl implements PatientService {
         patientDTO.setPassword(passwordEncoder.encode(patientDTO.getPassword()));
 
 		Patient patient = new Patient(patientDTO);
-		patientdao.save(patient);
+		patientdao.addPatient(patient);
 		
 		return ResponseEntity.ok("Patient added successfully");
 		
@@ -77,7 +77,7 @@ public class PatientServiceImpl implements PatientService {
 	@Transactional
 	public PatientDTO getPatientById(int patientId) {
 		// TODO Auto-generated method stub
-		Patient patient = patientdao.get(patientId);
+		Patient patient = patientdao.getPatientById(patientId);
 		return patient != null ? new PatientDTO(patient) : null;
 	}
 	
@@ -85,7 +85,7 @@ public class PatientServiceImpl implements PatientService {
 	@Transactional
 	public List<PatientDTO> listPatients() {
 		// TODO Auto-generated method stub
-		List<Patient> patientList =  patientdao.list();
+		List<Patient> patientList =  patientdao.listPatients();
 		List<PatientDTO> patientDTOlist = new ArrayList<>();
 		for(Patient p: patientList) {
 			patientDTOlist.add(new PatientDTO(p));
@@ -99,14 +99,14 @@ public class PatientServiceImpl implements PatientService {
 		// TODO Auto-generated method stub
 		Patient patient = new Patient(patientDTO);
 		patient.setPatientId(id);
-		patientdao.update(patient);
+		patientdao.updatePatient(patient);
 	}
 
 	@Override
 	@Transactional
 	public void deletePatient(int patientId) {
 		// TODO Auto-generated method stub
-		patientdao.delete(patientId);
+		patientdao.deletePatient(patientId);
 
 	}
 
@@ -114,7 +114,7 @@ public class PatientServiceImpl implements PatientService {
 	@Transactional
 	public ResponseEntity<?> getAvailableDoctors(String location, Time time, Date date) {
 		// TODO Auto-generated method stub
-		List<Doctor> doctorList = patientdao.getDoctors(location, time, date);
+		List<Doctor> doctorList = patientdao.getAvailableDoctors(location, time, date);
 		//Handling DoctorsNotFoundException and sending custom message
         if (doctorList.isEmpty()) {
             throw new UserNotFoundException("No doctors available for the selected city and time.");
@@ -144,7 +144,7 @@ public class PatientServiceImpl implements PatientService {
 	@Transactional
 	public List<DashboardDTO> getPatientAppointments(int id) {
 		// TODO Auto-generated method stub
-		List<Appointment> appointmentList =  patientdao.getAppointment(id);
+		List<Appointment> appointmentList =  patientdao.getPatientAppointments(id);
 		List<DashboardDTO> appointmentDTOlist = new ArrayList<>();
 		for(Appointment app : appointmentList) {
 			appointmentDTOlist.add(new DashboardDTO(app));

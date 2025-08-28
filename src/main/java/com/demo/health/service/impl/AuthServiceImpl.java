@@ -76,7 +76,7 @@ public class AuthServiceImpl implements AuthService{
         
         response.addCookie(cookie);
         
-        return ResponseEntity.ok(Map.of("message", "Logout Successful!!!"));
+        return ResponseEntity.ok(Map.of("message", "Logout Successfu!!!"));
 	}
 
 	@Override

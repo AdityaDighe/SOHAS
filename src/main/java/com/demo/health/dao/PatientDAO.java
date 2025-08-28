@@ -9,21 +9,21 @@ import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
 
 public interface PatientDAO {
-	void save(Patient patient);
+	void addPatient(Patient patient);
 
-	Patient get(int patientId);
+	Patient getPatientById(int patientId);
 
-	List<Patient> list();
+	List<Patient> listPatients();
 
-	void update(Patient patient);
+	void updatePatient(Patient patient);
 
-	void delete(int patientId);
+	void deletePatient(int patientId);
 
 
-	List<Doctor> getDoctors(String location, Time time, Date date);
+	List<Doctor> getAvailableDoctors(String location, Time time, Date date);
 
 	Patient findByEmail(String email);
 
-	List<Appointment> getAppointment(int id);
+	List<Appointment> getPatientAppointments(int id);
 
 }
