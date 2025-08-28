@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.health.dao.AppointmentDAO;
+import com.demo.health.dto.AppointmentDTO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
@@ -32,13 +33,13 @@ public class AppointmentServiceImpl implements AppointmentService{
 	
 	@Override
 	@Transactional
-	public void save(Appointment appointment) {
+	public void save(AppointmentDTO appointment) {
 		appointmentdao.save(appointment);
 		
-		int patientId = appointment.getPatient().getPatientId(); 
+		int patientId = appointment.getPatientId(); 
 		Patient patient = patientService.get(patientId);
 		
-		int doctorId = appointment.getDoctor().getDoctorId(); 
+		int doctorId = appointment.getDoctorId(); 
 		Doctor doctor = doctorService.get(doctorId);
 		
 		emailService.sendAppointmentConfirmationEmail(doctor.getEmail(), patient.getEmail(), doctor.getDoctorName(), patient.getPatientName(), appointment.getDate(), appointment.getTime());
@@ -46,14 +47,14 @@ public class AppointmentServiceImpl implements AppointmentService{
 
 	@Override
 	@Transactional
-	public Appointment get(int appointmentId) {
+	public AppointmentDTO get(int appointmentId) {
 		// TODO Auto-generated method stub
 		return appointmentdao.get(appointmentId);
 	}
 
 	@Override
 	@Transactional
-	public List<Appointment> list() {
+	public List<AppointmentDTO> list() {
 		// TODO Auto-generated method stub
 		return appointmentdao.list();
 	}
@@ -61,9 +62,8 @@ public class AppointmentServiceImpl implements AppointmentService{
 	
 	@Override
 	@Transactional
-	public void updateStatus(Appointment apt) {
+	public void updateStatus(AppointmentDTO apt) {
 		// TODO Auto-generated method stub
 		appointmentdao.updateStatus(apt);	
 	}
-
 }

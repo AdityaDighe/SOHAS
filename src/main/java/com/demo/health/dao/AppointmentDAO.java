@@ -2,11 +2,13 @@ package com.demo.health.dao;
 
 import java.util.List;
 
+import com.demo.health.dto.AppointmentDTO;
 import com.demo.health.entity.Appointment;
 
 public interface AppointmentDAO {
-    void save(Appointment appoint);
+    void save(AppointmentDTO appoint);
     Appointment get(int  appointmentId);
-    List<Appointment> list();
-	void updateStatus(Appointment apt);
+    List<AppointmentDTO> list();
+	void updateStatus(AppointmentDTO apt);
 }
+

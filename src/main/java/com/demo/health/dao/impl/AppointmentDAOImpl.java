@@ -2,6 +2,7 @@ package com.demo.health.dao.impl;
 
 import com.demo.health.dao.AppointmentDAO;
 import com.demo.health.entity.Appointment;
+import com.demo.health.dto.AppointmentDTO;
 
 import java.util.List;
 import org.hibernate.SessionFactory;
@@ -16,7 +17,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
 	private SessionFactory sessionFactory;
 
 	@Override
-	public void save(Appointment appointment) {
+	public void save(AppointmentDTO appointment) {
 		sessionFactory.getCurrentSession().save(appointment);
 	}
 
@@ -26,12 +27,12 @@ public class AppointmentDAOImpl implements AppointmentDAO{
 	}
 
 	@Override
-	public List<Appointment> list() {
+	public List<AppointmentDTO> list() {
 		return sessionFactory.getCurrentSession().createQuery("from Appointment", Appointment.class).list();
 	}
 	
 	@Override
-	public void updateStatus(Appointment apt) {
+	public void updateStatus(AppointmentDTO apt) {
 		sessionFactory.getCurrentSession().update(apt);
 	}
 }
