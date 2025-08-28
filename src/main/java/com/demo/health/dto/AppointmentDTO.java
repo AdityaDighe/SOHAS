@@ -3,6 +3,7 @@ package com.demo.health.dto;
 import java.sql.Date;
 import java.sql.Time;
 
+import com.demo.health.entity.Appointment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class AppointmentDTO {
@@ -18,6 +19,14 @@ public class AppointmentDTO {
     private int patientId;
 	
     private int doctorId;
+
+	public AppointmentDTO(Appointment appointment) {
+		this.status = appointment.getStatus();
+		this.date = appointment.getDate();
+		this.time = appointment.getTime();
+		this.patientId = appointment.getPatient().getPatientId();
+		this.doctorId = appointment.getDoctor().getDoctorId();
+	}
 
 	public String getStatus() {
 		return status;
