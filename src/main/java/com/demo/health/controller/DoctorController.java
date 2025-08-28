@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,8 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+import com.demo.health.dto.DoctorDTO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.service.DoctorService;
@@ -41,7 +41,7 @@ public class DoctorController {
 	private PatientService patientService;
 	
 	@GetMapping("/{id}")
-    public Doctor getDoctor(@PathVariable int id) {
+    public DoctorDTO getDoctor(@PathVariable int id) {
         return doctorService.get(id);
     }
 	
@@ -49,7 +49,7 @@ public class DoctorController {
      Registers a new doctor.
     */
 	@PostMapping("/signup")
-	public ResponseEntity<?> addDoctor(@RequestBody @Valid Doctor doctor, BindingResult result) {
+	public ResponseEntity<?> addDoctor(@RequestBody @Valid DoctorDTO doctorDTO, BindingResult result) {
 		
 		//Check for validation errors and return  
 	    if (result.hasErrors()) {
@@ -63,31 +63,30 @@ public class DoctorController {
 	    }
 	    
 	    // Check if start and end time are provided & end time comes after start time
-	    if (doctor.getEndTime() != null && doctor.getStartTime() != null &&
-	            !doctor.getEndTime().after(doctor.getStartTime())) {
+	    if (doctorDTO.getEndTime() != null && doctorDTO.getStartTime() != null &&
+	            !doctorDTO.getEndTime().after(doctorDTO.getStartTime())) {
 	        return ResponseEntity.badRequest()
 	                .body(Map.of("endTime", "End time must be after start time"));
 	    }
 	    
 	    // Check if the email is unique or not across Doctor & Patient Tables
-	    if (patientService.findByEmail(doctor.getEmail()) != null || 
-	        doctorService.findByEmail(doctor.getEmail()) != null) {
+	    if (patientService.findByEmail(doctorDTO.getEmail()) != null || 
+	        doctorService.findByEmail(doctorDTO.getEmail()) != null) {
 	        return ResponseEntity.badRequest()
 	                .body(Map.of("email", "Email already registered"));
 	    }
 
 	    // Encrypt password before saving
 	    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-	    doctor.setPassword(encoder.encode(doctor.getPassword()));
+	    doctorDTO.setPassword(encoder.encode(doctorDTO.getPassword()));
 
-	    doctorService.save(doctor);
+	    doctorService.save(doctorDTO);
 	    return ResponseEntity.ok("Doctor added successfully");
 	}
 
     @PutMapping("/{id}")
-    public void updateDoctor(@PathVariable int id, @RequestBody Doctor doctor) {
-    	doctor.setDoctorId(id);
-        doctorService.update(doctor);
+    public void updateDoctor(@PathVariable int id, @RequestBody DoctorDTO doctorDTO) {
+        doctorService.update(id, doctorDTO);
     }
     
     @DeleteMapping("/{id}")

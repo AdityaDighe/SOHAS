@@ -1,13 +1,29 @@
 package com.demo.health.dto;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
-public class PatientDTO {
+import com.demo.health.entity.Patient;
 
+public class PatientDTO {
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int patientId;
+	
+	public int getPatientId() {
+		return patientId;
+	}
+	public void setPatientId(int patientId) {
+		this.patientId = patientId;
+	}
 	@NotBlank(message = "Name is required")
     @Size(min = 3, max = 100, message = "Name must be between 3 and 100 characters")
     private String patientName;
@@ -29,7 +45,22 @@ public class PatientDTO {
         message = "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character"
     )
     private String password;
+	
+	private String otp;
+	
+	private LocalDateTime otpExpiry;
     
+	public PatientDTO(Patient patient) {
+		this.patientId = patient.getPatientId();
+		this.patientName = patient.getPatientName();
+		this.age = patient.getAge();
+		this.city = patient.getCity();
+		this.email = patient.getEmail();
+		this.password = patient.getPassword();
+		this.otp = patient.getOtp();
+		this.otpExpiry = patient.getOtpExpiry();
+	}
+	
 	//getters and setters
 	public String getPatientName() {
 		return patientName;
@@ -64,5 +95,17 @@ public class PatientDTO {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getOtp() {
+		return otp;
+	}
+	public void setOtp(String otp) {
+		this.otp = otp;
+	}
+	public LocalDateTime getOtpExpiry() {
+		return otpExpiry;
+	}
+	public void setOtpExpiry(LocalDateTime otpExpiry) {
+		this.otpExpiry = otpExpiry;
 	}
 }

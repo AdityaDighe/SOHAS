@@ -11,6 +11,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
+
+import com.demo.health.dto.PatientDTO;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,30 +23,31 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int patientId;
 	
-	@NotBlank (message = "Name is required")
-	@Size (min = 3, max = 100, message = "Name must be between 3 and 100 characters")
 	private String patientName;
 	
-	@PositiveOrZero(message = "Age must be zero or a positive number")
 	private int age;
 	
-	@NotBlank(message = "City is required")
-	@Size(max = 50, message = "City cannot exceed 50 characters")
 	private String city;
 	
-	@Email(message = "Invalid email format")
-    @NotBlank
 	private String email;
 	
-
 	private String password;
 	
-	
-
-
 	private String otp;
+	
 	private LocalDateTime otpExpiry;
-
+	
+	public Patient(PatientDTO patientDTO) {
+		this.patientId = patientDTO.getPatientId();
+		this.patientName = patientDTO.getPatientName();
+		this.age = patientDTO.getAge();
+		this.city = patientDTO.getCity();
+		this.email = patientDTO.getEmail();
+		this.password = patientDTO.getPassword();
+		this.otp = patientDTO.getOtp();
+		this.otpExpiry = patientDTO.getOtpExpiry();
+	}
+	
 	public String getOtp() {
 	    return otp;
 	}
