@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.health.exception.DuplicateEmailException;
+import com.demo.health.exception.DuplicateEmailException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -28,6 +28,7 @@ public class GlobalExceptionHandler {
 	// Exception handling for bean validation and showing at frontEnd the validation
 	// errors
 	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseBody
 	public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
 		Map<String, Object> errors = new HashMap<>();
 

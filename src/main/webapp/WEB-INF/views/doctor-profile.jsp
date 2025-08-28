@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -254,154 +253,119 @@ select option {
 		successfully!</div>
 
 	<script>
-		$(document)
-				.ready(
-						function() {
+		$(document).ready(function() {
 
-							$('#cancelEdit').click(
-									function() {
-										$('#doctorName').val(
-												"${doctor.doctorName}");
-										$('#speciality').val(
-												"${doctor.speciality}");
-										$('#number').val(
-												"${doctor.phoneNumber}");
-										$('#city').val("${doctor.city}");
-										$('#hospitalName').val(
-												"${doctor.hospitalName}");
-										$('#startTime').val(
-												"${doctor.startTime}");
-										$('#endTime').val("${doctor.endTime}");
-										$('.error').text('');
-									});
+			$('#cancelEdit').click(function() {
+				$('#doctorName').val(
+						"${doctor.doctorName}");
+				$('#speciality').val(
+						"${doctor.speciality}");
+				$('#number').val(
+						"${doctor.phoneNumber}");
+				$('#city').val("${doctor.city}");
+				$('#hospitalName').val(
+						"${doctor.hospitalName}");
+				$('#startTime').val(
+						"${doctor.startTime}");
+				$('#endTime').val("${doctor.endTime}");
+				$('.error').text('');
+			});
 
-							$('#doctorProfileForm')
-									.submit(
-											function(e) {
-												e.preventDefault();
-												$('.error').text('');
+			$('#doctorProfileForm').submit(function(e) {
+				e.preventDefault();
+				$('.error').text('');
 
-												const doctorName = $(
-														'#doctorName').val()
-														.trim();
-												const speciality = $(
-														'#speciality').val()
-														.trim();
-												const phoneNumber = $('#number')
-														.val().trim();
-												const city = $('#city').val();
-												const hospitalName = $(
-														'#hospitalName').val()
-														.trim();
-												const startTime = $(
-														'#startTime').val()
-														|| "09:00:00";
-												const endTime = $('#endTime')
-														.val()
-														|| "17:00:00";
+				const doctorName = $('#doctorName').val().trim();
+				const speciality = $('#speciality').val().trim();
+				const phoneNumber = $('#number').val().trim();
+				const city = $('#city').val();
+				const hospitalName = $('#hospitalName').val().trim();
+				const startTime = $('#startTime').val() || "09:00:00";
+				const endTime = $('#endTime').val() || "17:00:00";
 
-												let hasError = false;
+				let hasError = false;
 
-												if (!doctorName) {
-													$('#error-doctorName')
-															.text(
-																	'Name is required.');
-													hasError = true;
-												}
-												if (!speciality) {
-													$('#error-speciality')
-															.text(
-																	'Speciality is required.');
-													hasError = true;
-												}
-												if (!/^\d{10}$/
-														.test(phoneNumber)) {
-													$('#error-phoneNumber')
-															.text(
-																	'Phone number must be 10 digits.');
-													hasError = true;
-												}
-												if (!city) {
-													$('#error-city')
-															.text(
-																	'City is required.');
-													hasError = true;
-												}
-												if (!hospitalName) {
-													$('#error-hospitalName')
-															.text(
-																	'Hospital name is required.');
-													hasError = true;
-												}
-												if (!startTime || !endTime
-														|| endTime <= startTime) {
-													$('#error-endTime')
-															.text(
-																	'End time must be after start time.');
-													hasError = true;
-												}
+				if (!doctorName) {
+					$('#error-doctorName').text('Name is required.');
+					hasError = true;
+				}
+				if (!speciality) {
+					$('#error-speciality').text('Speciality is required.');
+					hasError = true;
+				}
+				if (!/^\d{10}$/.test(phoneNumber)) {
+					$('#error-phoneNumber').text('Phone number must be 10 digits.');
+					hasError = true;
+				}
+				if (!city) {
+					$('#error-city').text('City is required.');
+					hasError = true;
+				}
+				if (!hospitalName) {
+					$('#error-hospitalName').text('Hospital name is required.');
+					hasError = true;
+				}
+				if (!startTime || !endTime || endTime <= startTime) {
+					$('#error-endTime').text('End time must be after start time.');
+					hasError = true;
+				}
 
-												if (hasError)
-													return;
+				if (hasError)
+					return;
 
-												function getCookie(name) {
-													let match = document.cookie
-															.match(new RegExp(
-																	'(^| )'
-																			+ name
-																			+ '=([^;]+)'));
-													return match ? match[2]
-															: null;
-												}
+				function getCookie(name) {
+					let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+					return match ? match[2] : null;
+				}
 
-												let tokenFromCookie = getCookie("jwtToken");
-												function normalizeTime(t) {
-													if (!t)
-														return null;
-													return t.length === 5 ? t
-															+ ":00" : t; // if HH:mm -> add :00
-												}
+				let tokenFromCookie = getCookie("jwtToken");
+				function normalizeTime(t) {
+					if (!t)
+						return null;
+					return t.length === 5 ? t + ":00" : t; // if HH:mm -> add :00
+				}
 												$
-														.ajax({
-															url : '${pageContext.request.contextPath}/doctors/${doctor.doctorId}',
-															method : 'PUT',
-															contentType : 'application/json',
-															data : JSON
-																	.stringify({
-																		doctorName : doctorName,
-																		speciality : speciality,
-																		phoneNumber : phoneNumber,
-																		city : city,
-																		hospitalName : hospitalName,
-																		email : $(
-																				"#email")
-																				.val(),
-																		password : "${doctor.password}",
-																		startTime : normalizeTime(startTime),
-																		endTime : normalizeTime(endTime)
-																	}),
-															headers : {
-																"Authorization" : "Bearer "
-																		+ tokenFromCookie
-															},
-															success : function() {
-																$(
-																		'#successToast')
-																		.fadeIn()
-																		.delay(
-																				1500)
-																		.fadeOut();
-																window.location.href = "${pageContext.request.contextPath}/doctor/profile"
-															},
-															error : function() {
-																console
-																		.log(startTime);
-																alert('Update failed.');
+				.ajax({
+					url : '${pageContext.request.contextPath}/doctors/${doctor.doctorId}',
+					method : 'PUT',
+					contentType : 'application/json',
+					data : JSON.stringify({
+						doctorName : doctorName,
+						speciality : speciality,
+						phoneNumber : phoneNumber,
+						city : city,
+						hospitalName : hospitalName,
+						email : $("#email").val(),
+						password : "${doctor.password}",
+						startTime : normalizeTime(startTime),
+						endTime : normalizeTime(endTime)
+					}),
+					headers : {
+						"Authorization" : "Bearer "
+								+ tokenFromCookie
+					},
+					success : function() {
+						$('#successToast').fadeIn().delay(1500).fadeOut();
+						window.location.href = "${pageContext.request.contextPath}/doctor/profile"
+					},
+					error : function() {
+						//console.log(startTime);
+						//alert('Update failed.');
+						if (xhr.status === 400) {
+				              const errors = xhr.responseJSON;
 
-															}
-														});
-											});
-						});
+				              $(".error").text(""); // Clear previous errors
+				              $("input").css("border-color", ""); // Reset borders
+
+				              for (const field in errors) {
+				                  $("#error-" + field).text(errors[field]);
+				                  $("#" + field).css("border-color", "#b00020"); // Highlight field
+				              }
+				          }  
+					}
+				});
+			});
+		});
 	</script>
 
 </body>

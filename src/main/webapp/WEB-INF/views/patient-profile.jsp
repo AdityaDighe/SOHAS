@@ -256,7 +256,19 @@ $(document).ready(function() {
        	window.location.href = "${pageContext.request.contextPath}/patient/profile"
       },
       error: function () {
-        alert('Update failed.');
+    	  
+    	  if (xhr.status === 400) {
+              const errors = xhr.responseJSON;
+
+              $(".error").text(""); // Clear previous errors
+              $("input").css("border-color", ""); // Reset borders
+
+              for (const field in errors) {
+                  $("#error-" + field).text(errors[field]);
+                  $("#" + field).css("border-color", "#b00020"); // Highlight field
+              }
+          }  
+        //alert('Update failed.');
        
       }
     });
