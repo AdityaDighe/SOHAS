@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.health.dto.AppointmentDTO;
-import com.demo.health.entity.Appointment;
 import com.demo.health.service.AppointmentService;
 
 /*
@@ -39,12 +38,8 @@ public class AppointmentController {
 
     @PutMapping("/{id}")
     public void updateAppointment(@PathVariable int id, @RequestBody Map<String, String> request) {
-        Appointment apt = appointService.get(id);
-        if (apt != null) {
-            String status = request.get("status");
-        	apt.setStatus(status);
-            appointService.updateStatus(apt);
-        }
+        String status = request.get("status");
+        appointService.updateStatus(id, status);
     }
 
     

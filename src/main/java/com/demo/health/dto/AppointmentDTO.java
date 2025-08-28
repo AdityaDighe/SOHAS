@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class AppointmentDTO {
 	
+	private int appointmentId;
+	
 	private String status = "BOOKED";
 	
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -21,11 +23,22 @@ public class AppointmentDTO {
     private int doctorId;
 
 	public AppointmentDTO(Appointment appointment) {
+		this.appointmentId = appointment.getAppointmentId();
 		this.status = appointment.getStatus();
 		this.date = appointment.getDate();
 		this.time = appointment.getTime();
 		this.patientId = appointment.getPatient().getPatientId();
 		this.doctorId = appointment.getDoctor().getDoctorId();
+	}
+	
+	
+
+	public int getAppointmentId() {
+		return appointmentId;
+	}
+	
+	public void setAppointmentId(int appointmentId) {
+		this.appointmentId = appointmentId;
 	}
 
 	public String getStatus() {
