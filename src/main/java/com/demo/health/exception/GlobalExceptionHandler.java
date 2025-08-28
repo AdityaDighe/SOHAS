@@ -9,6 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.health.exception.DuplicateEmailException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -39,6 +42,12 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(DuplicateEmailException.class)
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> handleDuplicateEmail(DuplicateEmailException ex) {
+        return ResponseEntity.badRequest().body(Map.of("email", ex.getMessage()));
+    }
 
 	@ExceptionHandler(Exception.class)
 	public String handleGlobalException(Exception ex, Model model) {
