@@ -4,18 +4,19 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
+import com.demo.health.dto.PatientDTO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
 
 public interface PatientService {
-	void save(Patient patient);
+	String save(PatientDTO patientDTO);
 
-	Patient get(int patientId);
+	PatientDTO get(int patientId);
 
 	List<Patient> list();
 
-	void update(Patient patient);
+	void update(PatientDTO patient);
 
 	void delete(int patientId);
 

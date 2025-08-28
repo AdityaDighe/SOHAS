@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
+import com.demo.health.dto.PatientDTO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
@@ -52,46 +52,50 @@ public class PatientController {
      Registers a new patient 
      */
     @PostMapping("/signup")
-    public ResponseEntity<?> addPatient(@RequestBody @Valid Patient patient, BindingResult result) {
+    public ResponseEntity<?> addPatient(@RequestBody @Valid PatientDTO patientDTO) {
     	
-    	//Check for validation errors and return
-        if (result.hasErrors()) {
-            Map<String, String> errors = result.getFieldErrors().stream()
-                .collect(Collectors.toMap(
-                    FieldError::getField,
-                    FieldError::getDefaultMessage,
-                    (existing, replacement) -> existing
-                ));
-            return ResponseEntity.badRequest().body(errors);
-        }
-
-        // Check if the email is unique or not across Doctor & Patient Tables
-        if (patientService.findByEmail(patient.getEmail()) != null || 
-            doctorService.findByEmail(patient.getEmail()) != null) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("email", "Email already registered"));
-        }
-
-        //Encrypt password before saving
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        patient.setPassword(encoder.encode(patient.getPassword()));
-
-        patientService.save(patient);
-        return ResponseEntity.ok("Patient added successfully");
+//    	//Check for validation errors and return
+//        if (result.hasErrors()) {
+//            Map<String, String> errors = result.getFieldErrors().stream()
+//                .collect(Collectors.toMap(
+//                    FieldError::getField,
+//                    FieldError::getDefaultMessage,
+//                    (existing, replacement) -> existing
+//                ));
+//            return ResponseEntity.badRequest().body(errors);
+//        }
+//
+//        // Check if the email is unique or not across Doctor & Patient Tables
+//        if (patientService.findByEmail(patient.getEmail()) != null || 
+//            doctorService.findByEmail(patient.getEmail()) != null) {
+//            return ResponseEntity.badRequest()
+//                    .body(Map.of("email", "Email already registered"));
+//        }
+//
+//        //Encrypt password before saving
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        patient.setPassword(encoder.encode(patient.getPassword()));
+//
+//        patientService.save(patient);
+//        return ResponseEntity.ok("Patient added successfully");
+        
+        return ResponseEntity.ok(patientService.save(patientDTO));
     }
 
 
  
  
     @GetMapping("/{id}")
-    public Patient getPatient(@PathVariable int id) {
-        return patientService.get(id);
+    public PatientDTO getPatient(@PathVariable int id) {
+//        return patientService.get(id);
+    	return patientService.get(id);
     }
  
     @PutMapping("/{id}")
-    public void updatePatient(@PathVariable int id, @RequestBody Patient patient) {
-    	patient.setPatientId(id);
-    	patientService.update(patient);
+    public void updatePatient(@PathVariable int id, @RequestBody Patient patientDTO) {
+//    	patient.setPatientId(id);
+//    	patientService.update(patient);
+    	return ResponseEntity.ok(patientService.updatePatient(id, patientDTO));
     }
  
     @DeleteMapping("/{id}")
