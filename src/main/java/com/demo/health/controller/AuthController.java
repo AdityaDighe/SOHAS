@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demo.health.dto.LoginDTO;
 import com.demo.health.service.AuthService;
 
+
 /*
 Authentication controller used for authorization and authentication purposes
 */
