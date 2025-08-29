@@ -9,6 +9,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -25,6 +27,9 @@ public class PatientDAOImpl implements PatientDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
+    
+    // Logger instance
+    private static final Logger logger = LogManager.getLogger(PatientDAOImpl.class);
 
     @Override
     public void addPatient(Patient patient) {
@@ -34,9 +39,10 @@ public class PatientDAOImpl implements PatientDAO {
             tx = session.beginTransaction();
             session.save(patient);
             tx.commit();
+            logger.info("User registered successfully {}", patient.getPatientName());
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            e.printStackTrace();
+            logger.error("Failed to register User", e);
         } finally {
             session.close();
         }
@@ -48,8 +54,9 @@ public class PatientDAOImpl implements PatientDAO {
         Patient patient = null;
         try {
             patient = session.get(Patient.class, patientId);
+            logger.info("Fetched user with Name: {}", patient.getPatientName());
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Error fetching user with name: {}", e); 	
         } finally {
             session.close();
         }
@@ -62,8 +69,9 @@ public class PatientDAOImpl implements PatientDAO {
         List<Patient> patients = null;
         try {
             patients = session.createQuery("from Patient", Patient.class).list();
+            logger.info("Fetched {} users from the database", patients != null ? patients.size() : 0);
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Error listing users : ", e);
         } finally {
             session.close();
         }
@@ -78,9 +86,10 @@ public class PatientDAOImpl implements PatientDAO {
             tx = session.beginTransaction();
             session.merge(patient);
             tx.commit();
+            logger.info("Updated user with Name : {}", patient.getPatientName());
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            e.printStackTrace();
+            logger.error("Error updating user : {}", e);
         } finally {
             session.close();
         }
@@ -95,11 +104,15 @@ public class PatientDAOImpl implements PatientDAO {
             Patient p = session.get(Patient.class, patientId);
             if (p != null) {
                 session.delete(p);
+                logger.info("Deleted user with Name: {}", p.getPatientName());
+            }else {
+            	logger.warn("User not found");
             }
             tx.commit();
+            logger.info("Deleted user with Name: {}", p.getPatientName());
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            e.printStackTrace();
+            logger.error("Error deleting user : {}", e);
         } finally {
             session.close();
         }
@@ -135,8 +148,13 @@ public class PatientDAOImpl implements PatientDAO {
                     ));
 
             doctors = session.createQuery(cq).getResultList();
+            if(doctors != null) {
+            	logger.info("{} Doctors found for {}",doctors.size(), location, time, date);
+            } else {
+            	logger.warn("Doctor not found {}", location, time, date);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error finding doctor : ",e);
         } finally {
             session.close();
         }
@@ -153,8 +171,14 @@ public class PatientDAOImpl implements PatientDAO {
             patient = session.createQuery(hql, Patient.class)
                              .setParameter("email", email)
                              .uniqueResult();
+            
+            if (patient != null) {
+                logger.info("User found with email: {}", email);
+            } else {
+                logger.warn("No user found with email: {}", email);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Error finding user by email: {}", email, e);
         } finally {
             session.close();
         }
@@ -171,8 +195,10 @@ public class PatientDAOImpl implements PatientDAO {
             appointments = session.createQuery(hql, Appointment.class)
                                   .setParameter("patientId", id)
                                   .list();
+            
+            logger.info("Found {} appointments for user", appointments != null ? appointments.size() : 0);
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Error fetching appointments for user: {}", e);
         } finally {
             session.close();
         }
