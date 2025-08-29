@@ -11,7 +11,7 @@ import com.demo.health.dto.DashboardDTO;
 import com.demo.health.dto.PatientDTO;
 
 public interface PatientService {
-	ResponseEntity<?> registerPatient(PatientDTO patientDTO, BindingResult result);
+	ResponseEntity<?> registerPatient(PatientDTO patientDTO);
 
 	PatientDTO getPatientById(int patientId);
 

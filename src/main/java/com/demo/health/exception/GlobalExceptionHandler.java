@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.demo.health.exception.DuplicateEmailException;
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -49,12 +47,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleDuplicateEmail(DuplicateEmailException ex) {
         return ResponseEntity.badRequest().body(Map.of("email", ex.getMessage()));
     }
-
+	
+	@ExceptionHandler(TimeException.class)
+	@ResponseBody
+	public ResponseEntity<Map<String, String>> handleTimeException(TimeException ex) {
+	    return ResponseEntity.badRequest().body(Map.of("endTime", ex.getMessage()));
+	}
+	
 	@ExceptionHandler(Exception.class)
 	public String handleGlobalException(Exception ex, Model model) {
 		model.addAttribute("errorMessage", "Something went wrong! Please try again later.");
 		model.addAttribute("details", ex.getMessage()); // optional: remove in production
 		return "error"; // this will forward to /WEB-INF/views/error.jsp
 	}
-
 }

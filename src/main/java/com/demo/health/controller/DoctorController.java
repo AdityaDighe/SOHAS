@@ -2,6 +2,8 @@ package com.demo.health.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -38,13 +40,13 @@ public class DoctorController {
      Registers a new doctor.
     */
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerDoctor(@RequestBody DoctorDTO doctorDTO, BindingResult result) {
-	    return doctorService.registerDoctor(doctorDTO, result);
+	public ResponseEntity<?> registerDoctor(@RequestBody @Valid DoctorDTO doctorDTO) {
+	    return doctorService.registerDoctor(doctorDTO);
 	   
 	}
 
     @PutMapping("/{id}")
-    public void updateDoctor(@PathVariable int id, @RequestBody DoctorDTO doctorDTO) {
+    public void updateDoctor(@PathVariable int id, @RequestBody @Valid DoctorDTO doctorDTO) {
         doctorService.updateDoctor(id, doctorDTO);
     }
     

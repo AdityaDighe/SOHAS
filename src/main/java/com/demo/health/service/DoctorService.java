@@ -10,7 +10,7 @@ import com.demo.health.dto.DoctorDTO;
 import com.demo.health.exception.UserNotFoundException;
 
 public interface DoctorService {
-	ResponseEntity<?> registerDoctor(DoctorDTO doctorDTO, BindingResult result);
+	ResponseEntity<?> registerDoctor(DoctorDTO doctorDTO);
 
 	DoctorDTO getDoctorById(int doctorId) throws UserNotFoundException;
 

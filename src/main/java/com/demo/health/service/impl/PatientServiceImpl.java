@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -15,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import com.demo.health.dao.PatientDAO;
 import com.demo.health.dto.DashboardDTO;
@@ -25,6 +22,7 @@ import com.demo.health.dto.PatientDTO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 import com.demo.health.entity.Patient;
+import com.demo.health.exception.DuplicateEmailException;
 import com.demo.health.exception.UserNotFoundException;
 import com.demo.health.service.DoctorService;
 import com.demo.health.service.PatientService;
@@ -43,24 +41,12 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Transactional
-	public ResponseEntity<?> registerPatient(@Valid PatientDTO patientDTO, BindingResult result) {
-		// TODO Auto-generated method stub
-		//Check for validation errors and return
-        if (result.hasErrors()) {
-            Map<String, String> errors = result.getFieldErrors().stream()
-                .collect(Collectors.toMap(
-                    FieldError::getField,
-                    FieldError::getDefaultMessage,
-                    (existing, replacement) -> existing
-                ));
-            return ResponseEntity.badRequest().body(errors);
-        }
+	public ResponseEntity<?> registerPatient(PatientDTO patientDTO) {
 
         // Check if the email is unique or not across Doctor & Patient Tables
         if (findByEmail(patientDTO.getEmail()) != null || 
             doctorService.findByEmail(patientDTO.getEmail()) != null) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("email", "Email already registered"));
+            throw new DuplicateEmailException("Email already registered");
         }
 
         //Encrypt password before saving
@@ -152,7 +138,4 @@ public class PatientServiceImpl implements PatientService {
 		
 		return appointmentList != null ? appointmentDTOlist : null;
 	}
-
-	
-
 }

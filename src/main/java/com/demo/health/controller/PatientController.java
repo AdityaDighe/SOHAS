@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -37,8 +39,8 @@ public class PatientController {
      Registers a new patient 
      */
     @PostMapping("/signup")
-    public ResponseEntity<?> registerPatient(@RequestBody PatientDTO patientDTO, BindingResult result) {
-        return patientService.registerPatient(patientDTO, result);
+    public ResponseEntity<?> registerPatient(@RequestBody @Valid PatientDTO patientDTO) {
+        return patientService.registerPatient(patientDTO);
     }
 
     @GetMapping("/{id}")
@@ -47,7 +49,7 @@ public class PatientController {
     }
  
     @PutMapping("/{id}")
-    public void updatePatient(@PathVariable int id, @RequestBody PatientDTO patientDTO) {
+    public void updatePatient(@PathVariable int id, @RequestBody @Valid PatientDTO patientDTO) {
     	patientService.updatePatient(id, patientDTO);
     }
  
