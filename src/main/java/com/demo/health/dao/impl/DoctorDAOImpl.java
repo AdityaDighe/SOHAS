@@ -12,11 +12,17 @@ import com.demo.health.dao.DoctorDAO;
 import com.demo.health.entity.Appointment;
 import com.demo.health.entity.Doctor;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @Repository
 public class DoctorDAOImpl implements DoctorDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    // Logger instance
+    private static final Logger logger = LogManager.getLogger(DoctorDAOImpl.class);
 
     @Override
     public void addDoctor(Doctor doctor) {
@@ -26,9 +32,10 @@ public class DoctorDAOImpl implements DoctorDAO {
             tx = session.beginTransaction();
             session.save(doctor);
             tx.commit();
+            logger.info("Doctor added successfully: {}", doctor.getDoctorName());
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            e.printStackTrace();
+            logger.error("Error while adding doctor", e);
         } finally {
             session.close();
         }
@@ -40,8 +47,9 @@ public class DoctorDAOImpl implements DoctorDAO {
         Doctor doctor = null;
         try {
             doctor = session.get(Doctor.class, doctorId);
+            logger.info("Fetched doctor with ID: {}", doctorId);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error fetching doctor with ID: {}", doctorId, e);
         } finally {
             session.close();
         }
@@ -54,8 +62,9 @@ public class DoctorDAOImpl implements DoctorDAO {
         List<Doctor> doctors = null;
         try {
             doctors = session.createQuery("from Doctor", Doctor.class).list();
+            logger.info("Fetched {} doctors from the database", doctors != null ? doctors.size() : 0);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error listing doctors", e);
         } finally {
             session.close();
         }
@@ -70,9 +79,10 @@ public class DoctorDAOImpl implements DoctorDAO {
             tx = session.beginTransaction();
             session.merge(doctor); // merged to handle detached object update
             tx.commit();
+            logger.info("Updated doctor with ID: {}", doctor.getDoctorId());
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            e.printStackTrace();
+            logger.error("Error updating doctor with ID: {}", doctor.getDoctorId(), e);
         } finally {
             session.close();
         }
@@ -87,11 +97,14 @@ public class DoctorDAOImpl implements DoctorDAO {
             Doctor doctor = session.get(Doctor.class, doctorId);
             if (doctor != null) {
                 session.delete(doctor);
+                logger.info("Deleted doctor with ID: {}", doctorId);
+            } else {
+                logger.warn("Doctor not found for ID: {}", doctorId);
             }
             tx.commit();
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            e.printStackTrace();
+            logger.error("Error deleting doctor with ID: {}", doctorId, e);
         } finally {
             session.close();
         }
@@ -107,8 +120,13 @@ public class DoctorDAOImpl implements DoctorDAO {
             doctor = session.createQuery(hql, Doctor.class)
                             .setParameter("email", email)
                             .uniqueResult();
+            if (doctor != null) {
+                logger.info("Doctor found with email: {}", email);
+            } else {
+                logger.warn("No doctor found with email: {}", email);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error finding doctor by email: {}", email, e);
         } finally {
             session.close();
         }
@@ -125,8 +143,9 @@ public class DoctorDAOImpl implements DoctorDAO {
             appointments = session.createQuery(hql, Appointment.class)
                                   .setParameter("id", id)
                                   .list();
+            logger.info("Found {} appointments for doctor ID: {}", appointments != null ? appointments.size() : 0, id);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error fetching appointments for doctor ID: {}", id, e);
         } finally {
             session.close();
         }
