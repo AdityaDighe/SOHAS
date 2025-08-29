@@ -49,7 +49,7 @@ public class DoctorDAOImpl implements DoctorDAO {
             doctor = session.get(Doctor.class, doctorId);
             logger.info("Fetched doctor with ID: {}", doctorId);
         } catch (Exception e) {
-            logger.error("Error fetching doctor with ID: {}", doctorId, e);
+            logger.error("Error fetching doctor with ID: {}", doctorId, e); 	
         } finally {
             session.close();
         }
