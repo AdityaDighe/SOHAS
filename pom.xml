@@ -14,6 +14,14 @@
         <db.version>42.7.7</db.version>
         <jjwt.version>0.11.5</jjwt.version>
         <spring.security.version>5.8.11</spring.security.version>
+        <servlet.version>4.0.1</servlet.version>
+        <log4j.version>2.20.0</log4j.version>
+        <persistence.version>2.2</persistence.version>
+        <dbcp.version>2.9.0</dbcp.version>
+        <validation.version>2.0.1.Final</validation.version>
+        <validator.version>6.2.5.Final</validator.version>
+        <!--<spring.security.version>5.8.5</spring.security.version> -->
+        <mail.version>1.6.2</mail.version>
     </properties>
  
     <dependencies>
@@ -56,7 +64,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
+            <version>${servlet.version}</version>
             <scope>provided</scope>
         </dependency>
  
@@ -64,28 +72,28 @@
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
-            <version>2.2</version>
+            <version>${persistence.version}</version>
         </dependency>
  
         <!-- Commons DBCP2 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
-            <version>2.9.0</version>
+            <version>${dbcp.version}</version>
         </dependency>
         
         <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
 		<dependency>
 		    <groupId>javax.validation</groupId>
 		    <artifactId>validation-api</artifactId>
-		    <version>2.0.1.Final</version>
+		    <version>${validation.version}</version>
 		</dependency>
 	
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
 		<dependency>
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-validator</artifactId>
-		    <version>6.2.5.Final</version>
+		    <version>${validator.version}</version>
 		</dependency>
 		
 		<!-- JJWT (JWT support) -->
@@ -110,20 +118,20 @@
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-crypto</artifactId>
-		    <version>5.8.5</version> <!-- or the latest stable version -->
+		    <version>${spring.security.version}</version> <!-- or the latest stable version -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
-			<version>5.3.30</version>
+			<version>${spring.version}</version>
 			<!--  Use the Spring version your project is using  -->
 		</dependency>
 		
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
-			<version>1.6.2</version>
+			<version>${mail.version}</version>
 		</dependency>
 		
 		<!-- Spring Security -->
@@ -143,24 +151,15 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.20.0</version>
+			<version>${log4j.version}</version>
 		</dependency>
 
 		<!-- Log4j 2 API -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>2.20.0</version>
+			<version>${log4j.version}</version>
 		</dependency>
-
-		<!-- Log4j 2 SLF4J Bridge (Optional, if you use SLF4J) -->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>2.20.0</version>
-		</dependency>
-
-
     </dependencies>
   <build>
     <plugins>
