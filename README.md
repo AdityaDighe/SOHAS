@@ -120,7 +120,7 @@ SOHAS/
 
 ## 🧪 Postman Testing  
 
-### 1. Patient Signup  
+## 1. Patient Signup
 ```http
 POST http://localhost:8080/SOHAS/patients/signup
 Content-Type: application/json
@@ -134,10 +134,55 @@ Content-Type: application/json
 }
 ```
 
-### 2. Doctor Signup  
+## 2. Doctor Signup
 ```http
 POST http://localhost:8080/SOHAS/doctors/signup
 Content-Type: application/json
+
+{
+  "doctorName": "Dr. Sarah Khan",
+  "speciality": "Cardiologist",
+  "phoneNumber": "9876543210",
+  "city": "Mumbai",
+  "hospitalName": "Apollo Hospital",
+  "email": "sarah.khan@gmail.com",
+  "password": "Doctor@123",
+  "startTime": "09:00",
+  "endTime": "17:00"
+}
+```
+
+## 3. Login (Doctor/Patient)
+```http
+POST http://localhost:8080/SOHAS/api/login
+Content-Type: application/json
+
+{
+  "email": "david@mail.com",
+  "password": "David@7897"
+}
+```
+
+## 4. Update Patient Profile
+```http
+PUT http://localhost:8080/SOHAS/patients/{id}
+Content-Type: application/json
+Authorization: Bearer {jwtToken}
+
+{
+  "patientName": "David Johnson",
+  "age": 23,
+  "city": "Mumbai",
+  "email": "david@gmail.com",
+  "password": "David@7897"
+}
+```
+
+## 5. Update Doctor Profile
+```http
+PUT http://localhost:8080/SOHAS/doctors/{id}
+Content-Type: application/json
+Authorization: Bearer {jwtToken}
 
 {
   "doctorName": "Dr. Sarah Khan",
@@ -152,28 +197,301 @@ Content-Type: application/json
 }
 ```
 
-### 3. Book Appointment  
+## 6. Send OTP for Forgot Password
+```http
+POST http://localhost:8080/SOHAS/api/request-otp
+Content-Type: application/json
+
+{
+  "email": "user@example.com"
+}
+```
+
+## 7. Reset Password with OTP
+```http
+POST http://localhost:8080/SOHAS/api/reset-password
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "otp": "123456",
+  "newPassword": "NewPassword@123"
+}
+```
+
+## 8. Find Available Doctors
+```http
+GET http://localhost:8080/SOHAS/patients/doctors?date=2025-08-21&time=10:00:00&location=Mumbai
+Content-Type: application/json
+Authorization: Bearer {jwtToken}
+```
+
+## 9. Book Appointment
 ```http
 POST http://localhost:8080/SOHAS/appointment
-Authorization: Bearer {jwtToken}
 Content-Type: application/json
+Authorization: Bearer {jwtToken}
 
 {
   "date": "2025-09-15",
   "time": "10:30",
-  "patient": { "patientId": 101 },
-  "doctor": { "doctorId": 202 }
+  "patient": {
+    "patientId": 101
+  },
+  "doctor": {
+    "doctorId": 202
+  }
 }
 ```
 
-### 4. Update Appointment (Complete/Cancel)  
+## 10. Get Patient Appointments
+```http
+GET http://localhost:8080/SOHAS/patients/appointment/{id}
+Content-Type: application/json
+Authorization: Bearer {jwtToken}
+```
+
+## 11. Get Doctor Appointments
+```http
+GET http://localhost:8080/SOHAS/doctors/appointment/{id}
+Content-Type: application/json
+Authorization: Bearer {jwtToken}
+```
+
+## 12. Logout
+```http
+POST http://localhost:8080/SOHAS/api/logout
+Content-Type: application/json
+Authorization: Bearer {jwtToken}
+```
+
+## 13. Complete Appointment
 ```http
 PUT http://localhost:8080/SOHAS/appointment/{id}
-Authorization: Bearer {jwtToken}
 Content-Type: application/json
+Authorization: Bearer {jwtToken}
 
-{ "status": "COMPLETED" }
+{
+  "status": "COMPLETED"
+}
 ```
+
+## 14. Cancel Appointment
+```http
+PUT http://localhost:8080/SOHAS/appointment/{id}
+Content-Type: application/json
+Authorization: Bearer {jwtToken}
+
+{
+  "status": "CANCELLED"
+}
+```
+
+---
+
+## Postman Testing Format
+
+### 1. Patient Signup
+**Method:** POST  
+**URL:** http://localhost:8080/SOHAS/patients/signup  
+**Content-Type:** application/json  
+**Request-Body:**
+```json
+{
+  "patientName": "David Johnson",
+  "age": 22,
+  "city": "Mumbai",
+  "email": "david@mail.com",
+  "password": "David@7897"
+}
+```
+
+### 2. Doctor Signup
+**Method:** POST  
+**URL:** http://localhost:8080/SOHAS/doctors/signup  
+**Content-Type:** application/json  
+**Request-Body:**
+```json
+{
+  "doctorName": "Dr. Sarah Khan",
+  "speciality": "Cardiologist",
+  "phoneNumber": "9876543210",
+  "city": "Mumbai",
+  "hospitalName": "Apollo Hospital",
+  "email": "sarah.khan@gmail.com",
+  "password": "Doctor@123",
+  "startTime": "09:00",
+  "endTime": "17:00"
+}
+```
+
+### 3. Login (Doctor/Patient)
+**Method:** POST  
+**URL:** http://localhost:8080/SOHAS/api/login  
+**Content-Type:** application/json  
+**Request-Body:**
+```json
+{
+  "email": "david@mail.com",
+  "password": "David@7897"
+}
+```
+
+### 4. Update Patient Profile
+**Method:** PUT  
+**URL:** http://localhost:8080/SOHAS/patients/{id}  
+**Content-Type:** application/json  
+**Headers:**  
+Authorization: Bearer {jwtToken}  
+**Request-Body:**
+```json
+{
+  "patientName": "David Johnson",
+  "age": 23,
+  "city": "Mumbai",
+  "email": "david@gmail.com",
+  "password": "David@7897"
+}
+```
+
+### 5. Update Doctor Profile
+**Method:** PUT  
+**URL:** http://localhost:8080/SOHAS/doctors/{id}  
+**Content-Type:** application/json  
+**Headers:**  
+Authorization: Bearer {jwtToken}  
+**Request-Body:**
+```json
+{
+  "doctorName": "Dr. Sarah Khan",
+  "speciality": "Cardiologist",
+  "phoneNumber": "9876543210",
+  "city": "Pune",
+  "hospitalName": "Apollo Hospital",
+  "email": "sarah.khan@gmail.com",
+  "password": "Doctor@123",
+  "startTime": "09:00",
+  "endTime": "17:00"
+}
+```
+
+### 6. Send OTP for Forgot Password
+**Method:** POST  
+**URL:** http://localhost:8080/SOHAS/api/request-otp  
+**Content-Type:** application/json  
+**Request-Body:**
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+### 7. Reset Password with OTP
+**Method:** POST  
+**URL:** http://localhost:8080/SOHAS/api/reset-password  
+**Content-Type:** application/json  
+**Request-Body:**
+```json
+{
+  "email": "user@example.com",
+  "otp": "123456",
+  "newPassword": "NewPassword@123"
+}
+```
+
+### 8. Find Available Doctors
+**Method:** GET  
+**URL:** http://localhost:8080/SOHAS/patients/doctors  
+**Content-Type:** application/json  
+**Headers:**  
+Authorization: Bearer {jwtToken}  
+**Request-Params:**
+```
+date: 2025-08-21
+time: 10:00:00
+location: Mumbai
+```
+
+### 9. Book Appointment
+**Method:** POST  
+**URL:** http://localhost:8080/SOHAS/appointment  
+**Content-Type:** application/json  
+**Headers:**  
+Authorization: Bearer {jwtToken}  
+**Request-Body:**
+```json
+{
+  "date": "2025-09-15",
+  "time": "10:30",
+  "patient": {
+    "patientId": 101
+  },
+  "doctor": {
+    "doctorId": 202
+  }
+}
+```
+
+### 10. Get Patient Appointments
+**Method:** GET  
+**URL:** http://localhost:8080/SOHAS/patients/appointment/{id}  
+**Content-Type:** application/json  
+**Headers:**  
+Authorization: Bearer {jwtToken}
+
+### 11. Get Doctor Appointments
+**Method:** GET  
+**URL:** http://localhost:8080/SOHAS/doctors/appointment/{id}  
+**Content-Type:** application/json  
+**Headers:**  
+Authorization: Bearer {jwtToken}
+
+### 12. Logout
+**Method:** POST  
+**URL:** http://localhost:8080/SOHAS/api/logout  
+**Content-Type:** application/json  
+**Headers:**  
+Authorization: Bearer {jwtToken}
+
+### 13. Complete Appointment
+**Method:** PUT  
+**URL:** http://localhost:8080/SOHAS/appointment/{id}  
+**Content-Type:** application/json  
+**Headers:**  
+Authorization: Bearer {jwtToken}  
+**Request-Body:**
+```json
+{
+  "status": "COMPLETED"
+}
+```
+
+### 14. Cancel Appointment
+**Method:** PUT  
+**URL:** http://localhost:8080/SOHAS/appointment/{id}  
+**Content-Type:** application/json  
+**Headers:**  
+Authorization: Bearer {jwtToken}  
+**Request-Body:**
+```json
+{
+  "status": "CANCELLED"
+}
+```
+
+---
+
+## Notes:
+- Replace `{id}` with actual patient/doctor/appointment ID
+- Replace `{jwtToken}` with the actual JWT token received from login
+- All endpoints require proper authentication headers where specified
+- Date format: YYYY-MM-DD
+- Time format: HH:MM or HH:MM:SS
+
+
+
+
+
 
 ---
 
